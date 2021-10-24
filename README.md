@@ -85,13 +85,54 @@ If you already have both [docker](https://docs.docker.com/engine/reference/comma
    4. Then select the IMAGE ID of the image whose name is *doctag dockerized web* and run: `docker image rm <IMAGE ID>`
    5. Finally run `docker-compose up`
 
-
-
 # Getting started
+# Important information 
 
 
 
-## Customize MedTAG
+## Test DocTAG
+The first time you have access to DocTAG you have to log in with the user available for testing the application. To this aim you have to type *Test* for both the username and the password in the log in page. This is the *Test mode*: its goal is to provide the user with an initial configuration which allows her to test DocTAG's functionalities on a set of data we provided. The documents and the topics belong to the collection provided for *TREC7 TIPSTER corpus*. 
+
+Once log in with the credentials above, you are asked to choose a *topic*: in the *Test mode* only two topics have been provided.
+
+In the *Test mode* all the DocTAG functionalities are available to be tested even if an administrator (*Admin*) has not been defined yet.
+## Customize DocTAG
+Once you tested DocTAG you can create a new configuration so to start annotating the documents you upload. Open the sidebar and click on *Configure*. You are provided with a guide that shows how to format your files. 
+
+### Collection
+The collection contains the documents you are going to annotate using DocTAG. The file formats required to upload the collection are **json** and **csv**. If you have more **json** and/or **csv** files compressed in a **zip** archive, you can upload the **zip** archive itself and that will be automatically unzipped. 
+
+1. The **csv** file must contain in the header a column called *document_id* and one or more columns characterizing the document's corpus. If you decide to split your document's content into two or more fields (for example: a column for the *Introduction*, one for the *body* and one for the *conclusions*), you are given the possibility to choose what are the parts of the document you plan to annotate, display without annotation (no passages can be selected in these parts) or hide (if you do not want that part to be displayed). If you want to store the information about the language of a document add a column in the header called *language*. If no language column is defined, the *english* language will be used by default. Below some examples are provided.
+2. The **json** file must contain a key *collection* where the list of documents is stored. Each document is a json object whose key are: the *document_id* for the document's identifier and one key for the document's body. If you plan to split the body into two or more parts, each one associated to a key, you can choose what parts can be displayed, annotated or hidden.  If you want to store the information about the language of a document add a column in the header called *language*. If no language column is defined, the *english* language will be used by default. Below some examples are provided.
+
+
+DocTAG supports the insertion of articles belonging to **PUBMED**. In this case the *Title* and the *Abstract* parts will be annotable, while *volume*, *date*, *journal* and *authors* will be onlyy displayed.
+
+**NOTE** The uploaded documents **will** be inserted in the database if and only if they appear in one or more runs.
+
+### Topics
+Topics can be uploaded in three different formats: **csv**, **json** or **txt**.
+1. The **csv** file containing the topics must contain in the header the column *topic_id* containing the identifier of the topic. There are three other columns which are not mandatory, these are: *title*, *description* and *narrative*: even if they are not mandatory we strongly suggest you to provide this information.
+2. The **json** file containing the topics must contain a key *topics* where the list of topics is stored. Each topic in the list must be a json element characterized by four keys: the *topic_id* (mandatory), *title*,*description* and *narrative* (these are not mandatory). 
+3. The **txt** ffile containing the topics must be the one provided by TREC where each topic is characterized by a *num*,*title*,*desc*,*narr*.
+
+
+### Runs
+Runs containing for each topic a list of associated documents, can be uploaded in three different formats: **csv**, **json** or **txt**.
+1. The **csv** file containing the topics must contain in the header the column *topic_id* containing the identifier of the topic and the column *document_id* with the document's identifier. These columns are mandatory. If when you uploaded the collection files you specified the language of each article, remember to add an extra column called *language* with this information, otherwise *english* will be used by default.
+2. The **json** file containing the topics must contain a key *run* where the list of topic-documents is stored. Each topic-documents association in the list must be a json element characterized by these keys: the *topic_id* (mandatory) and *documents* which characterizes the list of documents' ids. If you specified the documents' language, each element in the *documents* list must be a json object characterized by the *document_id* and *language* keys.
+3. The **txt** ffile containing the topics must or the standard format of the TREC runs or a **txt** file where in each line the topic_id and the document_id are space separated. **If you use the standard TREC run format, the information about the language is not provided hence make sure you did not inserted this information in the definition of the collection**.
+
+### Labels
+Labels can be uploaded in three different formats: **csv**,**json** or **txt**:
+1. The **csv** file requires a column *label* defined in the header and all the labels will belong to that column.
+2. The **json** file requires a key *labels* where the list of labels is stored.
+3. The **txt** file requires a label for each line.
+
+### Concepts
+DocTAG allows you to associate to each passage one or more concepts belonging to one or more ontologies. The allowed formats for concepts definition are: **csv**,**json** or **txt**. For each concept we ask you to provide its URL and its specific definition.
+1. The **csv** file containing concepts must contain in the header a column *concept_url* that is also the identifier of the concept and a column called *concept_name* used to store the specific name of the concept: for example the concept associated to "Michael Schumacher" will have the ontology's URL as *concept_url* and "Michael Schumacher" as *concept_name*.
+2. The **json** file requires a key *concepts_list* where the list of concepts is stored. Each element of the list must be a json object with two keys: *concept_url* and *concept_name*.
 
 
 
