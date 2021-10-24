@@ -142,6 +142,12 @@ DocTAG allows you to associate to each passage one or more concepts belonging to
 
 
 # DocTAG: annotation types overview
+## Labels
+## Passages
+## Linking
+## Concepts
+### Other members' annotations
+Given a document and the annotation type, you can check what a team mate of yours has annotated. This annotation will be **read only** and the team mate you are checking the ground truth of is modifiable.
 
 # DocTAG main features
 ## A-B. Personal and global statistics
@@ -168,6 +174,8 @@ The *admin* has access to the global stats of DocTAG. These differ from those of
 ### Majority Vote
 For each document the *admin* can check the ground-truth created basing on **majority vote**. This ground-truth is generated for each document and for each annotation type. In particular it is possible also to set which users will take part in the majority vote ground-truth creation so to consider only a subset of ground-truth. When the ground-truth has been generated it is also possible to be downloaded in **json** and **csv** formats.
 
+## Support for multilingual documents
+Even if the default language is *english*, DocTAG allows the upload of the same document translated in different languages or, more in general, for each topic it is possible to upload documents written in different languages. The information about the language is given with the collection file and it is useful to filter the documents of a topic basing on the language your interested in.
 
 # Credits
 
