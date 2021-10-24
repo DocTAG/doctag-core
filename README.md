@@ -140,16 +140,33 @@ DocTAG allows you to associate to each passage one or more concepts belonging to
 1. The **csv** file containing concepts must contain in the header a column *concept_url* that is also the identifier of the concept and a column called *concept_name* used to store the specific name of the concept: for example the concept associated to "Michael Schumacher" will have the ontology's URL as *concept_url* and "Michael Schumacher" as *concept_name*.
 2. The **json** file requires a key *concepts_list* where the list of concepts is stored. Each element of the list must be a json object with two keys: *concept_url* and *concept_name*.
 
+
+# DocTAG: annotation types overview
+
 # DocTAG main features
-## A-C. Personal and global statistics
+## A-B. Personal and global statistics
 Each user can check how many documents she annotated for each topic and annotation type (i.e. - *labels, passages, concepts, linking*). If you are the admin of DocTAG you can visualize also your colleagues' stats: firstly you have to select the user you are interested in, and then you can check that user's stats.
 
-## B. Upload and Transfer annotations
+## C. Upload and Transfer annotations
 A user can copy the annotations of a colleague she share DocTAG with. There are two ways to transfer annotations:
 1. If DocTAG is run in a server and more than one user relies on the same instance, you have just to select a user and all her ground-truths will be automatically transferred.
 2. If DocTAG is installed locally annotations can be transferred by means of **csv** file (formatted as those downloaded from DocTAG).
 
 In case of annotation collision, that is when the user you are copying the annotations of and you have annotated the same document(s), you are asked to choose to keep your annotations and discard those of your colleague (only for those documents annotated by both of you) or vice versa, and in this case your annotations will be lost if collision occurs.
+
+## D. Change the configuration
+The *admin* can decide to change the actual configuration adding new labels, concepts, documents, topics and runs.
+
+## E. Check the global DocTAG stats
+The *admin* has access to the global stats of DocTAG. These differ from those of the single users because in DocTAG global stats it is possible to:
+1. Delete one or more documents
+2. Download the annotations for one or more documents. The annotations are those created by each user who annotated that/those documents. 
+3. Visualize each document's corpus
+4. Check the global stats for each document: for each annotation type it is possible to check how many users selected a specific *label*,*passage*,*concept*.
+5. Check the **majority vote ground truth**. 
+
+### Majority Vote
+For each document the *admin* can check the ground-truth created basing on **majority vote**. This ground-truth is generated for each document and for each annotation type. In particular it is possible also to set which users will take part in the majority vote ground-truth creation so to consider only a subset of ground-truth. When the ground-truth has been generated it is also possible to be downloaded in **json** and **csv** formats.
 
 
 # Credits
