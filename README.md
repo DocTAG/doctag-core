@@ -99,6 +99,12 @@ In the *Test mode* all the DocTAG functionalities are available to be tested eve
 ## Customize DocTAG
 Once you tested DocTAG you can create a new configuration so to start annotating the documents you upload. Open the sidebar and click on *Configure*. You are provided with a guide that shows how to format your files. 
 
+### Basic information
+If it is the first time you configure DocTAG, you are asked to provide your username and a password. Once the configuration is completed those will be your new credentials which overwrite the *Test* account. You will be the *Admin* of DocTAG: the only one who can change configuration, delete one or more reports from the collection, add more data and so on. 
+
+### TF-IDF Top-k words
+
+
 ### Collection
 The collection contains the documents you are going to annotate using DocTAG. The file formats required to upload the collection are **json** and **csv**. If you have more **json** and/or **csv** files compressed in a **zip** archive, you can upload the **zip** archive itself and that will be automatically unzipped. 
 
@@ -134,6 +140,16 @@ DocTAG allows you to associate to each passage one or more concepts belonging to
 1. The **csv** file containing concepts must contain in the header a column *concept_url* that is also the identifier of the concept and a column called *concept_name* used to store the specific name of the concept: for example the concept associated to "Michael Schumacher" will have the ontology's URL as *concept_url* and "Michael Schumacher" as *concept_name*.
 2. The **json** file requires a key *concepts_list* where the list of concepts is stored. Each element of the list must be a json object with two keys: *concept_url* and *concept_name*.
 
+# DocTAG main features
+## A-C. Personal and global statistics
+Each user can check how many documents she annotated for each topic and annotation type (i.e. - *labels, passages, concepts, linking*). If you are the admin of DocTAG you can visualize also your colleagues' stats: firstly you have to select the user you are interested in, and then you can check that user's stats.
+
+## B. Upload and Transfer annotations
+A user can copy the annotations of a colleague she share DocTAG with. There are two ways to transfer annotations:
+1. If DocTAG is run in a server and more than one user relies on the same instance, you have just to select a user and all her ground-truths will be automatically transferred.
+2. If DocTAG is installed locally annotations can be transferred by means of **csv** file (formatted as those downloaded from DocTAG).
+
+In case of annotation collision, that is when the user you are copying the annotations of and you have annotated the same document(s), you are asked to choose to keep your annotations and discard those of your colleague (only for those documents annotated by both of you) or vice versa, and in this case your annotations will be lost if collision occurs.
 
 
 # Credits
