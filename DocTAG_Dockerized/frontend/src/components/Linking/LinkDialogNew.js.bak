@@ -1,0 +1,344 @@
+import React, {useContext, useEffect, useState} from 'react';
+import PropTypes from 'prop-types';
+import {confirmable, createConfirmation} from 'react-confirm';
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
+import { faLink,faEye, faTimesCircle,faInfoCircle} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {AppContext, LinkedContext} from "../../BaseIndex";
+//import 'bootstrap/dist/css/bootstrap.min.css';
+import './linked.css';
+import Select from 'react-select';
+import axios from "axios";
+import Draggable from "react-draggable";
+import ModalDialog from 'react-bootstrap/ModalDialog';
+
+class DraggableModalDialog extends React.Component {
+    render() {
+        return <Draggable handle=".modal-header"><ModalDialog {...this.props} /></Draggable>
+    }
+}
+
+function LinkDialogNew(props){
+    const { tokens, color, allMentions, disButton,action,index, semanticArea,associations,concepts,linkingConcepts } = useContext(AppContext);
+    const { mountForm,stateButton,show } = useContext(LinkedContext);
+    const [LinkConcepts,SetLinkConcepts] = linkingConcepts;
+    const [associations_to_show,SetAssociations_to_show] = associations;
+    const [SemanticArea,SetSemanticArea] = semanticArea;
+    const [Concepts, SetConcepts] = concepts;
+    const [ConceptsToShow, SetConceptsToShow] = useState([]);
+    const [Area, SetArea] = useState('')
+    const [ConceptChosen, SetConceptChosen] = useState('')
+    const [Show,SetShow] = show;
+    const [Disable_Button,SetDisable_Buttons] = disButton;
+
+    const [Exist,SetExist] = useState(false);
+    // const [SemanticArea,SetSemanticArea] = useState([]);
+    // const [Concepts, SetConcepts] = useState([]);
+    //
+    // const [ConceptsToShow, SetConceptsToShow] = useState([]);
+    // const [Area, SetArea] = useState('');
+    // const [ConceptChosen, SetConceptChosen] = useState('');
+    const [Enable, SetEnable] = useState(false);
+
+   // const [Enable_Area, SetEnable_Area] = useState(true)
+    const [options_concepts,Setoptions_concepts] = useState([])
+    const [Options_area, SetOptions_area] = useState([])
+    const [Action, SetAction] = action;
+    const [Index, SetIndex] = index;
+    const [All, SetAll] = useState(false);
+
+    const [grouped, SetGrouped] = useState([])
+
+
+    useEffect(()=>{
+        SetArea('All')
+        SetAll(true)
+
+    },[Index,Action])
+
+
+    useEffect(()=>{
+        var options_area = []
+        var group = []
+        if(SemanticArea.length>0 && Concepts !== undefined){
+            SemanticArea.map(area =>{
+                var opt_group = []
+
+                var dis = false
+                if(Concepts[area.toString()].length === 0){
+                    dis = true
+                }
+                options_area.push({value: area, label: area, isDisabled:dis})
+                Concepts[area.toString()].map(concept=>{
+                    opt_group.push({value: concept['concept_url'], label: concept['concept_name']})
+                })
+                group.push({label:area,options:opt_group})
+
+            })
+            options_area.push({value: 'All',label:'All', isDisabled:false})
+            SetOptions_area(options_area)
+        }
+
+        console.log('GROUP',group)
+        SetGrouped(group)
+        // SetArea(options_area[options_area.length-1])
+        // SetAll(true)
+    },[Concepts,SemanticArea])
+
+    useEffect(()=>{
+        if(Options_area.length>0){
+            console.log('area-1',Options_area[Options_area.length-1])
+            var area = Options_area[Options_area.length-1].value
+            SetArea(area)
+            if(Options_area[Options_area.length-1].value.toString() === 'All'){
+                SetAll(true)
+            }
+        }
+    },[Options_area])
+
+
+
+
+
+
+    const handleChange_concept = (option) => {
+        console.log(`Option selected:`, option.value);
+        var concept = {'concept_name':option.label,'concept_url':option.value}
+        SetConceptChosen(concept)
+        // console.log(concept)
+        // var button = document.getElementById('addbottone1')
+        // button.disabled = false
+    };
+    const handleChange_area = (option) => {
+        console.log(`Option selected:`, option);
+        SetArea(option.value.toString())
+        // var button = document.getElementById('addbottone1')
+        // button.disabled = true
+    };
+
+    useEffect(()=>{
+        //var conce = Concepts['Diagnosis']
+        var options = []
+        if(ConceptsToShow.length>0){
+            ConceptsToShow.map(concept =>{
+
+                options.push({value: concept['concept_url'], label: concept['concept_name']})
+            })
+            Setoptions_concepts(options)
+            //SetEnable(true)
+        }
+
+    },[ConceptsToShow,ConceptChosen])
+
+    useEffect(()=>{
+        console.log('Area',Area)
+        //SetEnable_Area(true)
+        if(Area !== '' && Area !== 'All'){
+            SetAll(false)
+            SetConceptsToShow(Concepts[Area])
+            Setoptions_concepts([])
+            SetConceptChosen('')
+            //SetEnable(false)
+            console.log('CAMBIATO')
+        }
+        else if(Area === 'All'){
+            SetAll(true)
+            SetConceptChosen('')
+        }
+
+    },[Area])
+
+    const handleClose = () => SetShow(false);
+
+    const onAddAssociation = (e) =>{
+        SetDisable_Buttons(false)
+        var areaToInsert = ''
+        // var concept = ConceptChosen['concept']
+        var concept = ConceptChosen
+        if(Area === 'All'){
+            SemanticArea.map(area=>{
+                Concepts[area].map(con=>{
+                    if(con['concept_url'] === concept['concept_url'] && con['concept_name'] === concept['concept_name']){
+                        areaToInsert = area
+                    }
+                })
+            })
+
+        }
+        else{
+            areaToInsert = Area
+        }
+        var concept_name = concept['concept_name']
+        var concept_url = concept['concept_url']
+        var association = {
+            'mention_text': props.mention.mention_text,
+            'start': props.mention.start,
+            'stop': props.mention.stop,
+            'semantic_area': areaToInsert,
+            'concept_name': concept_name,
+            'concept_url': concept_url
+        }
+        console.log('association',association)
+        var exist = false
+        associations_to_show.map(ass => {
+            console.log('currentass',ass)
+            console.log('currentment',props.mention)
+            console.log(props.mention.mention_text)
+            if ((ass['mention_text'] === props.text && ass['start'] === props.mention.start && ass['stop'] === props.mention.stop
+                && ass['concept_name'] === concept_name && ass['concept_url'] === concept_url && ass['semantic_area'] === areaToInsert)) {
+                // alert('This association already exists!')
+                exist = true
+
+            }
+        })
+        if (exist === false) {
+            SetAssociations_to_show([...associations_to_show, association])
+            SetArea('')
+            //SetEnable(false)
+            SetConceptChosen('')
+            SetShow(false)
+            SetExist(false)
+        }
+        else{
+            SetExist(true)
+
+        }
+    }
+    const styles = {
+        menuList: (base) => ({
+            ...base,
+            "::-webkit-scrollbar":{
+                width: "6px"
+            },
+            "::-webkit-scrollbar-track":{
+                boxShadow: "inset 0 0 3px darkgrey",
+                borderRadius: "10px"
+            },
+            "::-webkit-scrollbar-thumb": {
+                background: "dodgerblue",
+                borderRadius: "10px"
+            },
+            "::-webkit-scrollbar-thumb:hover": {
+                background: "dodgerblue"
+            }
+        })
+    }
+    useEffect(()=>{
+        if(Show) {
+            var elem = (document.getElementsByClassName('modal-backdrop'))
+            console.log('elems', elem)
+            for(var i = 0; i < elem.length; i++){
+                console.log('entro qua dentro')
+                elem[i].style.opacity = '0';
+                console.log('el',elem[i])
+            }
+
+            //elem.style.opcaity = 0
+            // elem.map(el=>{
+            //     console.log('ele',el)
+            //     el.style = {'opacity':'0 !important;'}
+            //     console.log('ele',el)
+            //
+            // })
+            // }
+        }
+    },[Show])
+    const groupStyles = {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    };
+    const groupBadgeStyles = {
+        backgroundColor: '#EBECF0',
+        borderRadius: '2em',
+        color: '#172B4D',
+        display: 'inline-block',
+        fontSize: 12,
+        fontWeight: 'normal',
+        lineHeight: '1',
+        minWidth: 1,
+        padding: '0.16666666666667em 0.5em',
+        textAlign: 'center',
+    };
+    const formatGroupLabel = grouped => (
+        <div style={groupStyles}>
+            <span>{grouped.label}</span>
+            <span style={groupBadgeStyles}>{grouped.options.length}</span>
+        </div>
+    );
+    useEffect(()=>{
+        if(ConceptChosen !== ''){
+            SetEnable(true)
+        }
+        else{
+            SetEnable(false)
+        }
+    },[ConceptChosen])
+
+    return(
+
+        <div>
+            <Draggable>
+                <Modal onHide={handleClose} dialogAs={DraggableModalDialog} show={Show}
+
+            >
+                <Modal.Header closeButton>
+                    <h5><span>New Association for: </span><span style={{'color':'royalblue'}}>{props.mention.mention_text}</span></h5>
+                </Modal.Header>
+                <Modal.Body>
+                    {Exist && <div style={{'font-size':'18px','color':'red'}}><FontAwesomeIcon icon={faTimesCircle}/> This association already exists <FontAwesomeIcon icon={faTimesCircle}/></div>}
+
+                    <div style={{'width':'100%'}}>
+                        <div><span>Please, select the </span><span style={{'font-weight':'bold'}}>semantic area</span>:</div>
+                        <span>
+                        {Area !== '' && <Select styles={styles}
+                            onChange={(option)=>handleChange_area(option)}
+                            className='selection'
+                            options={Options_area}
+                            defaultValue={Options_area.slice(-1)[0]}
+
+                        />}
+                        </span>
+                        <span>
+                        {All === false && <div>
+                            <span> Select a </span><span style={{'font-weight':'bold'}}>concept</span>:
+                            <Select styles={styles}
+                                className='selection'
+                                onChange={(option)=>handleChange_concept(option)}
+                                options={options_concepts}
+
+                            /></div>}
+
+                        {All === true && <div>
+                            <span> Select a </span><span style={{'font-weight':'bold'}}>concept</span>:
+                            <Select styles={styles}
+                                options={grouped}
+                                onChange={(option)=>handleChange_concept(option)}
+                                formatGroupLabel={formatGroupLabel}
+                            />
+                            </div>}
+                    </span>
+                    </div>
+
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose} >
+                        Close
+                    </Button>
+                    <Button disabled={!Enable} id='addbottone1' onClick={(e)=>onAddAssociation(e)} variant="primary" >
+                        Add
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            </Draggable>
+        </div>
+
+    );
+
+
+
+}
+
+
+export default (LinkDialogNew);

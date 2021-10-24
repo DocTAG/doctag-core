@@ -1,0 +1,440 @@
+{% extends 'groundtruth_app/base.html' %}
+
+{% block title %}
+    <title>Examode | Ground Truth </title>
+{% endblock title %}
+
+
+{% load static %}
+
+{% block scripts %}
+    <script>
+    $(document).ready(function () {
+        var i = 0;
+        var report_id = '';
+        var indice = '';
+        function visualize_report(report) {
+            console.log(report['id_report'])
+            console.log(report['report_json'])
+            var idr = report['id_report']
+            var reptext = report['report_json']
+
+            $('#rep_id').html(idr)
+
+
+        }
+
+        async function getmentions() {
+            var data = {'report_id': report_id}
+            var rep = [];
+            await $.ajax({
+                {#url: "http://127.0.0.1:8000/get_ann/"+report_id,#}
+                url: "http://127.0.0.1:8000/insert_link/mentions",
+                type: 'GET',
+                async: true,
+                data : data,
+                success: function (result) {
+                    {#console.log(reports['report'])#}
+                    rep = result['mentions']
+
+                    console.log(rep)
+
+                }
+            });
+            return rep
+
+        }
+
+
+        async function getassociations(report_id) {
+            var data = {'report_id': report_id}
+            var rep = [];
+            await $.ajax({
+                {#url: "http://127.0.0.1:8000/get_ann/"+report_id,#}
+                url: "http://127.0.0.1:8000/insert_link/linked",
+                type: 'GET',
+                async: true,
+                data : data,
+                success: function (result) {
+                    {#console.log(reports['report'])#}
+                    rep = result['associations']
+                    console.log('associations   ',rep)
+
+                }
+            });
+            return rep
+
+        }
+
+
+        async function get_reps() {
+            var rep = [];
+            await $.ajax({
+                url: "http://127.0.0.1:8000/get_reports",
+                type: 'GET',
+                async: true,
+                dataType: "json",
+                success: function (reports) {
+                    {#console.log(reports['report'])#}
+                    rep = reports['report']
+
+                    {#console.log(rep)#}
+
+                }
+            });
+            return rep
+
+        }
+
+
+        get_reps().then(function(reports){
+            report_id = reports[i]['id_report']
+
+            $.each(reports, function(i,report){
+                $('#report_id').append('<option value="'+report['id_report']+'"> '+i+'</option>')
+
+
+            });
+            console.log('qua')
+            $('#report_id option[value="' +report_id+ '"]').prop('selected', true)
+            visualize_report(reports[i])
+            getmentions(report_id).then(function (m) {
+                     console.log('ci sono')
+                     console.log('mentions:  ', m)
+
+                        $.each(m, function(i,mention){
+                            var text = mention['mention_text']
+                            var start = mention['start']
+                            var stop = mention['stop']
+                            $('#mentionsid').append('<li class="ment list-group-item d-flex justify-content-between align-items-center"><input type="hidden" name="vals" value="'+text+'"/> '+text+'<span class="badge bg-primary rounded-pill"><div><input type="hidden" name="indexes" value="'+start+'-'+stop+'"/>'+start+'-'+stop +'</span></div><div><select name="semantic_area" class="form-select" aria-label="Default select example"><option value="Anatomical Location">Anatomical Location</option><option value="Procedure">Procedure</option></select></div><div><select name="concept_url" class="form-select" aria-label="Default select example"><option value="http://purl.obolibrary.org/obo/UBERON_0001153" selected>Caecum</option><option value="http://purl.obolibrary.org/obo/NCIT_C25349">Polypectomy</option></select></div></li>')
+                            {#console.log('label:   ',label['label'])#}
+                            });
+
+            });
+            getassociations(report_id).then(function (m) {
+                     console.log('ci sono')
+                     console.log('mentions:  ', m)
+
+                        $.each(m, function(i,mention){
+                            var url = mention['concept_url']
+                            var start = mention['start']
+                            var stop = mention['stop']
+                            var name = mention['area']
+                            var mention_text = mention['mention_text']
+                            console.log('mentionssss')
+                            console.log(url)
+                            console.log(start)
+                            console.log(stop)
+                            console.log(name)
+                            console.log(mention_text)
+
+
+                            $('.concept_url option[value="' +url+ '"]').prop('selected', true)
+                            $('.semantic_area option[value="' +name+ '"]').prop('selected', true)
+
+
+                        });
+            });
+             $('#report_id').change(function() {
+                 indice = $("#report_id option:selected").text();
+                 i = parseInt(indice)
+                 console.log('repppio ',reports[i])
+
+                 $('input[name="labels"]').prop('checked',false);
+
+                 var report_id = $("#report_id option:selected").val();
+                 console.log('varrrr ',report_id)
+                 console.log('indice ',indice)
+                 visualize_report(reports[i])
+                 $('.ment').remove()
+
+                 getmentions(report_id).then(function (m) {
+                        console.log('ci sono')
+                        console.log('mentions:  ', m)
+
+                        $.each(m, function(i,mention){
+                            var text = mention['mention_text']
+                            var start = mention['start']
+                            var stop = mention['stop']
+                            $('#mentionsid').append('<li class="ment list-group-item d-flex justify-content-between align-items-center"><input type="hidden" name="vals" value="'+text+'"/> '+text+'<span class="badge bg-primary rounded-pill"><div><input type="hidden" name="indexes" value="'+start+'-'+stop+'"/>'+start+'-'+stop +'</span></div>                              <div><select name="semantic_area" class="form-select" aria-label="Default select example"><option value="Anatomical Location">Anatomical Location</option><option value="Procedure">Procedure</option></select></div><div><select name="concept_url" class="form-select" aria-label="Default select example"><option value="http://purl.obolibrary.org/obo/UBERON_0001153" selected>Caecum</option><option value="http://purl.obolibrary.org/obo/NCIT_C25349">Polypectomy</option></select></div></li>')
+                                                    });
+                    });
+
+                });
+                 $('#next').click(function () {
+
+                    i = i+1;
+                    if (i === reports.length) {
+                        i = 0
+                    }
+                    visualize_report(reports[i])
+                    $('.ment').remove();
+                    report_id = reports[i]['id_report']
+
+                    getmentions(report_id).then(function (m) {
+                        console.log('ci sono')
+                        console.log('mentions:  ', m)
+
+                        $.each(m, function(i,mention){
+                            var text = mention['mention_text']
+                            var start = mention['start']
+                            var stop = mention['stop']
+                            $('#mentionsid').append('<li class="ment list-group-item d-flex justify-content-between align-items-center"><input type="hidden" name="vals" value="'+text+'"/> '+text+'<span class="badge bg-primary rounded-pill"><div><input type="hidden" name="indexes" value="'+start+'-'+stop+'"/>'+start+'-'+stop +'</span></div>                              <div><select name="semantic_area" class="form-select" aria-label="Default select example"><option value="Anatomical Location">Anatomical Location</option><option value="Procedure">Procedure</option></select></div><div><select name="concept_url" class="form-select" aria-label="Default select example"><option value="http://purl.obolibrary.org/obo/UBERON_0001153" selected>Caecum</option><option value="http://purl.obolibrary.org/obo/NCIT_C25349">Polypectomy</option></select></div></li>')
+                            {#console.log('label:   ',label['label'])#}
+                            });
+                    });
+                    report_id = reports[i]['id_report']
+                     $('#report_id option[value="' +report_id+ '"]').prop('selected', true)
+
+                    console.log('repid: ', report_id)
+
+                    console.log('rep: ', reports[i])
+
+                    });
+
+                $('#prev').click(function () {
+
+                    i = i-1;
+                    if (i < 0) {
+                        i = reports.length - 1
+                    }
+                    visualize_report(reports[i])
+                    $('.ment').remove()
+                    report_id = reports[i]['id_report']
+
+                    getmentions(report_id).then(function (m) {
+                        console.log('ci sono')
+                        console.log('mentions:  ', m)
+                        $.each(m, function(i,mention){
+                            var text = mention['mention_text']
+                            var start = mention['start']
+                            var stop = mention['stop']
+                            $('#mentionsid').append('<li class="ment list-group-item d-flex justify-content-between align-items-center"><input type="hidden" name="vals" value="'+text+'"/> '+text+'<span class="badge bg-primary rounded-pill"><div><input type="hidden" name="indexes" value="'+start+'-'+stop+'"/>'+start+'-'+stop +'</span></div>                              <div><select name="semantic_area" class="form-select" aria-label="Default select example"><option value="Anatomical Location">Anatomical Location</option><option value="Procedure">Procedure</option></select></div><div><select name="concept_url" class="form-select" aria-label="Default select example"><option value="http://purl.obolibrary.org/obo/UBERON_0001153" selected>Caecum</option><option value="http://purl.obolibrary.org/obo/NCIT_C25349">Polypectomy</option></select></div></li>')
+
+                            });
+                    });
+                    $('input[name="labels"]').prop('checked',false);
+
+                    report_id = reports[i]['id_report']
+                    $('#report_id option[value="' +report_id+ '"]').prop('selected', true)
+
+                    console.log('repid: ', report_id)
+                    console.log('rep: ', reports[i])
+
+                    });
+
+                });
+
+
+
+
+
+
+
+
+        $("#but").click(function (e) {
+            let form_serialized = $('#mentions').serialize();
+
+            {#e.preventDefault(); // avoid to execute the actual submit of the form.#}
+            {#var data = $('input[name*="labels"]:checked').serializeArray();#}
+            console.log('serial: ',form_serialized)
+            var url = "http://127.0.0.1:8000/insert_link/insert";
+
+
+            $.ajax({
+                   type: "POST",
+                   url: url,
+                   async: true,
+                   data: form_serialized,
+                   success: function(data)
+                           {
+                               console.log('RISPOSTA:   ',data)
+                               alert(data['message']);
+
+                           },
+                           error: function(data)
+                           {
+                               console.log('RISPOSTA NO:   ',data)
+                               alert(data['error']);
+
+
+                           }
+
+                 });
+
+
+        });
+        $("#but_del").click(function (e) {
+            let form_serialized = $('#mentions').serialize();
+
+            {#e.preventDefault(); // avoid to execute the actual submit of the form.#}
+            {#var data = $('input[name*="labels"]:checked').serializeArray();#}
+            console.log('serial: ',form_serialized)
+            var url = "http://127.0.0.1:8000/insert_link/delete";
+
+
+            $.ajax({
+                   type: "POST",
+                   url: url,
+                   async: true,
+                   data: form_serialized,
+                   success: function(data)
+                           {
+                               alert(data['message']);
+
+                               console.log('RISPOSTA:   ',data)
+
+                           },
+                           error: function(data)
+                           {
+                               console.log('RISPOSTA NO:   ',data)
+                               alert(data['error']);
+
+
+                           }
+
+            });
+        });
+
+        $('#ins_mens').click(function(){
+           let form_serialized = $('#mentions').serialize();
+
+            {#e.preventDefault(); // avoid to execute the actual submit of the form.#}
+            {#var data = $('input[name*="labels"]:checked').serializeArray();#}
+            console.log('serial: ',form_serialized)
+            var url = "http://127.0.0.1:8000/insert_link/insert_mention";
+
+
+            $.ajax({
+                   type: "POST",
+                   url: url,
+                   async: true,
+                   data: form_serialized,
+                   success: function(data)
+                           {
+                               alert(data['message']);
+
+                               console.log('RISPOSTA:   ',data)
+
+                           },
+                           error: function(data)
+                           {
+                               console.log('RISPOSTA NO:   ',data)
+                               alert(data['error']);
+
+
+                           }
+
+            });
+        });
+
+
+
+    });
+
+
+    </script>
+{% endblock scripts %}
+
+{% block body %}
+
+
+
+    <!-- Header -->
+    <section id="header">
+        <div class="inner">
+
+
+
+        </div>
+    </section>
+
+    <!-- Container -->
+    <div class="container">
+        <!-- Content here -->
+        <h1><span class="h1_title">ExaMode Ground Truth </span></h1>
+
+
+
+        <!-- TODO: add here body page  -->
+        <form id ='mentions' class="form-get_label" >{% csrf_token %}
+
+            <div class = 'row'>
+
+                <div class="col-md-6">
+
+                    <select name = "report_id" id = "report_id" class="form-select" aria-label="Default select example">
+                    <option selected>Choose a report</option>
+
+                    </select>
+                    <h3 >REPORT:</h3>
+
+                    <h6 id ='rep_id'></h6>
+                    <div id = 'testo'></div>
+                    <div class="col-md-1"></div>
+                </div>
+
+                <div class="col-md-5">
+                    <h2>ASSOCIATIONS</h2>
+
+                        <ul id = "mentionsid" class="list-group">
+{#                          <li class="list-group-item d-flex justify-content-between align-items-center"><input type='hidden' name='vals' value='cancer'/>#}
+{#                                Cancer#}
+{#                                <span class="badge bg-primary rounded-pill"><input type='hidden' name='indexes' value='15-423'/>5-43</span>#}
+{#                              <div><select name="semantic_area" class="form-select" aria-label="Default select example">#}
+{##}
+{#                                  <option value="Anatomical Location">Anatomical Location</option>#}
+{#                                  <option value="Procedure">Procedure</option>#}
+{##}
+{#                                </select></div>#}
+{#                              <div><select name="concept_url" class="form-select" aria-label="Default select example">#}
+{#                                  <option value="http://purl.obolibrary.org/obo/UBERON_0001153" selected>Caecum</option>#}
+{#                                  <option value="http://purl.obolibrary.org/obo/NCIT_C25349">Polypectomy</option>#}
+{##}
+{#                                </select></div>#}
+{#                              </li>#}
+                        </ul>
+                        <button id="but" class="btn btn-lg btn-teal-my  btn-block" type="button">SAVE</button>
+                        <button id="but_del" class="btn btn-lg btn-teal-my  btn-block" type="button">DELETE</button>
+
+                    <div class = 'row' style="margin-top: 10px; margin-bottom: 10px">
+
+                            <div class = 'col-md-4'>
+
+                                    <button id = "prev" name = "prev" class="btn btn-sm btn-teal-my  btn-block" type="button" value = 'Prev'>Prev</button>
+
+                            </div>
+                            <div class = 'col-md-4'></div>
+
+
+                        <div class = 'col-md-4'>
+
+                                    <button id = 'next' name = "next" class="btn btn-sm btn-teal-my  btn-block" type="button" value = 'Next'>Next</button>
+
+                        </div>
+
+                    </div>
+                    <div><h2>MENTIONS</h2>
+
+                        <ul id = "mentionsid" class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center"><input type='hidden' name='valori' value='examode'/>
+                                examode
+                                <span class="badge bg-primary rounded-pill"><input type='hidden' name='indici' value='33-93'/>33-93</span>
+                              </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center"><input type='hidden' name='valori' value='ciaociao'/>
+                                ciaociao
+                                <span class="badge bg-primary rounded-pill"><input type='hidden' name='indici' value='10-20'/>10-20</span>
+                              </li>
+                        </ul>
+                        <button id="ins_mens" class="btn btn-lg btn-teal-my  btn-block" type="button">Submit these mentions</button></div>
+                </div>
+        </div>
+        </form>
+
+    </div>
+
+
+
+
+
+{% endblock body %}

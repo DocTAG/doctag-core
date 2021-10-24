@@ -1,0 +1,154 @@
+.buttongroup > *{
+    margin-top:0px !important
+
+}
+#mate:focus,#robot:focus,#current:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.first_container {
+    height: 60vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding:10px;
+}
+.first_container_right {
+    position:relative;
+    height: 60vh;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    /*margin-top: 20px;*/
+}
+.first_container::-webkit-scrollbar, .first_container_right::-webkit-scrollbar {
+    width: 6px;
+}
+
+/* Track */
+.first_container::-webkit-scrollbar-track, .first_container_right::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 3px darkgrey;
+    border-radius: 10px;
+}
+
+/* Handle */
+.first_container::-webkit-scrollbar-thumb, .first_container_right::-webkit-scrollbar-thumb {
+    background: dodgerblue;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+.first_container::-webkit-scrollbar-thumb:hover, .first_container_right::-webkit-scrollbar-thumb:hover {
+    background: dodgerblue;
+}
+.two_buttons_div_rep{
+    height: 40px;
+    width: inherit;
+    /*vertical-align: text-bottom;*/
+}
+
+.two_buttons_div{
+    height: 40px;
+    width: inherit;
+}
+@media only screen and (max-width: 1200px) {
+    .two_buttons_div {
+
+        height:35px;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .act {
+
+        text-align: center;
+        width:65px !important;
+        padding-left: 0px;
+        padding-right: 0px;
+
+        font-size: 0.85rem;
+    }
+    /*.reportListStyle{*/
+    /*    font-size:2.1rem;*/
+    /*}*/
+    body{
+        font-size: 0.9rem !important;
+    }
+}
+
+@media only screen and (max-width: 767px){
+    .userInfo{
+        display: none;
+    }
+
+}
+@media only screen and (max-width: 995px) {
+    h5{
+        font-size: 1rem;
+    }
+    .col-md-2{
+        max-width: 100%;
+        text-align: center;
+    }
+
+    .linkCo{
+        width:20px;
+        height: 20px;
+        padding:0px;
+    }
+    .button_link{
+        width:30px;
+        height: 20px;
+        padding:0px;
+    }
+    #conf{
+        margin-top:7px;
+    }
+    .act {
+
+        text-align: center;
+        width:50px !important;
+        padding-left: 0px;
+        padding-right: 0px;
+        font-size: 0.65rem !important;
+    }
+    body{
+        font-size:0.75rem !important;
+    }
+    /*.reportListStyle{*/
+    /*    font-size: 20px;*/
+    /*}*/
+    select{
+        width:100px;
+    }
+    .btn{
+        font-size: 0.75rem !important;
+    }
+    /*.userInfo{*/
+    /*    display: none;*/
+    /*}*/
+
+}
+.nextbtn,.prevbtn{
+    padding:0;
+    height:30px;
+    width:40px;
+}
+@media only screen and (max-width: 1200px)  {
+    .prevbtn, .nextbtn, .save, .clear {
+        font-size: 0.85rem;
+    }
+}
+
+
+
+/*@media only screen and (max-width:1000px)  {*/
+/*    .act {*/
+
+/*        text-align: center;*/
+/*        padding-left: 0px;*/
+/*        padding-right: 0px;*/
+/*        width:49px !important;*/
+/*        font-size: 10px;*/
+/*    }*/
+/*}*/
+

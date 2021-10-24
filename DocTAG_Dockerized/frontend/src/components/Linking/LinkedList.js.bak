@@ -1,0 +1,440 @@
+import React, { Component } from 'react'
+import axios from "axios";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { useState, useEffect,useContext } from "react";
+import Association from "./Association";
+import {Col, Row} from "react-bootstrap";
+import Button from "react-bootstrap/Button";
+// import { useForm } from "react-hook-form";
+// import DjangoCSRFToken from 'django-react-csrftoken'
+// import cookie from "react-cookies";
+import AddMention from "../Mentions/AddMention";
+import {AppContext,MentionContext} from "../../BaseIndex";
+import './linked.css';
+import '../General/first_row.css'
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faChevronLeft, faChevronRight, faInfoCircle} from "@fortawesome/free-solid-svg-icons";
+import SubmitButtons from "../General/SubmitButtons";
+import Zoom from "@material-ui/core/Zoom";
+
+// axios.defaults.xsrfCookieName = "csrftoken";
+// axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+
+function LinkedList(props){
+    const { report, associationsList,action,highlightMention,finalcount, color, allMentions,tokens, reports, index, mentionSingleWord, associations } = useContext(AppContext);
+    const [AllMentions, SetAllMentions] = allMentions;
+    const [WordMention, SetWordMention] = mentionSingleWord;
+
+    const [Action, SetAction] = action;
+    const [Children, SetChildren] = tokens;
+    const [HighlightMention, SetHighlightMention] = highlightMention;
+    const [Color, SetColor] = color;
+    const [FinalCount, SetFinalCount] = finalcount;
+    const [ShowInfoLinking,SetShowInfoLinking] = useState(false)
+    //const [Saved,SetSaved] = useState(false)
+
+    // useEffect(()=>{
+    //     SetSaved(false)
+    // },[report])
+
+
+    // function checkOverlap(mention,ment){
+    //     var caso = ''
+    //     if(mention === ment){
+    //         caso = 'equal'
+    //     }
+    //     else if ((mention.start >= ment.start && mention.start <= ment.stop && mention.stop >= ment.start && mention.stop <= ment.stop)){
+    //         caso = 'a'
+    //     }
+    //     else if((ment.start >= mention.start && ment.start <= mention.stop && ment.stop >= mention.start && ment.stop <= mention.stop)){
+    //         caso = 'b'
+    //     }
+    //     else if((mention.start >= ment.start && mention.start <= ment.stop && mention.stop <= ment.stop)){
+    //         caso = 'c'
+    //     }
+    //     else if((ment.start >= mention.start && ment.start <= mention.stop && ment.stop <= mention.stop)){
+    //         caso = 'd'
+    //     }
+    //     else if( (mention.start <= ment.start && mention.stop >= ment.start && mention.stop <= ment.stop)){
+    //         caso = 'e'
+    //     }
+    //     else if((ment.start <= mention.start && ment.stop >= mention.start && ment.stop <= mention.stop)){
+    //         caso = 'f'
+    //     }
+    //
+    //     return caso
+    //
+    //
+    // }
+
+
+    // useEffect(()=>{
+    //     console.log('allment',AllMentions)
+    //     console.log('allcolors',Color)
+    //     var colors = []
+    //     var bottone_linked = (document.getElementsByClassName('butt_linked'))
+    //     var bott = Array.from(document.getElementsByClassName('butt_linked'))
+    //     if(AllMentions.length>0){
+    //
+    //         var overlapping = []
+    //         AllMentions.map((mention,index)=> {
+    //             //calcolo set di mention overlapping
+    //             var overlap = []
+    //             AllMentions.map((ment, ind1) => {
+    //                 var caso = checkOverlap(mention, ment)
+    //                 if (caso !== '') {
+    //                     overlap.push(ment)
+    //                 }
+    //             })
+    //             var coup = {'mention': mention, 'overlap': overlap}
+    //             overlapping.push(coup)
+    //         })
+    //         console.log('overlapping',overlapping)
+    //         var couples = []
+    //         var couples_prov = []
+    //         AllMentions.map((mention,index)=>{
+    //             //Trovo il set più grande che contiene quella mention, trovo l'indice di quella mention e assegno a tutti quel colore lì
+    //
+    //             var array_for_mention = []
+    //             //Ho calcolato per ogni mention quelle con cui c'è overlap
+    //             //Unisco i singoli insiemi: se due insiemi contengono la stessa mention li unisco
+    //             overlapping.map((over,index1)=> {
+    //                 var ment = over['mention']
+    //                 var array = over['overlap']
+    //                 if (array.indexOf(mention) !== -1) {
+    //                     array.map(elem => {
+    //                         if (array_for_mention.indexOf(elem) === -1) {
+    //                             array_for_mention.push(elem)
+    //                         }
+    //                     })
+    //
+    //                 }
+    //             })
+    //             couples_prov.push({'mention':mention,'array':array_for_mention})
+    //
+    //
+    //
+    //
+    //
+    //             // var indColor = AllMentions.indexOf(chosen['mention'])
+    //             // chosen['overlap'].map(mentionarr=>{
+    //             //     couples.push({'mention':mentionarr,'color':Color[indColor]})
+    //             // })
+    //         })
+    //         console.log('prov',couples_prov)
+    //
+    //         //Seleziono il set più grande che contiene quella mention
+    //         AllMentions.map((mention,ind)=>{
+    //             var max = 0
+    //             var chosen = ''
+    //             console.log('current mention',mention)
+    //
+    //             couples_prov.map(coup=>{
+    //                 var arr = coup['array']
+    //                 var ment = coup['mention']
+    //
+    //
+    //
+    //                 console.log('current ment',ment)
+    //                 if(arr.indexOf(mention) !== -1 ){
+    //                     if(arr.length >= max){
+    //                         max = arr.length
+    //                         chosen = coup
+    //                     }
+    //                 }
+    //             })
+    //             console.log('chosen',chosen)
+    //             var indMin = 100
+    //
+    //
+    //             chosen['array'].map(el=>{
+    //                 AllMentions.map((ment,ind)=>{
+    //                     if(el === ment && ind <= indMin){
+    //                         indMin = ind
+    //                     }
+    //                 })
+    //             })
+    //             console.log('minInd',indMin)
+    //             var indColor = AllMentions.indexOf(chosen['mention'])
+    //             console.log('chosen color',Color[indMin])
+    //             chosen['array'].map(mentionarr=> {
+    //                 couples.push({'mention': mentionarr, 'color': Color[indMin]})
+    //             })
+    //         })
+    //
+    //         console.log('overlapping couoles',couples)
+    //         couples.map((couple,ind)=>{
+    //             var mention = couple.mention
+    //             var col = couple.color
+    //             var array = fromMentionToArray(mention.mention_text,mention.start)
+    //             var words_array = []
+    //
+    //
+    //             AllMentions.map((ment,ind)=>{
+    //                 if(ment.mention_text === mention.mention_text){
+    //                     bottone_linked[ind].style.color = col
+    //                 }
+    //             })
+    //             // bottone_linked[].style.color = col
+    //
+    //
+    //
+    //             Children.map(child=>{
+    //                 array.map(word=>{
+    //                     if(child.id.toString() === word.startToken.toString() ){
+    //                         words_array.push(child)
+    //                         child.setAttribute('class','notSelected')
+    //                         child.style.color = col
+    //                         //child.style.color = Color[index]
+    //                         if(child.style.fontWeight === 'bold'){
+    //                             bottone_linked[index].style.fontWeight = 'bold'
+    //                         }
+    //
+    //                     }
+    //                 })
+    //             })
+    //
+    //         })
+    //
+    //     }
+    //
+    // },[Action,Color,AllMentions]) //COLOR AGGIUNTO
+    //
+    useEffect(()=>{
+
+        if(!ShowInfoLinking) {
+            if (Children.length === FinalCount) {
+                console.log('mentionshow', AllMentions)
+                if (AllMentions.length === 0) {
+                    console.log('PASSO DI QUA, MENTIONS VUOTE')
+
+                }
+
+                var bottone_linked = (document.getElementsByClassName('butt_linked'))
+                if (AllMentions.length > 0) {
+                    //console.log('PASSO DI QUA, MENTIONS',AllMentions)
+                    console.log('PASSO COLORO')
+                    AllMentions.map((mention, index) => {
+                        console.log('MENTION', mention)
+                        var array = fromMentionToArray(mention.mention_text, mention.start)
+                        //console.log(array)
+                        var words_array = []
+                        var index_color = index
+                        if (Color[index] === undefined) {
+                            index_color = index - Color.length
+                        }
+                        bottone_linked[index].style.color = Color[index_color]
+
+                        Children.map(child => {
+                            if(child.getAttribute('class') !== 'notSelected') {
+                                child.setAttribute('class', 'token') //Added!!
+                            }
+                            array.map((word, ind) => {
+                                if (child.id.toString() === word.startToken.toString()) {
+
+                                    console.log('PASSO COLORO 1')
+                                    words_array.push(child)
+                                    child.setAttribute('class', 'notSelected')
+
+
+                                    child.style.color = Color[index_color]
+
+
+                                    if (child.style.fontWeight === 'bold') {
+                                        bottone_linked[index].style.fontWeight = 'bold'
+                                    }
+
+                                }
+                            })
+                        })
+
+                    })
+                }
+            else{ //ADDED
+                    Children.map(child => {
+                        child.setAttribute('class', 'token') //Added!!
+                    })
+                }
+
+            }
+
+
+    }//Added
+    else{
+        Children.map(child=>{
+            child.setAttribute('class','notSelected')
+        })
+    }
+
+
+    },[Action,AllMentions,Color,ShowInfoLinking]) //COLOR AGGIUNTO,children
+
+
+    useEffect(()=>{
+        if(document.getElementById('select_all_butt') !== undefined && document.getElementById('select_all_butt') !== null) {
+            if (HighlightMention === true) {
+                console.log('highlight12', HighlightMention)
+
+                document.getElementById('select_all_butt').style.fontWeight = 'bold'
+                document.getElementById('select_all_butt').style.textDecoration = 'underline'
+            } else {
+                document.getElementById('select_all_butt').style.fontWeight = ''
+                document.getElementById('select_all_butt').style.textDecoration = ''
+                console.log('highlight12', document.getElementById('select_all_butt'))
+
+            }
+
+        }
+
+    },[HighlightMention])
+
+
+    function fromMentionToArray(text,start1){
+        var array = []
+        var words = []
+        var stringa = text.toString() //The age is considered an integer!!
+        if(stringa.indexOf(' ')){
+            words = stringa.split(' ')
+
+        }
+        else{
+            words.push(stringa)
+        }
+        // console.log('startpassato',props.startSectionChar)
+        var start = start1
+
+        words.map((word,index) =>{
+            var end = start + word.length - 1
+
+            var obj = {'word':word,'startToken':start,'stopToken':end}
+            array.push(obj)
+            start = end + 2 //tengo conto dello spazio
+            // console.log('obj',obj)
+
+        })
+        return array
+    }
+
+    function handleSelectAll(){
+        var count_bold = 0
+        var count_normal = 0
+        var mentions = Array.from(document.getElementsByClassName('butt_linked'))
+        mentions.map(but=>{
+            but.style.fontWeight === 'bold' ? count_bold = count_bold +1 : count_normal = count_normal +1
+
+        })
+
+        AllMentions.map((mention,index)=>{
+            var words = fromMentionToArray(mention.mention_text,mention.start)
+            Children.map(child=>{
+                words.map(word=>{
+                    if(child.id.toString() === word.startToken.toString()){
+
+                        {(HighlightMention === true ) ? child.style.fontWeight = '' : child.style.fontWeight = 'bold'}
+
+
+                    }
+                })
+            })
+        })
+
+        var bottone_linked = Array.from(document.getElementsByClassName('butt_linked'))
+        bottone_linked.map(but=>{
+            (HighlightMention === true ) ? but.style.fontWeight = '' : but.style.fontWeight = 'bold'
+
+        })
+
+        if(HighlightMention === true){
+            SetHighlightMention(false)
+        }
+        else{
+
+            SetHighlightMention(true)
+
+        }
+
+
+    }
+
+    function changeInfoLinking(e){
+        e.preventDefault()
+        if(ShowInfoLinking){
+            SetShowInfoLinking(false)
+
+        }else{SetShowInfoLinking(true)}
+    }
+
+
+
+    if(AllMentions.length === 0){
+        return(
+            <div>
+
+
+                <div>
+
+                    <form id = "linked-form" className="linked-form">
+                        </form>
+                    <div>
+                        Info about linking: &nbsp;&nbsp;<button className='butt_info' onClick={(e)=>changeInfoLinking(e)}><FontAwesomeIcon  color='blue' icon={faInfoCircle} /></button>
+                    </div>
+                    {WordMention.length >0 && !ShowInfoLinking && <div><AddMention mention_to_add ={WordMention}/>
+                        <hr/>
+
+                    </div>}
+                    {!ShowInfoLinking && <div className="linked-list" id ="linked-list"><h5>You have not annotated this report yet</h5></div>}
+
+
+                    {ShowInfoLinking && <Zoom in={ShowInfoLinking}>
+                        <div className='linked-list'>
+                            <h5>What is Linking?</h5>
+                            <p>Lorem ipsum...</p>
+                        </div></Zoom>}
+                </div>
+
+            </div>
+        );
+
+    }
+    return(
+        <div>
+
+            {AllMentions.length > 0 && <div>
+            <Row>
+                <Col md={7} className='right'><div><h5>Associations List &nbsp;&nbsp;<button className='butt_info' onClick={(e)=>changeInfoLinking(e)}><FontAwesomeIcon color='blue' icon={faInfoCircle} /></button></h5></div></Col>
+                <Col md={5} className='right'> <button id='select_all_butt' className='select_all_butt' onClick={()=>handleSelectAll()} >Highlight all</button>
+                </Col>
+
+            </Row>
+
+            {ShowInfoLinking && <Zoom in={ShowInfoLinking}>
+                <div className='linked-list'>
+                    <h5>What is Linking?</h5>
+                    <p>Lorem ipsum...</p>
+                </div></Zoom>
+
+                }
+                {ShowInfoLinking && <form id = "linked-form" className="linked-form" />}
+
+            {!ShowInfoLinking && <div className="linked-list" id ="linked-list">
+
+                {WordMention.length >0 && <div><AddMention mention_to_add ={WordMention}/><hr/></div>}
+
+                <form id = "linked-form" className="linked-form">
+                    {AllMentions.length>0 && AllMentions.map((mention,index) => <div className='linkedElement'>
+                        <Association id = {index} mention={mention} text={mention['mention_text']} start={mention['start']}
+                                     stop={mention['stop']} />
+
+
+                    </div>)}
+                </form>
+            </div>}
+        </div>}
+
+        </div>
+
+    );
+}
+
+
+export default LinkedList

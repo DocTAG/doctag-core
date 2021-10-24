@@ -1,0 +1,104 @@
+.button_x{
+    margin:0px;
+    border: 0px;
+    padding:0px;
+    color: midnightblue;
+    /*float: right;*/
+    text-align: center;
+}
+.button_l{
+     margin: 0px;
+     border: 0px;
+     padding:0px;
+     color: black;
+    float:right;
+
+}
+.mentionElement{
+    margin-bottom: 20px;
+    margin-top:20px;
+}
+.add_but{
+    margin-right:10px;
+    margin-top:0px;
+    margin-left:0px;
+    margin-bottom:0px;
+}
+.butt_mention{
+    background-color: white;
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+}
+.butt_mention:hover{
+    background-color: white;
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+    font-weight: bold;
+}
+
+.right{
+    width: 50% !important;
+}
+.right_remove{
+    text-align: center;
+    width:20% !important;
+}
+.left_list{
+    width:80% !important;
+}
+.mentions_list{
+    height: calc(65vh - 160px);
+    /*height: 44vh;*/
+    overflow-y:auto;
+    overflow-x: hidden;
+    padding-left:20px;
+    padding-right:10px;
+}
+
+.mentions_list::-webkit-scrollbar {
+    width: 6px;
+}
+
+/* Track */
+.mentions_list::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 3px darkgrey;
+    border-radius: 10px;
+}
+
+/* Handle */
+.mentions_list::-webkit-scrollbar-thumb {
+    background: dodgerblue;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+.mentions_list::-webkit-scrollbar-thumb:hover {
+    background: dodgerblue;
+}
+.select_all_butt{
+    float:right;
+    background-color: white;
+    border: white;
+    color:blue;
+}
+.select_all_butt:hover{
+    float:right;
+    background-color: white;
+    border: white;
+    font-weight: bold;
+    text-decoration: underline;
+    color:blue;
+}
+.last_char{
+    color:black !important;
+    text-decoration: none !important;
+    font-weight: normal !important;
+
+}
+.button_e_concept{
+    color:darkblue;
+    padding:0
+}
+

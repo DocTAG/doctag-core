@@ -1,0 +1,231 @@
+.report_sec {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+.titles{
+    font-weight: bold;
+}
+div{
+    margin-top:5px;
+}
+.highlight{
+    font-weight: bold !important;
+}
+.errorNotify{
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+.raw_diagnoses{
+    font-size: 0.9rem;
+}
+.inter{
+    text-decoration: underline;
+    margin-top: 15px;
+}
+.full-window{
+    cursor:pointer;
+}
+.select-custom-class{
+    width:200px;
+    display: inline-block;
+}
+.intervention{
+    margin-top: 15px;
+}
+.dysplasia, .intervention{
+    text-decoration: underline;
+    margin-top: 15px;
+}
+.sections{
+    margin-left: 10px;
+}
+.narr_butt{
+    border:none;
+    background-color: white;
+    color:royalblue;
+}
+.narr_butt:hover{
+    border:none;
+    background-color: white;
+    color:royalblue;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+
+.token{
+    background-color: white;
+    color: black !important;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+.token:hover{
+     color: midnightblue;
+    text-decoration: underline;
+    cursor: pointer !important;
+
+}
+.token-adj{
+    color: royalblue !important;
+    background-color: white;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+.token-adj-dx{
+    color: royalblue !important;
+    background-color: white;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+.token-adj-sx{
+    color: royalblue !important;
+    background-color: white;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+
+.token-adj:hover{
+    text-decoration: underline;
+
+}
+.token-adj-dx:hover{
+    text-decoration: underline;
+
+}
+.token-adj-sx:hover{
+    text-decoration: underline;
+
+}
+.notSelected,.notSelectedMention{
+    text-decoration: none;
+    background-color: white;
+    color: black;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    cursor: default !important;
+
+}
+
+
+.token-selected{
+    font-weight: bold !important;
+    background-color: white;
+    color: royalblue !important;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+
+.word_selected{
+    color: midnightblue !important;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+.token-ab{
+    font-weight: bold;
+    background-color: white;
+    color: royalblue;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+select{
+    /*width:150px;*/
+    height:25px;
+    border-radius:5px;
+}
+hr{
+    margin-top:10px !important;
+    margin-bottom:10px !important;
+}
+
+.select_class::-webkit-scrollbar {
+    width: 6px;
+}
+
+/* Track */
+.select_class::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 3px darkgrey;
+    border-radius: 10px;
+}
+
+/* Handle */
+.select_class::-webkit-scrollbar-thumb {
+    background: dodgerblue;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+.select_class::-webkit-scrollbar-thumb:hover {
+    background: dodgerblue;
+}
+
+.lang_span:hover{
+    color:royalblue;
+    font-weight: bold;
+    text-decoration: underline;
+    cursor:pointer;
+    background-color: white;
+    border: none
+}
+.lang_span{
+    color:royalblue;
+    text-decoration: underline;
+    background-color: white;
+    border: none
+}
+.lang_span:focus .lang_span:active{
+    color:midnightblue;
+    font-weight: bold;
+    text-decoration: underline;
+    background-color: white;
+    border: none
+
+}
+
+.badge{
+    font-size: 85% !important;
+}
+.topic_container,doc_container{
+    flex-wrap: wrap;
+}
+.no_margin_top, .no_margin_top .row{
+    margin-top: 0 !important;
+}
+.new_header{
+    display:none
+}
+
+.doc_corpus{
+    height:26vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.doc_corpus::-webkit-scrollbar {
+    width: 6px;
+}
+
+/* Track */
+.doc_corpus::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 3px darkgrey;
+    border-radius: 10px;
+}
+
+/* Handle */
+.doc_corpus::-webkit-scrollbar-thumb {
+    background: dodgerblue;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+.doc_corpus::-webkit-scrollbar-thumb:hover {
+    background: dodgerblue;
+}

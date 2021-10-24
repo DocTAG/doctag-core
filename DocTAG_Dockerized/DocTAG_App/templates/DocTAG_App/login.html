@@ -1,0 +1,73 @@
+{% extends 'DocTAG_App/base_without_navbar.html' %}
+
+{% block title %}
+<title>DocTAG</title>
+{% endblock title %}
+
+
+{% block scripts %}
+    <script>
+
+
+    </script>
+{% endblock scripts %}
+ 
+
+
+{% block body %}
+{% load static %}
+
+<!-- Bootstrap Login CSS -->
+<link rel="stylesheet" href="{% static "css/signin1.css" %}">
+
+
+
+    <!-- Header -->
+			<section id="header">
+				<div class="inner">
+
+
+
+				</div>
+			</section>
+
+<!-- Container -->
+<div class="container text-center top100px">
+	<!-- Content here -->
+    <img class="logo" height="100" src="{% static "images/doctag_logo.png" %}">
+
+    {% if not admin %}
+    <div><i>Test mode</i></div>
+    {% endif %}
+{#	<form class="form-signin" action="login" method="post">#}
+	<form class="form-signin" action="login" method="post">
+		{% if errorMessage %}
+		<div class="alert alert-danger">
+			<strong>Error!</strong> {{errorMessage}}
+		</div>
+		{% endif %}
+		<h5 class="mb-3 font-weight-normal">Please login</h5>
+
+		<label for="inputUsername" class="sr-only">Username</label>
+		<input type="text" name="username" id="inputUsername" class="form-control" placeholder="Username" >
+		<label for="inputPassword" class="sr-only">Password</label>
+		<input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" >
+{#		<div class="checkbox mb-3">#}
+{#			<label class="remember-me-label">#}
+{#				<input type="checkbox" value="remember-me"> Remember me#}
+{#			</label>#}
+{#		</div>#}
+		<button class="btn btn-lg btn-teal-my  btn-block" type="submit">Log In</button>
+
+		<p class="mt-5 mb-3 text-muted" style="visibility: hidden">&copy; 2019-2020</p>
+
+		{% csrf_token %}
+	</form>
+    {% if admin %}
+    <div><h5 style="font-size: 1em">If you have never set your username and password, sign in.</h5>
+        <form action="{% url 'DocTAG_App:registration'%}"><button type="submit" class="btn btn-primary" >Sign In</button></form></div>
+    {% endif %}
+</div>
+
+
+{% endblock body %}

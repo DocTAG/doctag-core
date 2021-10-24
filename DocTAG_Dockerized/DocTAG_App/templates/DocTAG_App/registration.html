@@ -1,0 +1,62 @@
+{% extends 'DocTAG_App/base_without_navbar.html' %}
+
+{% block title %}
+<title>Examode | Ground Truth </title>
+{% endblock title %}
+
+
+
+{% block body %}
+{% load static %}
+
+<!-- Bootstrap Login CSS -->
+<link rel="stylesheet" href="{% static "css/signin1.css" %}">
+
+
+
+    <!-- Header -->
+			<section id="header">
+				<div class="inner">
+
+
+
+				</div>
+			</section>
+
+<!-- Container -->
+<div class="container text-center top100px">
+	<!-- Content here -->
+	<img class="central-logo-login" src="{% static "images/examode_gt_logo.png" %}"/>
+{#	<form class="form-signin" action="login" method="post">#}
+	<form class="form-signin" action="registration" method="post">
+		{% if errorMessage %}
+		<div class="alert alert-danger">
+			<strong>Error!</strong> {{errorMessage}}
+		</div>
+		{% endif %}
+		<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+		<label for="inputUsername" class="sr-only">Username</label>
+		<input type="text" name="username" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
+		<label for="inputPassword" class="sr-only">Password</label>
+		<input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+
+        <div style='font-weight:bold'>Profile</div>
+        <div class="checkbox mb-3">
+
+			<label >
+				<input name = "profile" type="checkbox" value="Expert" > Expert</label>&nbsp;&nbsp;&nbsp;
+            <label >
+				<input name = "profile" type="checkbox" value="Beginner" > Beginner
+			</label>&nbsp;&nbsp;&nbsp;
+            <label >
+				<input name = "profile" type="checkbox" value="Tech" > Tech
+			</label>
+		</div>
+		<button class="btn btn-lg btn-teal-my  btn-block" type="submit">Submit</button>
+		<p class="mt-5 mb-3 text-muted" style="visibility: hidden">&copy; 2019-2020</p>
+		{% csrf_token %}
+	</form>
+</div>
+
+
+{% endblock body %}

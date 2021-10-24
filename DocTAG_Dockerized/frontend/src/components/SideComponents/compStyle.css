@@ -1,0 +1,139 @@
+.cardLink, .cardLink:hover{
+    color: black;
+    text-decoration: none;
+}
+
+.Tutorial{
+    height:100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.Tutorial::-webkit-scrollbar {
+    width: 6px;
+}
+
+/* Track */
+.Tutorial::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 3px darkgrey;
+    border-radius: 10px;
+}
+
+/* Handle */
+.Tutorial::-webkit-scrollbar-thumb {
+    background: dodgerblue;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+.Tutorial::-webkit-scrollbar-thumb:hover {
+    background: dodgerblue;
+}
+.tutorial_li{
+    font-weight: bold;
+}
+.tutorial-ul{
+    margin-top:20px;
+    margin-bottom:20px;
+}
+.carousel-control-next,.carousel-control-prev{
+    text-align:right;
+    width:8%;
+    display:none;
+}
+.carousel-control-next-icon{
+    text-align:left;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='black' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath d='M2.75 0l-1.5 1.5L3.75 4l-2.5 2.5L2.75 8l4-4-4-4z'/%3e%3c/svg%3e");
+}
+.carousel-control-prev-icon{
+    text-align:left;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='black' viewBox='0 0 8 8'%3e%3cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3e%3c/svg%3e");
+}
+.carousel-indicators li{
+    background-color: black !important;
+}
+.carousel img{
+    width:auto;
+    height:auto;
+    display:block;
+}
+body {
+    margin: 0 !important;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji" !important;
+    font-size: 1rem !important;
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
+    color: #212529 !important;
+    text-align: left !important;
+    background-color: #fff !important;
+}
+div.MuiDataGrid-root div{
+    margin-top: 0 !important;
+}
+.MuiDataGrid-root{
+    border: none !important;
+}
+.attention_div{
+    padding:2%;
+    height: 10vh;
+    color: #3f51b5;
+    background-color: rgba(63, 81, 181, 0.08);
+    /*background-color: royalblue;*/
+    /*opacity: 0.3;*/
+}
+.font_button{
+    float:right;
+    border: none;
+    background-color: inherit;
+    color: #3f51b5;
+    cursor: pointer;
+
+}
+.font_button:hover{
+    float:right;
+
+    border: none;
+    background-color: inherit;
+    color: midnightblue;
+    cursor: pointer;
+
+}
+
+.trash_butt{
+    border: none;
+    color: rgba(0, 0, 0, 0.87);
+    background-color: inherit;
+    cursor: pointer;
+}
+.trash_butt:hover{
+    border: none;
+    color: midnightblue;
+    background-color: inherit;
+    cursor: pointer;
+}
+.rdg-cell-selected {
+    /* disable selection border color */
+    box-shadow: none !important;
+}
+.rdg-selected {
+    border: none !important;
+}
+.delete-button,.delete-button:hover{
+    padding:0;
+    background-color: white;
+    border: none;
+    color: red;
+}
+.delete-button:hover{
+    padding:0;
+    font-weight: bold;
+    color: red;
+}
+.delete-button:focus{
+    padding:0;
+    border:none;
+    background-color: white;
+    font-weight: bold;
+    color: red;
+    box-shadow: none;
+}

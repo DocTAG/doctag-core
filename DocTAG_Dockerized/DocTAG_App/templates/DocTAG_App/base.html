@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	
+	{% load static %}
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Crete+Round&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "css/myNewCss.css" %}" />
+    <link rel="stylesheet" href="{% static "css/bootstrap.css" %}" />
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}" />
+    <link rel="stylesheet" href="{% static "css/custom_styles.css" %}" />
+
+
+	{% block title %}
+	{% endblock title %}
+
+	{% block scripts %}
+	{% endblock scripts %}
+	
+	{% block styles %}
+	{% endblock styles %}
+
+	</head>
+	<body>
+    {# "csrf_token" Added by Fabio in 20210218 #}
+    <input type="hidden" name="csfr_token" id="csrf_token" value="{{csrf_token}}"/>
+
+    <div class="flex-container site-branding">
+            <img class="logo" src="{% static "images/doctag_logo.png" %}">
+
+{#        <div style="margin-top:0px;text-align: center;font-size:8vh;font-family: 'Crete Round', serif;color:white;margin-bottom: 15px;">#}
+{#            MedTAG#}
+{#                    <a href="https://www.examode.eu/" target="_blank"> <img  class="logo" src="{% static "images/examode_logo.png" %}"></a>#}
+
+        </div>
+
+    </div>
+
+
+
+	{% block body %}
+	{% endblock body %}
+
+	</body>
+    <footer >
+                  <hr/>
+
+          <div style="text-align:center;margin-top:80px;">
+
+              <a href="https://www.unipd.it/" target="_blank" class="no-link-decoration"><img  class="logo1" src="{% static "images/unipd-logo.png" %}"></a>
+              <a href="https://www.dei.unipd.it/home-page" target="_blank" class="no-link-decoration"><img class="logo1" src="{% static "images/logo-dei.png" %}"></a>
+              <a href="http://iiia.dei.unipd.it/" target="_blank" class="no-link-decoration"><img  class="logo1" src="{% static "images/iiia-logo.png" %}"></a>
+
+          </div>
+
+
+{#        <aside class="widget-area" role="complementary" aria-label="Footer">#}
+{#				<section id="text-6" class="widget widget_text">#}
+{#                    <div class ="row footerRow">#}
+{#                        <div class="col-md-3">#}
+{##}
+{#                        </div>#}
+{#                        <div class="col-md-3 flags">#}
+{#                                                                            <h2 class="widget-title tt">This project has received funding from the European Union&#8217;s Horizon 2020 research and innovation programme under grant agreement No 825292</h2>#}
+{##}
+{#                        </div>#}
+{#                        <div class="col-md-3 flags">#}
+{#                                                    <a href="https://ec.europa.eu/" target="_blank"><img class="flagsimg" src="https://www.examode.eu/wp-content/uploads/2018/11/flag_yellow.png"></a>#}
+{#                    <a href="https://ec.europa.eu/programmes/horizon2020" target="_blank"><img class="flagsimg" src="https://www.examode.eu/wp-content/uploads/2018/11/horizon.jpg"></a>#}
+{##}
+{#                        </div>#}
+{#                        <div class="col-md-3"></div>#}
+{##}
+{##}
+{#                    </div>#}
+{##}
+{#                </section>#}
+{#        </aside>#}
+
+
+
+
+        </footer>
+</html>

@@ -1,0 +1,25 @@
+version: "3"
+   
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./init2.sql:/docker-entrypoint-initdb.d/init2.sql
+      - ./data/db:/var/lib/postgresql/data
+
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres 
+      
+  web:
+    build: .
+
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; python manage.py migrate && python manage.py runserver 0.0.0.0:8000'
+
+    depends_on:
+      - db
+

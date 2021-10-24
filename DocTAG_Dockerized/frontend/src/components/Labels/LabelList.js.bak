@@ -1,0 +1,78 @@
+import React, { Component } from 'react'
+import axios from "axios";
+import 'bootstrap/dist/css/bootstrap.min.css';
+// import Button from 'react-bootstrap/Button';
+import { useState, useEffect, useContext } from "react";
+import { faInfoCircle,faEye, faMicroscope,faTimesCircle,faLanguage,faLocationArrow,faCogs, faHospital } from '@fortawesome/free-solid-svg-icons';
+
+import LabelItem from "./LabelItem";
+// import { useForm } from "react-hook-form";
+// import DjangoCSRFToken from 'django-react-csrftoken'
+import cookie from "react-cookies";
+import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
+import Card from "react-bootstrap/Card";
+import {Col, Row} from "react-bootstrap";
+import {AppContext,LabelContext} from "../../BaseIndex";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import SubmitButtons from "../General/SubmitButtons";
+import Slide from '@material-ui/core/Slide';
+import Zoom from '@material-ui/core/Zoom';
+
+// import {Container,Row,Col} from "react-bootstrap";
+// axios.defaults.xsrfHeaderName = "X-CSRFToken";
+// axios.defaults.xsrfCookieName = "csrftoken";
+// axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+function LabelList(props){
+    const { report, reports, action, index, checks, userLabels, labelsList } = useContext(AppContext);
+    const [labels_to_show, setLabels_to_show] = userLabels
+    const [labels, setLabels] = labelsList
+    const [Checks, setChecks] = checks;
+    const [Report, setReport] = report;
+    const [Reports, setReports] = reports;
+    const [Index, setIndex] = index;
+    const [Action, setAction] = index;
+    const [Saved,SetSaved] = useState(false)
+    const [ShowInfo,SetShowInfo] = useState(false)
+
+    useEffect(()=>{
+        SetShowInfo(false)
+    },[Action,Index])
+
+    function changeInfo(e){
+        e.preventDefault()
+        if(ShowInfo){
+            SetShowInfo(false)
+
+        }else{SetShowInfo(true)}
+    }
+
+
+    return(
+
+        <div>
+            {/*<h2>LABELS</h2>*/}
+               <div className='labels_list'>
+                <form id = "annotation-form" className="annotation-form" >
+                <div style={{'fontWeight':'bold','fontStyle':'italic'}}>Choose one or more labels:&nbsp;&nbsp;
+                <button className='butt_info' onClick={(e)=>changeInfo(e)}><FontAwesomeIcon icon={faInfoCircle} color='blue'/></button>
+                    </div>
+                    {ShowInfo && <Zoom in={ShowInfo}>
+                    <div className='container_list'>
+                    <h5>What is Label annotation?</h5>
+                    <p>Lorem ipsum...</p>
+                    </div></Zoom>}
+
+                    {!ShowInfo && <div className='container_list'>
+                    {labels.map(label => <LabelItem key ={label.seq_number} label={label.label} seq_number={label.seq_number} checks={Checks}  />)}
+                    </div>}
+                </form>
+               </div>
+
+        </div>
+
+    );
+
+
+}
+export default LabelList

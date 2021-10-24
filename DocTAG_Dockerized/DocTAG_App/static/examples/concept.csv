@@ -1,0 +1,6 @@
+concept_url,concept_name,usecase,area
+http://purl.obolibrary.org/obo/UBERON_0003346,Rectal mucous membrane,Colon,Anatomical Location
+http://purl.obolibrary.org/obo/UBERON_0001157,Transverse Colon,Colon,Anatomical Location
+http://purl.obolibrary.org/obo/UBERON_0001052,"Rectum, NOS",Colon,Anatomical Location
+http://purl.obolibrary.org/obo/UBERON_0001158,Descending colon,Colon,Anatomical Location
+http://purl.obolibrary.org/obo/UBERON_0001153,Caecum,Colon,Anatomical Location

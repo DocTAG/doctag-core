@@ -1,0 +1,13 @@
+.button_passage{
+    border:none;
+    background-color: white;
+}
+.button_passage:hover{
+    cursor:pointer;
+    text-decoration: underline;
+    border:none;
+    background-color: white;
+}
+.MuiButtonBase-root .MuiIconButton-root{
+    padding:0 !important
+}
