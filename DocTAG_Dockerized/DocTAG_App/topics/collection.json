@@ -1,0 +1,7 @@
+{
+  "collection": [
+    {"document_id": 15,"text": "questo è il report con id 15"},
+    {"document_id": 16,"text": "questo report ha come id il numero 16"},
+    {"document_id": 17,"text": "il numero 17 è un report"}
+  ]
+}

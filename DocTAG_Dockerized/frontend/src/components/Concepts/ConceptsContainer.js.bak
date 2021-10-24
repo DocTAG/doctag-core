@@ -1,0 +1,88 @@
+import React, {useContext, useEffect, useState} from "react";
+import ReactDOM from "react-dom";
+import WindowedSelect from "react-windowed-select";
+import ListSelectedConcepts from "./ListSelectedConcepts";
+import {AppContext, ConceptContext} from "../../BaseIndex";
+import {Col, Modal, Row} from "react-bootstrap";
+import Button from "react-bootstrap/Button";
+import ConceptList from "./ConceptList";
+import axios from "axios";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faInfoCircle} from "@fortawesome/free-solid-svg-icons";
+import Zoom from "@material-ui/core/Zoom";
+
+
+export default function ConceptsContainer(props) {
+
+    const {currentSemanticArea, setCurrentSemanticArea, setSelectedOption} = useContext(ConceptContext);
+    const { index, action } = useContext(AppContext);
+    const [Index, setIndex] = index;
+    const [Action, setAction] = action;
+    const [ShowInfoConcepts,SetShowInfoConcepts] = useState(false);
+    useEffect(()=>{
+        setCurrentSemanticArea('Diagnosis')
+        setSelectedOption('')
+    },[Index,Action])
+
+
+
+    function changeInfoConcepts(e){
+        e.preventDefault()
+        if(ShowInfoConcepts){
+            SetShowInfoConcepts(false)
+
+        }else{SetShowInfoConcepts(true)}
+
+    }
+    return (
+        <>
+            <div style={{'fontWeight':'bold','fontStyle':'italic'}}>Choose one or more concepts:&nbsp;&nbsp;
+            <button className='butt_info' onClick={(e)=>changeInfoConcepts(e)}><FontAwesomeIcon icon={faInfoCircle} color='blue'/></button>
+            </div>
+            {ShowInfoConcepts && <Zoom in={ShowInfoConcepts}>
+                <div className='container_list'>
+                    <h5>What is Concepts identification?</h5>
+                    <p>Lorem ipsum...</p>
+                </div></Zoom>}
+            {!ShowInfoConcepts && <div>
+            <Row>
+                <Col md="5">
+                    <label className="label" htmlFor="semanticAreaSelect">Semantic Area:</label>
+                </Col>
+                <Col md="7">
+                    <select id="semanticAreaSelect" style={{'width': '90%'}} className="form-control"
+                            value={currentSemanticArea} onChange={(e) => {
+                        console.log(e.target.value);
+                        setCurrentSemanticArea(e.target.value);
+                    }}>
+                        <option value="Diagnosis">Diagnosis</option>
+                        <option value="Anatomical Location">Anatomical Location</option>
+                        <option value="Procedure">Procedure</option>
+                        <option value="Test">Test</option>
+                        <option value="General Entity">General Entity</option>
+                        <option value="All">All</option>
+                    </select>
+                </Col>
+            </Row>
+
+            {currentSemanticArea === 'Diagnosis' && <ConceptList semanticArea="Diagnosis"/>}
+
+            {currentSemanticArea === 'Anatomical Location' && <ConceptList semanticArea="Anatomical Location"/>}
+
+            {currentSemanticArea === 'Procedure' && <ConceptList semanticArea="Procedure"/>}
+
+            {currentSemanticArea === 'Test' && <ConceptList semanticArea="Test"/>}
+
+            {currentSemanticArea === 'General Entity' && <ConceptList semanticArea="General Entity"/>}
+
+            {currentSemanticArea === 'All' && <ConceptList semanticArea="All"/>}
+
+
+            </div>}
+
+
+        </>
+    );
+
+}
+

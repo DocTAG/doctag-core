@@ -1,0 +1,96 @@
+.button_x_concept{
+    margin:0px;
+    border: 0px;
+    padding:0px;
+    color: darkred;
+    float: right;
+
+}
+
+.button_x_concept:hover{
+    color: red;
+}
+.button_info_concept{
+    margin: 0px;
+    border: 0px;
+    padding:0px;
+    color: midnightblue;
+
+}
+
+.button_info_concept:hover{
+    color: lightskyblue;
+}
+
+.numberOfConceptsIdentifiedParagraph{
+    text-align: center;
+}
+
+.clickable:hover{
+    cursor: pointer;
+    background-color:lightskyblue;
+}
+.concept-list{
+    height: calc(50vh - 170px);
+
+    /*height: 44vh;*/
+    overflow-y:auto;
+    overflow-x: hidden;
+    padding-right:10px;
+    padding-left:15px;
+
+
+}
+li{
+    margin-bottom: 10px;
+}
+.quick_tutorial{
+    height: calc(65vh - 150px);
+
+    /*height: 43.5vh;*/
+    overflow-y:auto;
+    overflow-x: hidden;
+    padding-left:10px;
+    padding-right:10px;
+}
+.concept-list::-webkit-scrollbar, .quick_tutorial::-webkit-scrollbar {
+    width: 6px;
+}
+
+/* Track */
+.concept-list::-webkit-scrollbar-track, .quick_tutorial::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 3px darkgrey;
+    border-radius: 10px;
+}
+
+/* Handle */
+.concept-list::-webkit-scrollbar-thumb,.quick_tutorial::-webkit-scrollbar-thumb {
+    background: dodgerblue;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+.concept-list::-webkit-scrollbar-thumb:hover,.quick_tutorial::-webkit-scrollbar-thumb:hover {
+    background: dodgerblue !important;
+}
+
+.Select__menu::-webkit-scrollbar {
+    width: 6px !important;
+}
+
+/* Track */
+.Select__menu::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 3px darkgrey !important;
+    border-radius: 10px !important;
+}
+
+/* Handle */
+.Select__menu::-webkit-scrollbar-thumb {
+    background: dodgerblue !important;
+    border-radius: 10px !important;
+}
+
+/* Handle on hover */
+.Select__menu-list::-webkit-scrollbar-thumb:hover {
+    background: dodgerblue !important;
+}

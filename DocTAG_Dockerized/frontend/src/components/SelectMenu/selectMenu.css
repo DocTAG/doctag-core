@@ -1,0 +1,35 @@
+/*.selection_menu{*/
+/*    margin-top:8%;*/
+
+/*}*/
+
+.modal-50w{
+    width:50%;
+    max-width: none !important;
+}
+
+.configuration{
+    padding-left: 20px;
+}
+.configuration_btn{
+    padding-left: 20px;
+    padding-left: 20px;
+    vertical-align: bottom;
+
+}
+.hr_class{
+    margin:0px;
+}
+.menuButton{
+    color: black;
+    background-color: white;
+    border:none;
+    float:left;
+}
+.bioc_down:hover{
+    color:#01579B !important;
+    cursor: pointer;
+}
+.selection{
+    margin-top:1%;
+}

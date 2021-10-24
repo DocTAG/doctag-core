@@ -1,0 +1,193 @@
+/*.h1_title{*/
+/*	font-family:Nunito !important;*/
+
+/*}*/
+
+/*.h2_title{*/
+/*	font-family:Nunito !important;*/
+
+/*}*/
+
+/*.row{*/
+/*	margin-top: 25px; !* or whatever *!*/
+/*}*/
+
+/*.subtitle{*/
+/*	font-size: 1.2em;*/
+/*}*/
+
+/*label{color:#212529;font-weight: 800;}*/
+
+/*h1{font-family:Nunito !important;}*/
+/*body{font-family: 'Lato', sans-serif !important;}*/
+
+/*.bg-light {*/
+/*	background-color: #fff!important;*/
+/*	border-bottom: 1px solid #adb5bd;*/
+/*}*/
+
+/*.navbar-light .navbar-brand {*/
+/*	color: #222!important;*/
+/*}*/
+
+/*.nav-link {*/
+/*	color: #222 !important;*/
+/*}*/
+
+/*.btn-white-my {*/
+/*	color: #f8f9fa;*/
+/*	border-color: #f8f9fa;*/
+/*}*/
+
+/*.btn-white-my:hover {*/
+/*	color: #9B0014;*/
+/*	background-color: #f8f9fa;*/
+/*	border-color: #f8f9fa;*/
+/*}*/
+
+
+/*.btn-red-my {*/
+
+/*	background-color: #9B0014;*/
+/*	color: #f8f9fa;*/
+/*	border-color: #9B0014;*/
+/*}*/
+
+/*.btn-red-my:hover {*/
+/*	color: #f8f9fa;*/
+/*	background-color: #5E0000;*/
+/*	border-color: #5E0000;*/
+/*}*/
+
+/*.btn-teal-my {*/
+
+/*	background-color: #12bbad;*/
+/*	color: #f8f9fa;*/
+/*	border-color: #12bbad;*/
+/*}*/
+
+/*.btn-teal-my:hover {*/
+/*	color: #f8f9fa;*/
+/*	background-color: #0f988d;*/
+/*	border-color: #0f988d;*/
+/*}*/
+
+
+/*.top100px{*/
+/*	position: relative;*/
+/*	top: 100px;*/
+/*}*/
+
+/*.central-logo-login{*/
+/*	position: relative;*/
+/*	height: 200px;*/
+/*}*/
+
+/*.remember-me-label{*/
+
+/*	color:#212529;*/
+/*}*/
+
+/*.flex-container {*/
+/*	display: flex;*/
+/*	justify-content: space-between;*/
+/*}*/
+
+/*.user-p{*/
+/*	position: relative;*/
+/*	top: 170px;*/
+/*	right: 20px;*/
+/*}*/
+
+/*.username-span{*/
+/*	font-weight: bold;*/
+/*	padding: 5px;*/
+/*}*/
+
+/*.input-margin-topAndBottom-20px{*/
+/*	margin-bottom: 20px;*/
+/*	margin-top: 20px;*/
+/*}*/
+
+/*.site-branding {*/
+/*	background-image: url(https://www.examode.eu/wp-content/uploads/2018/11/cropped-Screenshot-2018-11-14-at-18.00.17-3.png);*/
+/*	background-position: 0% 23%;*/
+/*	background-size: cover;*/
+/*	height: 13vh;*/
+/*}*/
+
+/*.logo{*/
+/*	margin-left: 30px;*/
+/*	height: 80px;*/
+/*}*/
+/*.img_footer{*/
+/*	height:90px;*/
+/*}*/
+/*footer{*/
+/*	margin-top:150px;*/
+/*}*/
+/*.logo_app{*/
+/*	height: 70px;*/
+/*	margin-left: 30px;*/
+/*}*/
+
+/*.flag{*/
+/*	height: 30px ;*/
+/*}*/
+
+
+/*!* D3 *!*/
+
+/*.links line {*/
+/*	stroke: #999;*/
+/*	stroke-opacity: 0.6;*/
+/*}*/
+
+/*.nodes circle {*/
+/*	stroke: #fff;*/
+/*	stroke-width: 1.5px;*/
+/*}*/
+
+/*text {*/
+/*	font-family: sans-serif;*/
+/*	font-size: 10px;*/
+/*}*/
+
+/*#D3-chart-div{*/
+/*	display: none;*/
+/*	!*overflow: scroll;*!*/
+/*}*/
+
+/*#D3-expand-chart{*/
+/*	position: absolute;*/
+/*	right: 10px;*/
+/*}*/
+
+/*.open{*/
+/*	width: 100% !important;*/
+/*	height: 100% !important;*/
+/*	position: fixed;*/
+/*	top: 0px;*/
+/*	height: 3000px;*/
+/*	background-color: white;*/
+/*}*/
+
+/*.highlighted{*/
+/*	background: linear-gradient( to bottom, #13B9AD 0%, #13B9AD 100% );*/
+/*	color: #2f3138;*/
+/*	background-position: 0 100%;*/
+/*	background-repeat: repeat-x;*/
+/*	background-size: 4px 3px;*/
+/*}*/
+
+/*.centered{*/
+/*	margin-left:50%;*/
+/*}*/
+
+/*.download_json_btn{*/
+/*	margin-right: 5px;*/
+/*}*/
+
+/*.ui-dialog-titlebar-close{*/
+/*	border:0px !important;*/
+/*}*/

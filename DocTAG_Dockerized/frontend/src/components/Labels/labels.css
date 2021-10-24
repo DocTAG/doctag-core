@@ -1,0 +1,73 @@
+.labelitem{
+    margin-bottom: 10px;
+}
+
+.item_lab:hover{
+    cursor: pointer;
+    text-decoration: underline;
+}
+.butt_info{
+    border: none;
+    background-color: white;
+}
+.buttlabel{
+    border: none;
+    background-color: white;
+    color:black;
+    width:90%;
+    padding:0px;
+    text-align:left;
+
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+
+}
+.buttlabel:hover{
+    text-decoration: underline;
+    border: none;
+    background-color: white;
+    width:90%;
+    text-align:left;
+    padding:0px;
+    cursor: default;
+    color:black;
+}
+.container_list{
+    margin-top:30px;
+    /*margin-left:20px;*/
+}
+.labels_list{
+    height: calc(65vh - 100px);
+
+    /*height: 43.5vh;*/
+    overflow-y:auto;
+    overflow-x: hidden;
+    padding-left:10px;
+    padding-right:10px;
+}
+
+.labels_list::-webkit-scrollbar {
+    width: 6px;
+}
+
+/* Track */
+.labels_list::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 3px darkgrey;
+    border-radius: 10px;
+}
+
+/* Handle */
+.labels_list::-webkit-scrollbar-thumb {
+    background: dodgerblue;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+.labels_list::-webkit-scrollbar-thumb:hover {
+    background: dodgerblue;
+}

@@ -1,0 +1,332 @@
+{% extends 'groundtruth_app/base.html' %}
+
+{% block title %}
+    <title>Examode | Ground Truth </title>
+{% endblock title %}
+
+
+{% load static %}
+
+{% block scripts %}
+    <script>
+    $(document).ready(function () {
+        var i = 0;
+        var report_id = '';
+        var indice = '';
+        function visualize_report(report) {
+            console.log(report['id_report'])
+            console.log(report['report_json'])
+            var idr = report['id_report']
+            var reptext = report['report_json']
+
+            $('#rep_id').html(idr)
+
+
+        }
+
+        async function getannotations(report_id) {
+            var data = {'report_id': report_id};
+            var rep = [];
+            await $.ajax({
+                {#url: "http://127.0.0.1:8000/get_ann/"+report_id,#}
+                url: "http://127.0.0.1:8000/annotationlabel",
+                type: 'GET',
+                data: data,
+                async: true,
+                success: function (reports) {
+                    rep = reports['labels']
+
+                    console.log('reps: ',rep)
+
+                }
+            });
+            return rep
+
+        }
+
+
+        async function get_reps() {
+            var rep = [];
+            await $.ajax({
+                url: "http://127.0.0.1:8000/get_reports",
+                type: 'GET',
+                async: true,
+                dataType: "json",
+                success: function (reports) {
+                    {#console.log(reports['report'])#}
+                    rep = reports['report']
+
+                    {#console.log(rep)#}
+
+                }
+            });
+            return rep
+
+        }
+
+
+        get_reps().then(function(reports){
+            report_id = reports[i]['id_report']
+
+            $.each(reports, function(i,report){
+                $('#report_id').append('<option value="'+report['id_report']+'"> '+i+'</option>')
+
+
+            });
+            console.log('qua')
+            $('#report_id option[value="' +report_id+ '"]').prop('selected', true)
+            visualize_report(reports[i])
+            getannotations(report_id).then(function (labels) {
+                     console.log('ci sono')
+                     console.log('labels:  ', labels)
+
+                     $.each(labels, function(i,label){
+                        var lab = label['label']
+                        var num = label['seq_number']
+                        console.log('num',num)
+                        console.log('lab',lab)
+                        $('input[value="' + lab + '"]').prop('checked',true);
+                     });
+            });
+
+             $('#report_id').change(function() {
+                 indice = $("#report_id option:selected").text();
+                 i = parseInt(indice)
+                 console.log('repppio ', reports[i])
+
+                 $('input[name="labels"]').prop('checked', false);
+
+                 var report_id = $("#report_id option:selected").val();
+                 console.log('varrrr ', report_id)
+                 console.log('indice ', indice)
+                 visualize_report(reports[i])
+
+                 getannotations(report_id).then(function (labels) {
+                     console.log('ci sono')
+                     console.log('labels:  ', labels)
+
+                     $.each(labels, function (i, label) {
+                         var lab = label['label']
+                         var num = label['seq_number']
+                         console.log('num', num)
+                         console.log('lab', lab)
+                         $('input[value="' + lab + '"]').prop('checked', true);
+                     });
+                 });
+             });
+                 console.log('indice ',indice)
+
+                 $('#next').click(function () {
+                    i = i+1;
+                    if (i === reports.length) {
+                        i = 0
+                    }
+                    visualize_report(reports[i])
+                    $('input[name="labels"]').prop('checked',false);
+
+                    report_id = reports[i]['id_report']
+                     $('#report_id option[value="' +report_id+ '"]').prop('selected', true)
+
+                    console.log('repid: ', report_id)
+
+                    console.log('rep: ', reports[i])
+                    getannotations(report_id).then(function (labels) {
+                        console.log('ci sono')
+                        console.log('labels:  ', labels)
+
+                        $.each(labels, function(i,label){
+                            var lab = label['label']
+                            var num = label['seq_number']
+                            console.log('num',num)
+                            console.log('lab',lab)
+                            $('input[value="' + lab + '"]').prop('checked',true);
+                            {#console.log('label:   ',label['label'])#}
+                        });
+                    });
+                });
+                $('#prev').click(function () {
+                    i = i-1;
+                    if (i < 0) {
+                        i = reports.length - 1
+                    }
+                    visualize_report(reports[i])
+                    $('input[name="labels"]').prop('checked',false);
+
+                    report_id = reports[i]['id_report']
+                    $('#report_id option[value="' +report_id+ '"]').prop('selected', true)
+
+                    console.log('repid: ', report_id)
+                    console.log('rep: ', reports[i])
+                    getannotations(report_id).then(function (labels) {
+                        console.log('ci sono')
+                        console.log('labels:  ', labels)
+
+                        $.each(labels, function(i,label){
+                            var lab = label['label']
+                            var num = label['seq_number']
+                            console.log('num',num)
+                            console.log('lab',lab)
+                            $('input[value="' + lab + '"]').prop('checked',true);
+                        {#console.log('label:   ',label['label'])#}
+                        });
+                    });
+
+                });
+
+
+            });
+
+
+
+
+        $("#but").click(function (e) {
+            let form_serialized = $('#labe').serialize();
+
+            {#e.preventDefault(); // avoid to execute the actual submit of the form.#}
+            {#var data = $('input[name*="labels"]:checked').serializeArray();#}
+            console.log('serial: ',form_serialized)
+            var url = "http://127.0.0.1:8000/annotationlabel/insert";
+
+
+            $.ajax({
+                   type: "POST",
+                   url: url,
+                   async: true,
+                   data: form_serialized,
+                   success: function(data)
+                           {
+                               console.log('RISPOSTA:   ',data)
+                               alert(data['message']);
+
+                           },
+                           error: function(data)
+                           {
+                               console.log('RISPOSTA NO:   ',data)
+                               alert(data['error']);
+
+
+                           }
+
+                 });
+
+
+        });
+        $("#but_del").click(function (e) {
+            let form_serialized = $('#labe').serialize();
+
+            {#e.preventDefault(); // avoid to execute the actual submit of the form.#}
+            {#var data = $('input[name*="labels"]:checked').serializeArray();#}
+            console.log('serial: ',form_serialized)
+            var url = "http://127.0.0.1:8000/annotationlabel/delete";
+
+
+            $.ajax({
+                   type: "POST",
+                   url: url,
+                   async: true,
+                   data: form_serialized,
+                   success: function(data)
+                           {
+                               alert(data['message']);
+
+                               $('input[name="labels"]').prop('checked',false);
+                               console.log('RISPOSTA:   ',data)
+
+                           },
+                           error: function(data)
+                           {
+                               console.log('RISPOSTA NO:   ',data)
+                               alert(data['error']);
+
+
+                           }
+
+                 });
+
+        });
+
+
+    });
+
+
+    </script>
+{% endblock scripts %}
+
+{% block body %}
+
+
+
+
+    <!-- Header -->
+    <section id="header">
+        <div class="inner">
+
+
+
+        </div>
+    </section>
+
+    <!-- Container -->
+    <div class="container">
+        <!-- Content here -->
+        <h1><span class="h1_title">ExaMode Ground Truth </span></h1>
+
+
+
+        <!-- TODO: add here body page  -->
+        <form id ='labe' class="form-get_label" method="post">
+                {% csrf_token %}
+            <div class = 'row'>
+
+                <div class="col-md-6">
+
+                    <select name = "report_id" id = "report_id" class="form-select" aria-label="Default select example">
+
+                    </select>
+                    <h3 >REPORT:</h3>
+
+                    <h6 id ='rep_id'></h6>
+                    <div id = 'testo'></div>
+                    <div class="col-md-1"></div>
+                </div>
+
+                <div class="col-md-5">
+                    <h2>LABELS
+
+                    </h2>
+                        {% for label in labels %}
+
+                            <input type="checkbox" id = "la" name="labels" value="{{ label.0 }}" >
+                                <label> {{ label.0 }}</label><br>
+                        {% endfor %}
+                        <button id="but" class="btn btn-lg btn-teal-my  btn-block" type="button">SAVE</button>
+                        <button id="but_del" class="btn btn-lg btn-teal-my  btn-block" type="button">DELETE</button>
+
+                    <div class = 'row' style="margin-top: 10px; margin-bottom: 10px">
+
+                            <div class = 'col-md-4'>
+
+                                    <button id = "prev" name = "prev" class="btn btn-sm btn-teal-my  btn-block" type="button" value = 'Prev'>Prev</button>
+
+                            </div>
+                            <div class = 'col-md-4'></div>
+
+
+                        <div class = 'col-md-4'>
+
+                                    <button id = 'next' name = "next" class="btn btn-sm btn-teal-my  btn-block" type="button" value = 'Next'>Next</button>
+
+                        </div>
+
+                    </div>
+                </div>
+        </div>
+        </form>
+
+    </div>
+
+
+
+
+
+{% endblock body %}

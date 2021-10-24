@@ -1,0 +1,31 @@
+
+#disable-clearable{
+    font-size:0.8rem !important;
+    width: 30vh !important;
+}
+.MuiAutocomplete-endAdornment{
+    margin:0px !important;
+}
+
+
+::-webkit-scrollbar {
+    width: 6px !important;
+    height: 6px !important;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 3px darkgrey !important;
+    border-radius: 10px !important;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: dodgerblue !important;
+    border-radius: 10px !important;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: dodgerblue !important;
+}

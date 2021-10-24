@@ -1,0 +1,153 @@
+{% extends 'groundtruth_app/base.html' %}
+
+{% block title %}
+<title>Examode | Ground Truth</title>
+{% endblock title %}
+
+
+{% load static %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function(){
+        $('#send-form').click(function (){
+                let action = $('input[name=action]:radio:checked').val();
+                //console.log(action);
+                let method = "POST";
+
+                if(action == "SELECT"){
+                    method = "GET";
+                }
+
+                let url = "/contains";
+
+                if(action == "DELETE")
+                {
+                    url = "/contains/delete";
+                }
+                else if(action == "UPDATE")
+                {
+                    url = "/contains/update";
+                }
+                else if(action == "INSERT")
+                {
+                    url = "/contains/insert";
+                }
+
+                //$('#test-form').attr('action', url);
+                //$('#test-form').submit();
+
+                let form_serialized = $('#test-form').serialize();
+
+                console.log(form_serialized);
+
+                $.ajax({url: url,
+                        type: method,
+                        data: form_serialized,
+                        success: function(result){
+                            console.log(result);
+                    }});
+
+        });
+    });
+</script>
+{% endblock scripts %}
+
+{% block body %}
+
+
+
+
+<!-- Header -->
+<section id="header">
+    <div class="inner">
+
+
+
+    </div>
+</section>
+
+<!-- Container -->
+<div class="container">
+    <!-- Content here -->
+    <h1><span class="h1_title">Test contains table </span></h1>
+
+    <!-- TODO: add here body page  -->
+    <div class="py-5">
+        <div class="container">
+            <form id="test-form" action="contains" method="post">
+                {% csrf_token %}
+                <div class="row">
+                    Method
+                    <div class="col-md-5">
+                        <label class="label" for="select-op">SELECT</label>
+                        <input type="radio" id="select-op" name="action" value="SELECT">
+                    </div>
+                    <div class="col-md-7">
+                        <label class="label" for="insert-op">INSERT</label>
+                        <input type="radio" id="insert-op" name="action" value="INSERT">
+                    </div>
+                    <div class="col-md-7">
+                        <label class="label" for="insert-op">UPDATE</label>
+                        <input type="radio" id="update-op" name="action" value="UPDATE">
+                    </div>
+                    <div class="col-md-7">
+                        <label class="label" for="insert-op">DELETE</label>
+                        <input type="radio" id="delete-op" name="action" value="DELETE">
+                    </div>
+                </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="row">
+                        <div class="col-md-3"><label class="label" for="report_id">Report:</label></div>
+                        <div class="col"><select class="js-example-basic-multiple" name="report_id" id="report_id">
+                            <option value="b41424b4da7565e4dd7825cef2b8c7a6">Report 1</option>
+                            <option value="79b5134ccfda275eebb21bfe96c5c3dc">Report 2</option>
+                            <option value="c609127c6b58a90a612daa806eb8b096">Report 3</option>
+                        </select></div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <label class="label" for="concept-1">Adenoma:</label>
+                            <input type="checkbox" id="concept-1" name="concepts_url" value="http://purl.obolibrary.org/obo/MONDO_0006498">
+                        </div>
+                        <div class="col-md-7">
+                            <label class="label" for="concept-2">Colon Dysplasia:</label>
+                            <input type="checkbox" id="concept-2" name="concepts_url" value="http://purl.obolibrary.org/obo/NCIT_C4847">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="row">
+                        <div class="col-md-4"><label class="label" for="semantic_area">Semantic Area:</label></div>
+                        <div class="col">
+                            <select class="js-example-basic-multiple" name="semantic_area" id="semantic_area">
+                                <option value="Diagnosis">Diagnosis</option>
+                                <option value="Procedure">Procedure</option>
+                                <option value="Test">Test</option>
+                                <option value="Anatomical Location">Anatomical Location</option>
+                                <option value="General Entity">General Entity</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="row">
+                        <button type="button" id="send-form" class="btn-primary btn-lg">Send</button>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+
+
+{% endblock body %}

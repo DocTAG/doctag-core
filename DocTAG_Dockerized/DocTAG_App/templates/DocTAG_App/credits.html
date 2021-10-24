@@ -1,0 +1,64 @@
+{% extends 'DocTAG_App/base.html' %}
+
+{% block MedTag %}
+<title>MedTAG | Ground Truth </title>
+{% endblock title %}
+
+
+{% load static %}
+
+{% block scripts %}
+
+{% endblock scripts %}
+
+{% block body %}
+
+
+
+
+<!-- Header -->
+<section id="header">
+  <div class="inner">
+
+
+
+  </div>
+</section>
+{#        <div class="flex-container site-branding"></div>#}
+
+<!-- Container -->
+<div class="container">
+  <!-- Content here -->
+  <div id="root"></div>
+    <script type="text/javascript">
+      window.username = '{{ username }}'
+    </script>
+
+    <div>
+        <h2 class = 'credits'>CREDITS</h2>
+    </div>
+        <div class="py-5 text-center">
+
+
+            <div class="row">
+                <div class="col-lg-4 col-md-6 p-4"><a target='_blank' href="http://www.dei.unipd.it/~giachell/">  <img class="img-fluid d-block mb-3 mx-auto rounded-circle person_img" src="https://www.dei.unipd.it/~giachell/img/personal/personal-image.jpg" alt="Card image cap" width="200">
+                    <h4 class="person_name" ><b>Fabio Giachelle</b></h4></a>
+                    <p class="mb-0">giachell@dei.unipd.it</p>
+                </div>
+                <div class="col-lg-4 col-md-6 p-4"><a target='_blank' href="http://www.dei.unipd.it/~irreraorne/"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle person_img" target="" src="" alt="Card image cap" width="200">
+                    <h4 class="person_name"> <b>Ornella Irrera</b> </h4></a>
+                    <p class="mb-0">irreraorne@dei.unipd.it</p>
+                </div>
+                <div class="col-lg-4 p-4"> <a target='_blank' href="http://www.dei.unipd.it/~silvello/"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle person_img" target="http://www.dei.unipd.it/~silvello/" src="http://nanoweb.dei.unipd.it/static/images/personal_images/gian_personal-image.jpg" alt="Card image cap" width="200">
+                    <h4 class="person_name"><b>Gianmaria Silvello</b></h4></a>
+                    <p class="mb-0">silvello@dei.unipd.it</p>
+                </div>
+            </div>
+
+        </div>
+
+</div>
+
+
+
+{% endblock body %}

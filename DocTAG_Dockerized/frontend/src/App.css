@@ -1,0 +1,61 @@
+.App{
+    min-height:80vh;
+}
+.spinnerDiv{
+    margin-top:120px;
+    text-align:center;
+}
+.container{
+    padding: 10px;
+}
+.reportListStyle{
+    padding:10px;
+    font-size:1.2rem;
+    font-weight: bold;
+}
+.act{
+    margin: 7px;
+}
+@media (min-width: 1000px ) {
+    .col-md-6 {
+        flex: 0 0 41.666667%;
+        max-width: 41.666667%;
+    }
+}
+
+@media (min-width: 1000px ) {
+    .col-md-5 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+.modal-backdrop{
+    margin:0px !important;
+}
+/*.site-branding{*/
+/*    margin:0 !important;*/
+/*    background-image: url(https://news.usc.edu/files/2018/02/HarmfulBacteria_web.jpg);*/
+/*    background-position: 0% 23%;*/
+/*    background-size: cover;*/
+/*    height:13vh;*/
+
+/*}*/
+.row_container{
+    margin-top:5px;
+}
+
+
+body{
+    font-size: 16px !important;
+}
+.container{
+    padding-top: 0px;
+}
+
+
+
+
+
+
+
+/*Media query*/

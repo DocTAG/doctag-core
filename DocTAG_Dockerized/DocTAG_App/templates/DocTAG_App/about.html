@@ -1,0 +1,45 @@
+{% extends 'DocTAG_App/base.html' %}
+
+{% block title %}
+<title>Examode | Ground Truth | React Test</title>
+{% endblock title %}
+
+
+{% load static %}
+
+{% block scripts %}
+
+{% endblock scripts %}
+
+{% block body %}
+
+
+
+
+<!-- Header -->
+<section id="header">
+  <div class="inner">
+
+
+
+  </div>
+</section>
+{#        <div class="flex-container site-branding"></div>#}
+
+<!-- Container -->
+<div class="container">
+  <!-- Content here -->
+  <div id="root"></div>
+    <script type="text/javascript">
+      window.username = '{{ username }}'
+    </script>
+    
+    <div>
+        <h1 class = 'about'>ABOUT</h1>
+    </div>
+
+</div>
+
+
+
+{% endblock body %}

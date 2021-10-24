@@ -1,0 +1,10 @@
+/*.active_button, .btn-primary:focus, .btn-primary:active:focus, .btn-primary.active.focus, .btn-primary.focus, .btn:focus, .btn.focus{*/
+
+.active_button, .act:focus, .act:active:focus, .act.active.focus, .act.focus, .act:focus, .act.focus{
+
+    box-shadow: 0 0 0 0.2rem orange !important;
+    outline: orange 10px !important;
+    background-color: orange !important;
+    border-color:orange !important;
+}
+
