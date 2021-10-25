@@ -1,0 +1,5 @@
+document_id,language,text
+doc_1,english,"this is the corpus of doc_1"
+doc_2,italian,"questo è il corpus del doc_2"
+doc_3,english,"this is the corpus of doc_3"
+doc_4,english,"this is the corpus of doc_4"

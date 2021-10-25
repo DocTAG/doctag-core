@@ -1,0 +1,16 @@
+{
+  "collection": [
+    {
+      "document_id": "doc_1",
+      "introduction": "this is the introduction of doc_1",
+      "corpus": "this is the corpus of doc_1",
+      "conclusion": "this is the conclusion of doc_1",
+    },
+      {
+      "document_id": "doc_2",
+      "introduction": "this is the introduction of doc_2",
+      "corpus": "this is the corpus of doc_2",
+      "conclusion": "this is the conclusion of doc_2",
+    }
+  ]
+}

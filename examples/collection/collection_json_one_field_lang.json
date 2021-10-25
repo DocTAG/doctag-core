@@ -1,0 +1,14 @@
+{
+  "collection": [
+    {
+      "document_id": "doc_1",
+      "language": "english",
+      "text": "this is the corpus of doc_1"
+    },
+  {
+      "document_id": "doc_2",
+      "language": "italian",
+      "text": "questo è il corpus del doc_2"
+    }
+  ]
+}

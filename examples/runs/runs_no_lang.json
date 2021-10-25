@@ -1,0 +1,12 @@
+{
+  "run": [
+    {
+      "topic_id": "topic_id_1",
+      "documents": ["doc_1","doc_2","doc_4"]
+    },
+    {
+      "topic_id": "topic_id_2",
+      "documents": ["doc_3","doc_5","doc_6"]
+    }
+  ]
+}

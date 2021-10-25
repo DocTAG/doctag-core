@@ -1,0 +1,12 @@
+{
+  "concepts_list": [
+    {
+      "concept_url": "www.example_1.com",
+      "concept_name": "concept 1 name"
+    },
+    {
+      "concept_url": "www.example_2.com",
+      "concept_name": "concept 2 name"
+    }
+  ]
+}

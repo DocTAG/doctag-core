@@ -1,0 +1,6 @@
+topic_id_1  Q0  document_id_1   0   <score>   <run_id>
+topic_id_1  Q0  document_id_2   1   <score>   <run_id>
+topic_id_1  Q0  document_id_5   2   <score>   <run_id>
+topic_id_1  Q0  document_id_4   3   <score>   <run_id>
+topic_id_1  Q0  document_id_3   4   <score>   <run_id>
+topic_id_1  Q0  document_id_9   5   <score>   <run_id>
