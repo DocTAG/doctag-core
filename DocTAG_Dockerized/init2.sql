@@ -102,7 +102,7 @@ ALTER TABLE public.report
 CREATE TABLE public.name_space
 (
     ns_id ns_names NOT NULL,
-    description text COLLATE pg_catalog."default" NOT NULL,
+    description text COLLATE pg_catalog."default",
     CONSTRAINT name_space_pkey PRIMARY KEY (ns_id)
 )
 
