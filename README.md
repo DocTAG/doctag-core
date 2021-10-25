@@ -104,7 +104,7 @@ The collection contains the documents you are going to annotate using DocTAG. Th
 2. The **json** file must contain a key *collection* where the list of documents is stored. Each document is a json object whose key are: the *document_id* for the document's identifier and one key for the document's body. If you plan to split the body into two or more parts, each one associated to a key, you can choose what parts can be displayed, annotated or hidden.  If you want to store the information about the language of a document add a column in the header called *language*. If no language column is defined, the *english* language will be used by default. Below some examples are provided.
 
 
-DocTAG supports the insertion of articles belonging to **PUBMED**. In this case the *Title* and the *Abstract* parts will be annotable, while *volume*, *date*, *journal* and *authors* will be onlyy displayed.
+DocTAG supports the insertion of articles belonging to **PUBMED**. In this case the *Title* and the *Abstract* parts will be annotable, while *volume*, *date*, *journal* and *authors* will be only displayed.
 
 **NOTE** The uploaded documents **will** be inserted in the database if and only if they appear in one or more runs.
 
