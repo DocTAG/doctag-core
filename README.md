@@ -10,7 +10,7 @@ DocTAG provides four annotation types:
 * *Passages*: allows the user to identify and annotate the passages of a document with user-specified labels, highlighted in different colors.
 * *Linking*: allows the user to link the passages identified with the corresponding user-defined concepts. Users can link the same passage to multiple concepts.
 * *Concepts*: allows the user to specify the relevant concepts for a document. Users can take advantage of auto-complete facilities for searching the relevant concepts to assign to each document.
-
+![main](./images/screen/doctag_main_passage.png)
 ## Functionalities
 
 DocTAG provides the following functionalities:
@@ -23,8 +23,6 @@ DocTAG provides the following functionalities:
   and “unannotated-first” policy
 - web responsive design to support mobile devices
 - download of annotations and ground truths in several formats (e.g., CSV and JSON)
-  ![download](./img/screenshots/download_modal_800.png)
-
 - support for passage-level annotation (i.e. users can assign a user-specified label to a particular passage)
 - support for document-level annotation (i.e. users can assign a label and/or a set of concepts to describe a particular document)
 - multilingual support (i.e. documents are grouped by language)
@@ -32,13 +30,8 @@ DocTAG provides the following functionalities:
 - import of document corpus, runs and topics in different formats (e.g. CSV and JSON) 
 - support for annotation of PubMed articles
 - support for visualization of document's annotations
-  ![stats](./img/screenshots/annotation_stats_800.png)
-
 - support for inter-annotator agreement
-  ![majority_vote](./img/screenshots/majority_vote_900.png)
-
 - support for the upload and visualization of other team members' ground-truths
-  ![upload](./img/screenshots/upload_800.png)
 
 ## Files
 
@@ -95,7 +88,8 @@ Once log in with the credentials above, you are asked to choose a *topic*: in th
 
 In the *Test mode* all the DocTAG functionalities are available to be tested even if an administrator (*Admin*) has not been defined yet.
 ## Customize DocTAG
-Once you tested DocTAG you can create a new configuration so to start annotating the documents you upload. Open the sidebar and click on *Configure*. You are provided with a guide that shows how to format your files. 
+Once you tested DocTAG you can create a new configuration so to start annotating the documents you upload. Open the sidebar and click on *Configure*. You are provided with a guide that shows how to format your files. In the folder *Examples files*  of the project you can find some examples of how to format each required file.
+![config](./images/screen/config.png)
 
 ### Basic information
 If it is the first time you configure DocTAG, you are asked to provide your username and a password. Once the configuration is completed those will be your new credentials which overwrite the *Test* account. You will be the *Admin* of DocTAG: the only one who can change configuration, delete one or more reports from the collection, add more data and so on. 
