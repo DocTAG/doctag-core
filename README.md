@@ -87,9 +87,7 @@ If you already have both [docker](https://docs.docker.com/engine/reference/comma
 
 # Getting started
 # Important information 
-
-
-
+DocTAG is a collaborative platform based on a postgresql database where each user's annotations are stored. Due to the fact that DocTAG can be shared between groups of people, it is important that only one of them is allowed to upload, delete, keep track of annotations, in order to avoid possible loss of data. The user allowed to change configuration, add more data to it, keep track of other users' annotations, delete one or more document and so on is the *admin*. The admin will have access to three sections other people have not access to: the *Configure* section, the *DocTAG stats* section and the *Members stats* section. 
 ## Test DocTAG
 The first time you have access to DocTAG you have to log in with the user available for testing the application. To this aim you have to type *Test* for both the username and the password in the log in page. This is the *Test mode*: its goal is to provide the user with an initial configuration which allows her to test DocTAG's functionalities on a set of data we provided. The documents and the topics belong to the collection provided for *TREC7 TIPSTER corpus*. 
 
