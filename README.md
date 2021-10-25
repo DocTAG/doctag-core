@@ -139,45 +139,57 @@ DocTAG allows you to associate to each passage one or more concepts belonging to
 2. The **json** file requires a key *concepts_list* where the list of concepts is stored. Each element of the list must be a json object with two keys: *concept_url* and *concept_name*.
 
 
-# DocTAG: annotation types overview
-## Labels
+# DocTAG: features overview
+![overview](./images/screen/doctag_mainPage.png)
+## A. Labels annotation
 Labels annotation consists in associating to each document **one** label that, for example, expresses the relevance of that document for that topic.
-## Passages
+![labels](./images/screen/labels.png)
+## B. Passages annotation
 Passage annotation consists in identifying in the document portions of text, and associating to that portion a label (taken from the same set used for label annotation). For ezample, given a set of labels that describe the relevance of the document to the topic, it is possible to identify which passage of the document is relevant for a topic. The selection of the passage can be done in two different way:
 1. Selecting adjacent words
 2. Selecting two words (not adjacent): in this case the words inbetween them will be automatically selected. 
-
-## Linking
+![passages](./images/screen/passages.png)
+## C. Linking
 Linking consists in associating to a passage one or more concepts. The passages used in linking are those that have been identified in *passages annotation* or those that have been identified performing linking. To these passages it is possible also to associate a label accessing by *Passages* button. The concepts to be linked are represented by means of a draggable modal where autocompletion is enabled.
-## Concepts
+![linking](./images/screen/linking.png)
+## D. Concepts annotation
 Concepts annotation consists in associating to a document a set of one or more user-inserted concepts. 
-### Other members' annotations
+![concepts](./images/screen/concepts.png)
+## E. Check other members' annotations
 Given a document and the annotation type, you can check what a team mate of yours has annotated. This annotation will be **read only** and the team mate you are checking the ground truth of is modifiable.
-
-# DocTAG main features
-## A-B. Personal and global statistics
+![member](./images/screen/change_member.png)
+## F,G. Personal and global statistics
 Each user can check how many documents she annotated for each topic and annotation type (i.e. - *labels, passages, concepts, linking*). If you are the admin of DocTAG you can visualize also your colleagues' stats: firstly you have to select the user you are interested in, and then you can check that user's stats.
+![global_stats](./images/screen/global_stats.png)
 
-## C. Upload and Transfer annotations
+## H. Upload and Transfer annotations
 A user can copy the annotations of a colleague she share DocTAG with. There are two ways to transfer annotations:
 1. If DocTAG is run in a server and more than one user relies on the same instance, you have just to select a user and all her ground-truths will be automatically transferred.
 2. If DocTAG is installed locally annotations can be transferred by means of **csv** file (formatted as those downloaded from DocTAG).
 
 In case of annotation collision, that is when the user you are copying the annotations of and you have annotated the same document(s), you are asked to choose to keep your annotations and discard those of your colleague (only for those documents annotated by both of you) or vice versa, and in this case your annotations will be lost if collision occurs.
+![upload_files](./images/screen/upload_files.png)
 
-## D. Change the configuration
+## I. Change the configuration
 The *admin* can decide to change the actual configuration adding new labels, concepts, documents, topics and runs.
+![change_config](./images/screen/update_config.png)
 
-## E. Check the global DocTAG stats
+## L. Check the global DocTAG stats
+![table_doctag](./images/screen/table_doctag.png)
 The *admin* has access to the global stats of DocTAG. These differ from those of the single users because in DocTAG global stats it is possible to:
 1. Delete one or more documents
 2. Download the annotations for one or more documents. The annotations are those created by each user who annotated that/those documents. 
 3. Visualize each document's corpus
 4. Check the global stats for each document: for each annotation type it is possible to check how many users selected a specific *label*,*passage*,*concept*.
-5. Check the **majority vote ground truth**. 
+  ![annotation_stats](./images/screen/annotation_stats.png)
+6. Check the **majority vote ground truth**. 
+
+
 
 ### Inter annotator agreement - majority vote
 For each document the *admin* can check the ground-truth created basing on **majority vote**. This ground-truth is generated for each document and for each annotation type. In particular it is possible also to set which users will take part in the majority vote ground-truth creation so to consider only a subset of ground-truth. When the ground-truth has been generated it is also possible to be downloaded in **json** and **csv** formats.
+![majority_1](./images/screen/majority_1.png)
+![majority_2](./images/screen/majority_2.png)
 
 ## Support for multilingual documents
 Even if the default language is *english*, DocTAG allows the upload of the same document translated in different languages or, more in general, for each topic it is possible to upload documents written in different languages. The information about the language is given with the collection file and it is useful to filter the documents of a topic basing on the language your interested in.
