@@ -62,7 +62,7 @@ If you already have both [docker](https://docs.docker.com/engine/reference/comma
 
 5. Open the [DocTAG_Dockerized](https://github.com/DocTAG/doctag-core/tree/main/DocTAG_Dockerized) project folder and, on a new terminal session, type ```docker-compose up```. After running the latter command the installation of DocTAG dependencies is performed and the following output will be generated:
 
-   ![installation_process_output](./img/screenshots/installation_process_output.png)
+   ![installation_process_output](./images/process_output.png)
 
    **NOTE**: In Unix-like systems `docker-compose` should be run  without using `sudo` in a directory owned by the user.
 
