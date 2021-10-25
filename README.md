@@ -143,9 +143,16 @@ DocTAG allows you to associate to each passage one or more concepts belonging to
 
 # DocTAG: annotation types overview
 ## Labels
+Labels annotation consists in associating to each document **one** label that, for example, expresses the relevance of that document for that topic.
 ## Passages
+Passage annotation consists in identifying in the document portions of text, and associating to that portion a label (taken from the same set used for label annotation). For ezample, given a set of labels that describe the relevance of the document to the topic, it is possible to identify which passage of the document is relevant for a topic. The selection of the passage can be done in two different way:
+1. Selecting adjacent words
+2. Selecting two words (not adjacent): in this case the words inbetween them will be automatically selected. 
+
 ## Linking
+Linking consists in associating to a passage one or more concepts. The passages used in linking are those that have been identified in *passages annotation* or those that have been identified performing linking. To these passages it is possible also to associate a label accessing by *Passages* button. The concepts to be linked are represented by means of a draggable modal where autocompletion is enabled.
 ## Concepts
+Concepts annotation consists in associating to a document a set of one or more user-inserted concepts. 
 ### Other members' annotations
 Given a document and the annotation type, you can check what a team mate of yours has annotated. This annotation will be **read only** and the team mate you are checking the ground truth of is modifiable.
 
@@ -171,7 +178,7 @@ The *admin* has access to the global stats of DocTAG. These differ from those of
 4. Check the global stats for each document: for each annotation type it is possible to check how many users selected a specific *label*,*passage*,*concept*.
 5. Check the **majority vote ground truth**. 
 
-### Majority Vote
+### Inter annotator agreement - majority vote
 For each document the *admin* can check the ground-truth created basing on **majority vote**. This ground-truth is generated for each document and for each annotation type. In particular it is possible also to set which users will take part in the majority vote ground-truth creation so to consider only a subset of ground-truth. When the ground-truth has been generated it is also possible to be downloaded in **json** and **csv** formats.
 
 ## Support for multilingual documents
