@@ -1,4 +1,4 @@
 document_id,introduction,corpus,conclusion
-doc_1,english,"this is the introduction of doc_1","this is the corpus of doc_1","this is the conclusion of doc_1"
-doc_2,english,"this is the introduction of doc_2","this is the corpus of doc_2","this is the conclusion of doc_2"
-doc_3,english,"this is the introduction of doc_3","this is the corpus of doc_3","this is the conclusion of doc_3"
+doc_1,"this is the introduction of doc_1","this is the corpus of doc_1","this is the conclusion of doc_1"
+doc_2,"this is the introduction of doc_2","this is the corpus of doc_2","this is the conclusion of doc_2"
+doc_3,"this is the introduction of doc_3","this is the corpus of doc_3","this is the conclusion of doc_3"
