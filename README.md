@@ -95,7 +95,7 @@ Once you tested DocTAG you can create a new configuration so to start annotating
 If it is the first time you configure DocTAG, you are asked to provide your username and a password. Once the configuration is completed those will be your new credentials which overwrite the *Test* account. You will be the *Admin* of DocTAG: the only one who can change configuration, delete one or more reports from the collection, add more data and so on. 
 
 ### TF-IDF Top-k words
-
+These are the top-k matching words between a topic-document pair sorted by decreasing TF-IDF score. 
 
 ### Collection
 The collection contains the documents you are going to annotate using DocTAG. The file formats required to upload the collection are **json** and **csv**. If you have more **json** and/or **csv** files compressed in a **zip** archive, you can upload the **zip** archive itself and that will be automatically unzipped. 
