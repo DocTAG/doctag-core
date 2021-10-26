@@ -1,5 +1,5 @@
 {
   "fields": [],
-  "fields_to_ann": ["text"].
+  "fields_to_ann": ["text"],
   "all_fields": ["text"]
 }
