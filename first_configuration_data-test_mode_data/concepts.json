@@ -1,0 +1,40 @@
+{
+  "concepts_list": [
+    {
+      "concept_url":"https://dbpedia.org/page/Hydrogen",
+      "concept_name": "Hydrogen"
+    },
+    {
+      "concept_url":"https://dbpedia.org/page/Energy",
+      "concept_name": "Energy"
+    },
+    {
+      "concept_url":"https://dbpedia.org/page/Renewable_energy",
+      "concept_name": "Renewable energy"
+    },
+    {
+      "concept_url":"https://dbpedia.org/page/Electric_energy_consumption",
+      "concept_name": "Electric energy consumption"
+    },
+    {
+      "concept_url":"https://dbpedia.org/page/Electric_car",
+      "concept_name": "Electric car"
+    },
+    {
+      "concept_url":"https://dbpedia.org/page/Petroleum",
+      "concept_name": "Petroleum"
+    },
+    {
+      "concept_url":"https://dbpedia.org/page/Falkland_Islands",
+      "concept_name": "Falkland Islands"
+    },
+    {
+      "concept_url":"https://dbpedia.org/page/Petroleum_industry",
+      "concept_name": "Petroleum industry"
+    },
+    {
+      "concept_url":"https://dbpedia.org/page/Gasoline",
+      "concept_name": "Gasoline"
+    }
+  ]
+}

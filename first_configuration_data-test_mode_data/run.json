@@ -1,0 +1,12 @@
+{
+  "run": [
+    {
+  "topic_id": "351",
+  "documents": ["FBIS3-10551","FBIS3-10646","FBIS3-19947","FBIS3-11107","FBIS3-10697","FBIS3-10411","FBIS3-10433","FBIS3-10464","FBIS3-10698","FBIS3-10889"]
+    },
+    {
+  "topic_id": "375",
+  "documents": ["FBIS3-41950","FBIS3-43040","FBIS3-42459","FBIS3-42854","FBIS3-43002","FBIS3-43108","FBIS3-41958","FBIS3-42381","FBIS3-42460","FBIS3-42749"]
+    }
+  ]
+}

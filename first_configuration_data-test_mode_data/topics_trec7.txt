@@ -1,0 +1,33 @@
+<top>
+<num> Number: 351
+<title> Falkland petroleum exploration
+
+<desc> Description:
+What information is available on petroleum exploration in
+the South Atlantic near the Falkland Islands?
+
+<narr> Narrative:
+Any document discussing petroleum exploration in the
+South Atlantic near the Falkland Islands is considered
+relevant.  Documents discussing petroleum exploration in
+continental South America are not relevant.
+</top>
+
+
+<top>
+
+<num> Number: 375
+<title> hydrogen energy
+
+<desc> Description:
+What is the status of research on hydrogen as a
+feasible energy source?
+
+<narr> Narrative:
+A relevant document will describe progress in
+research on controlled hydrogen fusion or the use
+of hydrogen as fuel to power engines.
+
+</top>
+
+
