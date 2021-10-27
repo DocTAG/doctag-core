@@ -87,6 +87,7 @@ The first time you have access to DocTAG you have to log in with the user availa
 Once log in with the credentials above, you are asked to choose a *topic*: in the *Test mode* only two topics have been provided.
 
 In the *Test mode* all the DocTAG functionalities are available to be tested even if an administrator (*Admin*) has not been defined yet.
+**NOTE** The data provided in the *Test mode* are provided in the *first_configuration_data-test_mode_data* folder of the project.
 ## Customize DocTAG
 Once you tested DocTAG you can create a new configuration so to start annotating the documents you upload. Open the sidebar and click on *Configure*. You are provided with a guide that shows how to format your files. In the folder *Examples files*  of the project you can find some examples of how to format each required file.
 ![config](./images/screen/config.png)
