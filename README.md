@@ -92,6 +92,13 @@ In the *Test mode* all the DocTAG functionalities are available to be tested eve
 Once you tested DocTAG you can create a new configuration so to start annotating the documents you upload. Open the sidebar and click on *Configure*. You are provided with a guide that shows how to format your files. In the folder *Examples files*  of the project you can find some examples of how to format each required file.
 ![config](./images/screen/config.png)
 
+Once you have uploaded all the required files, click on *Check* to check that the files are well formed. Under each file a message will appear:
+- If the message is green the file can be uploaded without errors.
+- if the message is yellow the file can be uploaded but there are some inconnsistencies in the provided data that will be ignored (i.e. -- some data may be duplicated)
+- If the message is red the file can not be uploaded: in this case the message tells you what went wrong so to change the file and upload it again.
+
+
+Once that the message is green or yellow you can configure DocTAG with your data clicking on *Configure*.
 ### Basic information
 If it is the first time you configure DocTAG, you are asked to provide your username and a password. Once the configuration is completed those will be your new credentials which overwrite the *Test* account. You will be the *Admin* of DocTAG: the only one who can change configuration, delete one or more reports from the collection, add more data and so on. 
 
