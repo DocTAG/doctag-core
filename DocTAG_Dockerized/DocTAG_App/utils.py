@@ -5,7 +5,6 @@ from DocTAG_App.models import *
 import os
 import numpy
 import zipfile
-import unlzw3
 import hashlib
 from django.db import connection
 import pandas as pd
