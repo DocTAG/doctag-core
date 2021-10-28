@@ -1,0 +1,15 @@
+{
+  "topics": [
+    {
+      "topic_id": 351,
+      "title": "Falkland petroleum exploration",
+      "description": "What information is available on petroleum exploration in the South Atlantic near the Falkland Islands?",
+      "narrative": "Any document discussing petroleum exploration in the South Atlantic near the Falkland Islands is considered relevant.  Documents discussing petroleum exploration in continental South America are not relevant."
+    },    {
+      "topic_id": 375,
+      "title": "hydrogen energy",
+      "description": "What is the status of research on hydrogen as a feasible energy source?",
+      "narrative": "A relevant document will describe progress in research on controlled hydrogen fusion or the use of hydrogen as fuel to power engines."
+    }
+  ]
+}

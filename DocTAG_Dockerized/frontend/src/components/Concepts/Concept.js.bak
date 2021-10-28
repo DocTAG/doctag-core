@@ -7,7 +7,8 @@ import Button from 'react-bootstrap/Button';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useContext } from "react";
 import { faTimesCircle,faSearch, faInfoCircle} from '@fortawesome/free-solid-svg-icons';
-import {AppContext, ConceptContext} from "../../BaseIndex";
+import {AppContext}  from "../../App";
+import {ConceptContext} from '../../BaseIndex'
 import cookie from "react-cookies";
 import LabelItem from "../Labels/LabelItem";
 import './concept.css';
@@ -21,14 +22,17 @@ axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 
  
 function Concept(props){
-    const { selectedconcepts, action, disButton,changeConceots, associations, conceptModal } = useContext(AppContext);
+    const { selectedconcepts,removedConcept, action, disButton,changeConceots, associations,semanticArea, conceptModal } = useContext(AppContext);
     const [Disable_Buttons, SetDisable_Buttons] = disButton;
     const [show, setShow] = useState(false);
     const [Action, setAction] = action;
+    const [RemovedConcept,SetRemovedConcept] = removedConcept;
+    const [SemanticArea, SetSemanticArea] = semanticArea;
+
     const [associations_to_show,SetAssociations_to_show] = associations;
-    console.log('name',props.concept_name)
-    console.log('url',props.concept_url)
-    console.log('area',props.semantic_area)
+    // console.log('name',props.concept_name)
+    // console.log('url',props.concept_url)
+    // console.log('area',props.semantic_area)
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
 
@@ -47,19 +51,20 @@ function Concept(props){
 
 
     function removeConceptFromList(){
-            SetDisable_Buttons(false)
+        SetDisable_Buttons(false)
+        SetRemovedConcept(true)
         if(Action === 'concepts'){
             let tempConcepts = selectedConcepts;
             let tempConcepts_semArea = selectedConcepts[props.semantic_area].filter(checkConcept);
-            console.log(tempConcepts_semArea);
-            console.log("Concept removed");
+            // console.log(tempConcepts_semArea);
+            // console.log("Concept removed");
 
             tempConcepts[props.semantic_area] = tempConcepts_semArea;
-            console.log(tempConcepts);
+            // console.log(tempConcepts);
 
             //setSelectedConcepts(tempConcepts);
 
-            var sem_area = ['General Entity','Anatomical Location','Procedure','Test','Diagnosis']
+            var sem_area = SemanticArea
             var array = {}
             sem_area.map(area=>{
                 array[area] = selectedConcepts[area]

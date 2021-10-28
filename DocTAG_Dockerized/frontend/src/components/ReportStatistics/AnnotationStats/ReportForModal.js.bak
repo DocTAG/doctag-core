@@ -145,7 +145,7 @@ function ReportForModal(props) {
     return (
           <div className='container-fluid'>
 
-            {(newInd !== false  && ReportString !== '' && props.stats !== false && ShowAnnotationsStats && Reports.length > 0) ? <Row>
+            {(newInd !== false  && ReportString !== '' && (FieldsToAnn.length > 0 || Fields.length > 0) && props.stats !== false && ShowAnnotationsStats && Reports.length > 0) ? <Row>
 
                 <Col md={6} style={{fontSize:'1rem'}}>
                     <div className='report_modal'>
@@ -192,15 +192,17 @@ function ReportForModal(props) {
                         <Collapse style={{marginTop:'0px'}} in={ShowMentionsStats}>
 
                         <div>
-                            <i>Below you can find the list of passages associated to this report; next to each passage you can see how many users selected that mention for this documentout of the total of users who annotated the passages for this report.</i>
+                            <i>Below you can find the list of passages associated to this document; next to each passage you can see how many users selected that passage for this document out of the total of users who annotated the passages for this document.</i>
                             <br/><br/>
                             {props.stats['Human']['mentions']['count'] > 0 && <>
                             <div>Users who annotated the passage for this document: <b>{props.stats['Human']['mentions']['count']}  {props.stats['Human']['mentions']['count']> 0 && <i>({props.stats['Human']['mentions']['users_list'].join(', ')})</i>}</b></div>
                             <ul>{props.stats['Human']['mentions']['mentions_list'].map((mention,index)=>
                                 <>{mention.count > 0 && <li className='annotations_li'>
                                     <div><Mention id = {index} index = {index} text={mention['mention']} start={mention['start']}
-                                                         stop={mention['stop']} mention_obj = {mention}/><br/></div><br/>
-                                    <div style={{'font-size':'0.9rem'}}><b>{mention.count} </b>{mention.count === 1 ? <>user</> : <>users</>} annotated this label : <i>{mention.users_list.join(', ')}</i></div>
+                                                         stop={mention['stop']} mention_obj = {mention}/><br/></div><br/><br/>
+                                    {mention.labels.map(lab=><div >
+                                        <div>label: <b>{lab.label}</b></div>
+                                        <div style={{'font-size':'0.9rem'}}><b>{lab.count} </b>{lab.count === 1 ? <>user</> : <>users</>} annotated this label : <i>{lab.users_list.join(', ')}</i></div></div>)}
                                     </li>}</>)}</ul>
                                 </>}
                             <hr/>
@@ -213,7 +215,7 @@ function ReportForModal(props) {
                         <div><h5 style={{display:'inline-block'}}>Concepts  </h5><IconButton onClick={()=>{SetShowConceptsStats(prev=>!prev);SetSelectedStata('concepts')}}><ExpandMoreIcon style={{marginLeft:'2px'}} /></IconButton></div>
                         <Collapse style={{marginTop:'0px'}} in={ShowConceptsStats}>
                         <div>
-                            <i>Below you can find the list of concepts found for the report; next to each concept you can see how many users chose that concept for this document out of the total of users who annotated the concepts for this report.</i>
+                            <i>Below you can find the list of concepts found for the document; next to each concept you can see how many users chose that concept for this document out of the total of users who annotated the concepts for this document.</i>
                             <br/><br/>
                             {props.stats['Human']['concepts']['count'] > 0 && <div>
 
@@ -235,7 +237,7 @@ function ReportForModal(props) {
                         <div><h5 style={{display:'inline-block'}}>Linking  </h5><IconButton onClick={()=>{SetShowLinkingStats(prev=>!prev);SetSelectedStata('concept-mention')}}><ExpandMoreIcon style={{marginLeft:'2px'}} /></IconButton></div>
                         <Collapse style={{marginTop:'0px'}} in={ShowLinkingStats}>
                             <div>
-                            <i>Below you can find the list of associations mention-concept found for this report; next to each association mention-concept you can see how many users chose that association for this document out of the total of users who annotated the associations for this report.</i>
+                            <i>Below you can find the list of associations passage-concept found for this document; next to each association passage-concept you can see how many users chose that association for this document out of the total of users who annotated the associations for this document.</i>
                             <br/><br/>
                             {props.stats['Human']['linking']['count'] > 0 && <div>
 
@@ -245,7 +247,7 @@ function ReportForModal(props) {
                                     <>{val.count > 0 && <li className='annotations_li'>
                                         <div><div><Mention id = {index} index = {index} text={val['mention']} start={val['start']}
                                                                   stop={val['stop']} mention_obj = {val}/></div>
-                                            <br/><div>
+                                            <br/><div><br/><br/>
                                                 <Badge pill variant="dark" >
                                                     {val.concept_name}
                                                 </Badge> - <span style={{color:'black',fontSize:'0.9rem'}}><i><b>URL</b> {val.concept_url}</i></span>

@@ -23,6 +23,7 @@ import Tooltip from "react-bootstrap/Tooltip";
 import TopicSelection from "./TopicSelection";
 import Modal from "react-bootstrap/Modal";
 import TopicNextPrevButtons from "../General/TopicNextPrevButtons";
+import Spinner from "react-bootstrap/Spinner";
 // axios.defaults.xsrfCookieName = "csrftoken";
 // axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 function ReportListUpdated(props) {
@@ -552,7 +553,7 @@ function ReportListUpdated(props) {
 
                     <div ref={doc_corpus} className='doc_corpus'>
                         {ReportText !== false  && <div className='no_margin_top'>
-
+                            {LoadingReport === true ? <div><Spinner animation="border" role="status"/></div> : <>
                             {FieldsToAnn.map((field,ind)=><div className='no_margin_top'>
                                     {ReportText[field] !== undefined && ReportText[field] !== null  && <Row>
                                         {/*{((props.action === 'mentions' || props.action === 'concept-mention') && (ShowAnnotationsStats === false && ShowMajorityModal === false && Translation === false)) ? <Col md={4} className="titles no-click"><div><FontAwesomeIcon style={{'width':'0.8rem'}} icon={faPencilAlt}/> {field}:</div></Col> : <Col md={4} className="titles no-click"><div>{field}:</div></Col>}*/}
@@ -580,7 +581,7 @@ function ReportListUpdated(props) {
 
                                     </Row>}
                                 </div>
-                            )}
+                            )}</>}
 
 
 

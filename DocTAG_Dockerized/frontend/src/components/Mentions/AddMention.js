@@ -4,7 +4,7 @@ import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import {AppContext}  from "../../App";
-import {LinkedContext, MentionContext} from '../../BaseIndex'
+import {LinkedContext, MentionContext} from '../../Prova_BaseIndex'
 import {Container,Row,Col} from "react-bootstrap";
 
 

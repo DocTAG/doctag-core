@@ -11,8 +11,8 @@ import Button from "react-bootstrap/Button";
 import LabelItem from "../Labels/LabelItem";
 import AddMention from "../Mentions/AddMention";
 import {AppContext}  from "../../App";
-// import {PassageContext}  from "../../BaseIndex";
-import {LinkedContext, MentionContext} from '../../BaseIndex'
+// import {PassageContext}  from "../../Prova_BaseIndex";
+import {LinkedContext, MentionContext} from '../../Prova_BaseIndex'
 import '../Mentions/mention.css';
 import './passage.css';
 import '../General/first_row.css';
@@ -117,20 +117,11 @@ function PassageLabelsList(props){
 
     useEffect(()=>{
         if(SelectedLang === Language && WordMention.length === 0) {
-            // var new_mentions = []
-            // console.log('showlist',ShowLists)
-            // console.log('showlist',mentions_to_show)
-            //
-            // mentions_to_show.map(m=>{
-            //     if(ShowLists[m.seq_number-1] === true){
-            //         new_mentions.push(m)
-            //     }
-            // })
-            // console.log('ert',Color)
+
             if (ShowInfoMentions === false) {
                 if (Children.length === FinalCount) {
                     if (mentions_to_show.length === 0) {
-                        console.log('EMPTY MENTIONS')
+                        // console.log('EMPTY MENTIONS')
                         Children.map(child => {
                             // console.log('TOKEN')
                             child.setAttribute('class', 'token') //Added!!
@@ -147,7 +138,7 @@ function PassageLabelsList(props){
                             //Added!!
                         })
                         //console.log('PASSO DI QUA, MENTIONS',mentions_to_show)
-                        console.log('PASSO COLORO')
+                        // console.log('PASSO COLORO')
                         mentions_to_show.map((mention, index) => {
                             // console.log('mention',mention)
                             // console.log('mention',bottone_mention[index])
@@ -224,7 +215,7 @@ function PassageLabelsList(props){
 
             SetLoadingMentionsColor(false)
         }
-    },[Action,mentions_to_show,Color,ShowInfoMentions,SelectedLang,Children,ChangeLabel,WordMention]) //COLOR AGGIUNTO,children
+    },[Action,mentions_to_show,Color,ShowInfoMentions,SelectedLang,ChangeLabel,WordMention]) //COLOR AGGIUNTO,children
 
 
     function order_array(mentions){

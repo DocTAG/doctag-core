@@ -7,7 +7,8 @@ import Button from 'react-bootstrap/Button';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useContext } from "react";
 import { faTimesCircle,faSearch, faInfoCircle} from '@fortawesome/free-solid-svg-icons';
-import {AppContext, ConceptContext} from "../../BaseIndex";
+import {AppContext}  from "../../App";
+import {ConceptContext} from '../../BaseIndex'
 import cookie from "react-cookies";
 import LabelItem from "../Labels/LabelItem";
 import './concept.css';
@@ -26,9 +27,9 @@ function ConceptInfoModal({concept_name,concept_url,semantic_area}){
 
     const handleClose = () => setShow(false);
 
-    console.log('area1',semantic_area)
-    console.log('name1',concept_name)
-    console.log('url1',concept_url)
+    // console.log('area1',semantic_area)
+    // console.log('name1',concept_name)
+    // console.log('url1',concept_url)
 
 
     return(

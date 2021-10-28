@@ -10,7 +10,7 @@ import Button from "react-bootstrap/Button";
 // import cookie from "react-cookies";
 import AddMention from "../Mentions/AddMention";
 import {AppContext}  from "../../App";
-import {LinkedContext, MentionContext} from '../../BaseIndex'
+import {LinkedContext, MentionContext} from '../../Prova_BaseIndex'
 import './linked.css';
 import '../General/first_row.css'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";

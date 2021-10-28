@@ -4,7 +4,7 @@ import WindowedSelect from "react-windowed-select";
 import Select from "react-select";
 import ListSelectedConcepts from "./ListSelectedConcepts";
 import {AppContext}  from "../../App";
-import {ConceptContext} from '../../BaseIndex'
+import {ConceptContext} from '../../Prova_BaseIndex'
 import {Modal} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import axios from "axios";

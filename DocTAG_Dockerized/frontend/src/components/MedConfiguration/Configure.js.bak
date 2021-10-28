@@ -657,7 +657,10 @@ function Configure() {
             formData.append('json_disp', displayed);
             formData.append('json_ann', annotate);
             formData.append('json_all', hide);
-            // if(LoadExaConcepts ===true){
+            input = document.getElementById('tfidf_form');
+            // console.log('test input', input.value)
+            var tfidf = input.value
+            formData.append('tfidf', tfidf);            // if(LoadExaConcepts ===true){
             //     formData.append('exa_concepts', [...new Set(UsesInserted.concat(PubMedUsesInserted))])
             // }
             // if(LoadExaLabels===true){
@@ -1085,25 +1088,34 @@ function Configure() {
                                 {Admin === '' && Username === 'Test' && <div><Form.Group controlId="formBasicUsername">
                                     <div>
                                         <h3>Basic information</h3>
-                                        <div>Select a username and a password, once you selected a username check it in order to see if it is available. </div>
+                                        <div>Select a username and a password, once you selected a username check it in
+                                            order to see if it is available.
+                                        </div>
                                     </div>
                                     <div>Username</div>
-                                    <Form.Control type="text" placeholder="Select a username..." />
+                                    <Form.Control type="text" placeholder="Select a username..."/>
                                 </Form.Group>
                                     <Form.Group controlId="formBasicPassword">
                                         <div>Password</div>
-                                        <Form.Control type="password" placeholder="Select a password..." />
+                                        <Form.Control type="password" placeholder="Select a password..."/>
                                     </Form.Group>
 
-                                    <div>You are the admin, this means that you are the only one who can change configuration files. </div>
+                                    <div>You are the admin, this means that you are the only one who can change
+                                        configuration files.
+                                    </div>
                                     {CheckUsername !== 0 && <div>
-                                        {(CheckUsername === true && CheckUsername !== 0) ? <div style={{'color':'green'}}>The username and password are OK</div> : <div style={{'color':'red'}}><span>The username and/or the password contain some errors: </span><span>{CheckUsername}</span></div>}
+                                        {(CheckUsername === true && CheckUsername !== 0) ?
+                                            <div style={{'color': 'green'}}>The username and password are OK</div> :
+                                            <div style={{'color': 'red'}}><span>The username and/or the password contain some errors: </span><span>{CheckUsername}</span>
+                                            </div>}
 
-                                    </div>}<hr/></div>}
+                                    </div>}
+                                    <hr/>
+                                </div>}
 
                                     <div>
                                         <div><h3>Top k TF-IDF words</h3></div>
-                                        <div>Select the top-k words with the highest TF-IDF score in the topic-document pairs. Clicking on the <FontAwesomeIcon icon={faMagic}/> above the document's corpus allows you to check what words had a high tf-idf score. <b>This function is available exclusively for the english language</b> </div>
+                                        <div>Select the top-k words with the highest TF-IDF score in the topic-document pairs. Clicking on the <FontAwesomeIcon icon={faMagic}/> above the document's corpus allows you to check what words had a high tf-idf score. <b>This function is available exclusively for the english language. <br/> PAY ATTENTION: setting this parameter will slow down the configuration process, if you do not want to set this parameter, put 0 and the process to find the top-k tf-idf words will be disabled.</b> </div>
                                         <Form.Group controlId="tfidf_form">
                                             <Form.Control type="text" placeholder="Select a number..." />
                                         </Form.Group>
@@ -1227,7 +1239,7 @@ function Configure() {
                                     <div><span>Insert here the files with the PUBMED articles' ids.</span></div><br/>
                                         {/*<div className='conf-div'><Button onClick={()=>SetShowReportExample(prev=>!prev)} variant="info" size='sm'>Example</Button></div></div>*/}
                                     {/*<div style={{marginBottom:'2%',fontSize:'0.9rem'}}><i>Please, make sure the ids of the reports you insert do not start with "pubmed" and the institutes you insert are different from "pubmed".</i></div>*/}
-                                    <Form.File id="pubmed_form" onClick={(e) => {(e.target.value = null);SetGeneralMessage('');SetFinalMessage('');SetShowDeleteReports(false);SetCheckReport(0);SetCheckJsonAnn(0);SetWarningReport(0);SetCheckJsonDisp(0);SetWarningJsonDisp('');SetLoadExaConcepts(false);SetLoadExaLabels(false);SetCheckPubMed(0);SetUsesInserted([]);SetKeys([])}} onChange={(e)=>{showDelete(e,'reports');}} multiple/>
+                                    <Form.File id="pubmed_form" onClick={(e) => {(e.target.value = null);SetGeneralMessage('');SetFinalMessage('');SetShowDeletePubMed(false);SetCheckPubMed(0);SetCheckJsonAnn(0);SetWarningPubMed(0);SetLoadExaConcepts(false);SetLoadExaLabels(false);SetCheckPubMed(0);}} onChange={(e)=>{showDelete(e,'pubmed');}} multiple/>
                                         {ShowDeletePubMed === true && <div><Button className='delete-button' onClick={(e)=>deleteInput(e,'reports')}><FontAwesomeIcon icon={faTimes} />Delete file</Button></div>}
 
                                 </Form.Group>

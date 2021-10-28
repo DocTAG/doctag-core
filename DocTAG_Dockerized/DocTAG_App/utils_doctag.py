@@ -4,6 +4,8 @@ import json
 from DocTAG_App.models import *
 import os
 import numpy
+from datetime import date
+
 import hashlib
 import xml.etree.ElementTree as ET
 from django.db import connection
@@ -53,7 +55,7 @@ def elaborate_TREC_topic_files(arr_to_ret,f,action=None):
                     if action is None:
                         tops = [str(tup[0]) for tup in arr_to_ret]
                         if str(num) in tops:
-                            UseCase.objects.create(name=str(num),narrative = narr_string,description = desc_string,title = title_string)
+                            UseCase.objects.get_or_create(name=str(num),narrative = narr_string,description = desc_string,title = title_string)
                     # print(num)
                     # print(title_string)
                     # print(desc_string)
@@ -116,7 +118,7 @@ def process_topic_json_file(arr_to_ret,f):
 
         topics = [str(tup[0]) for tup in arr_to_ret]
         if str(topic_id) in topics:
-            UseCase.objects.create(name = str(topic_id),title = title, description = description,
+            UseCase.objects.get_or_create(name = str(topic_id),title = title, description = description,
                                narrative = narrative)
 
 
@@ -133,7 +135,7 @@ def process_topic_csv_file(arr_to_ret,file):
         narrative = str(df.loc[i, 'narrative'])
         topics = [str(tup[0]) for tup in arr_to_ret]
         if str(topic_id) in topics:
-            UseCase.objects.create(name=str(topic_id), title=title, description=description,
+            UseCase.objects.get_or_create(name=str(topic_id), title=title, description=description,
                                    narrative=narrative)
 
 
@@ -197,7 +199,7 @@ def elaborate_runs_txt_files(run):
     with open(run,'r') as f:
         lines = f.readlines()
         for line in lines:
-            line = line.decode('utf-8')
+            # line = line.decode('utf-8')
             vals = line.split(' ')
             topic_id = vals[0]
             document_id = vals[1]
@@ -246,55 +248,6 @@ def elaborate_runs_json_files(run):
     return arr_to_ret
 
 
-# def find_docs_in_TREC_collection(arr_tuples,docc):
-#
-#     """This function takes the collection and the runs and look for the runs' docs int he collection: when the docs are
-#     found, these are inserted in the db"""
-#
-#     # build an array with the ids of the docs which appear in the array of tuples.
-#     arr_ids = [str(i[1]) for i in arr_tuples]
-#     arr_found = []
-#     # process the collection of docs
-#     if docc.name.endswith('.txt'):
-#         print(docc)
-#         with open(docc, 'r') as f:   # Reading file
-#             xml = f.read()
-#
-#         xml = '<ROOT>' + xml + '</ROOT>'   # Let's add a root tag
-#
-#         root = ET.fromstring(xml)
-#         print(xml)
-#         print(root)
-#         # Simple loop through each document
-#         for doc in root.iter('DOC'):
-#             print(doc)
-#             doc_no = doc.find('DOCNO')
-#             print(doc_no.tag, doc_no.text)
-#             if str(doc_no.text) in arr_ids:
-#                 arr_found.append(str(doc_no.text))
-#                 document_id = doc.find('DOCID').text
-#                 json_doc = {}
-#                 json_doc['id'] = document_id
-#                 json_doc['no'] = doc_no
-#                 json_doc['article'] = doc
-#                 language = 'english'
-#                 institute = 'default'
-#                 batch = 1
-#                 insertion_time = str(date.today())
-#                 Report.objects.create(id_report = document_id,language = language, report_json = json_doc,batch = batch, insertion_date = insertion_time,institute = institute)
-#
-#         data = {}
-#         data['fields'] = ['id','no']
-#         data['fields_to_ann'] = ['article']
-#         data['all_fields'] = ['id','no','article']
-#         version = get_version()
-#         workpath = os.path.dirname(os.path.abspath(__file__))  # Returns the Path your .py file is in
-#         version_new = int(version) + 1
-#         filename = 'fields' + str(version_new)
-#         with open(os.path.join(workpath, './data/' + filename + '.json'), 'w') as outfile:
-#             json.dump(data, outfile)
-
-
 
 def find_docs_in_json_collection(arr_tuples,file,batch=None):
 
@@ -302,8 +255,8 @@ def find_docs_in_json_collection(arr_tuples,file,batch=None):
        found, these are inserted in the db"""
 
     # build an array with the ids of the docs which appear in the array of tuples.
-    arr_ids = [str(i[1]) for i in arr_tuples]
-    arr_tops = [str(i[0]) for i in arr_tuples]
+    arr_ids = list(set([str(i[1]) for i in arr_tuples]))
+    arr_tops = list(set([str(i[0]) for i in arr_tuples]))
     arr_found = []
     cursor = connection.cursor()
     tup_topic_batch_list = []
@@ -317,37 +270,33 @@ def find_docs_in_json_collection(arr_tuples,file,batch=None):
             b = 1
         tup_topic_batch_list.append((str(t), b))
 
-    # process the collection of docs
+
     if isinstance(file, str):
-        workpath = os.path.dirname(os.path.abspath(__file__))  # Returns the Path your .py file is in
-        rep_name = os.path.join(workpath, 'static/tmp/' + file)
-        file = rep_name
-    else:
-        rep_name = file.name
-    if rep_name.endswith('.json'):
-        data = json.load(file)
-        documents = data['collection']
-        for document in documents:
-            if 'language' in document.keys():
-                language = document['language']
-            else:
-                language = 'english'
-            institute = 'default'
+        file = open(file, 'r')
 
-            insertion_time = str(date.today())
-            id_report = document['document_id']
-            report_json = {}
-            for k in document.keys():
 
-                filtered_characters = list(s for s in document[k] if s.isprintable())
-                report_json[k] = ''.join(filtered_characters)
+    data = json.load(file)
+    documents = data['collection']
+    for document in documents:
+        if 'language' in document.keys():
+            language = document['language']
+        else:
+            language = 'english'
+        institute = 'default'
 
-            if str(id_report) in arr_ids:
-                arr_found.append(id_report)
-                Report.objects.create(id_report = id_report,language = language, report_json = report_json,batch = b, insertion_date = insertion_time,institute = institute)
-    #     if len(arr_ids) == len(arr_found):
-    #         return True
-    # return list(set(arr_ids) - set(arr_found))
+        insertion_time = str(date.today())
+        id_report = document['document_id']
+        report_json = {}
+        for k in document.keys():
+
+            filtered_characters = list(s for s in document[k] if s.isprintable())
+            report_json[k] = ''.join(filtered_characters)
+
+        if str(id_report) in arr_ids:
+            arr_found.append(id_report)
+        if not Report.objects.filter(id_report=id_report, language=language).exists():
+            Report.objects.create(id_report = id_report,language = language, report_json = report_json,batch = b, insertion_date = insertion_time,institute = institute)
+
 
 
 from datetime import date
@@ -361,8 +310,8 @@ def find_docs_in_json_pubmed_collection(arr_tuples,file,batch = None):
        found, these are inserted in the db"""
 
     # build an array with the ids of the docs which appear in the array of tuples.
-    arr_ids = [str(i[1]) for i in arr_tuples]
-    arr_tops = [str(i[0]) for i in arr_tuples]
+    arr_ids = list(set([str(i[1]) for i in arr_tuples]))
+    arr_tops = list(set([str(i[0]) for i in arr_tuples]))
     arr_found = []
     # process the collection of docs
     cursor = connection.cursor()
@@ -450,18 +399,19 @@ def find_docs_in_csv_collection(arr_tuples,file,batch = None):
     else:
         b = 1
     if isinstance(file, str):
-        workpath = os.path.dirname(os.path.abspath(__file__))  # Returns the Path your .py file is in
-        rep_name = os.path.join(workpath, 'static/tmp/' + file)
+        # workpath = os.path.dirname(os.path.abspath(__file__))  # Returns the Path your .py file is in
+        # rep_name = os.path.join(workpath, 'static/tmp/' + file)
+        rep_name = file
     else:
         rep_name = file.name
     if rep_name.endswith('.csv'):
-        df = pd.read_csv(rep_name)
+        df = pd.read_csv(file)
         df = df.where(pd.notnull(df), None)
         df = df.reset_index(drop=True)
 
         institute = 'default'
         insertion_time = str(date.today())
-        ids = list(df.document_id.unique().str)
+        ids = [str(i) for i in list(df.document_id.unique())]
         if bool(set(ids) & set(arr_ids)):
             for col in df:
                 if col != 'document_id':
@@ -485,7 +435,8 @@ def find_docs_in_csv_collection(arr_tuples,file,batch = None):
                             filtered_characters = list(s for s in testo if s.isprintable())
                             testo = ''.join(filtered_characters)
                             json_rep[col1] = testo
-                    Report.objects.create(id_report = id_report,language = language,institute = institute,report_json = json_rep,batch = b,insertion_date = insertion_time)
+                    if not Report.objects.filter(id_report = id_report,language = language).exists():
+                        Report.objects.create(id_report = id_report,language = language,institute = institute,report_json = json_rep,batch = b,insertion_date = insertion_time)
     #     if len(arr_ids) == len(arr_found):
     #         return True
     # return list(set(arr_ids) - set(arr_found))
@@ -518,7 +469,7 @@ def process_TREC_and_txt_runs(run):
         else:
             return True
         if UseCase.objects.filter(name=topic_id).exists() and Report.objects.filter(id_report = document_id).exists() and not TopicHasDocument.objects.filter(topic_id=topic_id, document_id=document_id,language = language).exists():
-            TopicHasDocument.objects.create(topic_id=topic_id,document_id=document_id,language = language)
+            TopicHasDocument.objects.get_or_create(topic_id=topic_id,document_id=document_id,language = language)
         else:
             return topic_id,document_id
 
@@ -541,7 +492,7 @@ def process_csv_runs(file):
             if 'language' in df:
                 language = str(df.loc[i,'language'])
             if UseCase.objects.filter(name=topic_id).exists() and Report.objects.filter(id_report=document_id,language = language).exists() and not TopicHasDocument.objects.filter(topic_id=topic_id, document_id=document_id,language = language).exists():
-                TopicHasDocument.objects.create(topic_id=topic_id, document_id=document_id,language = language)
+                TopicHasDocument.objects.get_or_create(topic_id=topic_id, document_id=document_id,language = language)
             else:
                 return topic_id, document_id
     return True
@@ -566,7 +517,7 @@ def process_json_runs(file):
                         language = document_id['language']
                     document_id = document_id['document_id']
                 if UseCase.objects.filter(name=topic_id).exists() and Report.objects.filter(id_report=document_id).exists() and not TopicHasDocument.objects.filter(topic_id=topic_id, document_id=document_id,language = language).exists():
-                    TopicHasDocument.objects.create(topic_id=topic_id, document_id=document_id, language= language)
+                    TopicHasDocument.objects.get_or_create(topic_id=topic_id, document_id=document_id, language= language)
                 else:
                     return topic_id, document_id
     return True

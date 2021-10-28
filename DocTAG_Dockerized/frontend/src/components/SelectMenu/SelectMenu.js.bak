@@ -231,17 +231,17 @@ function SelectMenu(props){
                                         </select> :
                                         <span>{Language}</span>}
                                 </span>}
-                            {Institute !== '' && InstituteList.length > 1 && <span>
-                                    <span className='configuration'><b>Institute:</b></span>&nbsp;
+                            {/*{Institute !== '' && InstituteList.length > 1 && <span>*/}
+                            {/*        <span className='configuration'><b>Institute:</b></span>&nbsp;*/}
 
-                                    <select style={{'vertical-align':'bottom','font-size':'0.8rem'}} className='select_class'
-                                            value = {Institute}
-                                            onChange={(e)=>handleChangeInstitute(e)}>
-                                        {InstituteList.map(ins=>
-                                            <option value = {ins}>{ins}</option>
-                                        )}
-                                    </select>
-                                </span>}
+                            {/*        <select style={{'vertical-align':'bottom','font-size':'0.8rem'}} className='select_class'*/}
+                            {/*                value = {Institute}*/}
+                            {/*                onChange={(e)=>handleChangeInstitute(e)}>*/}
+                            {/*            {InstituteList.map(ins=>*/}
+                            {/*                <option value = {ins}>{ins}</option>*/}
+                            {/*            )}*/}
+                            {/*        </select>*/}
+                            {/*    </span>}*/}
 
 
 
@@ -253,12 +253,12 @@ function SelectMenu(props){
                         <span className='configuration' style={{'font-weight':'bold'}}>Topic: </span>
                         <span  >{UseCase}</span>&nbsp;
                         {Total !== false && <><span className='configuration' style={{'font-weight':'bold'}}>Annotated: </span>
-                        {/*<span >{Annotated}</span>&nbsp;</>}*/}
-                            <span >12</span>&nbsp;</>}
+                        <span >{Annotated}</span>&nbsp;</>}
+                            {/*<span >12</span>&nbsp;</>}*/}
 
                         {Annotated !== false && <><span className='configuration' style={{'font-weight':'bold'}}>Total: </span>
-                        {/*<span  >{Total}</span>&nbsp;</>}*/}
-                            <span  >100</span>&nbsp;</>}
+                        <span  >{Total}</span>&nbsp;</>}
+                            {/*<span  >100</span>&nbsp;</>}*/}
 
                         {Action !== 'none' && Action !== 'concept-mention' && Action !== false && <><span className='configuration' style={{'font-weight': 'bold'}}>Type: </span>
                             <span >{Action === 'mentions' ? 'passages' : Action}</span>&nbsp;&nbsp;</>}

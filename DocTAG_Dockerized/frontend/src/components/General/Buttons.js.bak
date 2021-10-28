@@ -359,9 +359,6 @@ function Buttons(props){
         SetWordMention('')
         SetClicked(true)
 
-
-
-
     }
 
 
@@ -384,5 +381,6 @@ function Buttons(props){
 
 
 }
+
 
 export default Buttons

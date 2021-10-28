@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button";
 import { faLink,faEye, faTimesCircle,faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {AppContext}  from "../../App";
-import {LinkedContext, MentionContext} from '../../BaseIndex'
+import {LinkedContext, MentionContext} from '../../Prova_BaseIndex'
 //import 'bootstrap/dist/css/bootstrap.min.css';
 import './linked.css';
 import Select from 'react-select';

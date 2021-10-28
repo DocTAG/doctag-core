@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import WindowedSelect from "react-windowed-select";
 import ListSelectedConcepts from "./ListSelectedConcepts";
 import {AppContext}  from "../../App";
-import {ConceptContext} from '../../BaseIndex'
+import {ConceptContext} from '../../Prova_BaseIndex'
 import {Col, Modal, OverlayTrigger, Row} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import ConceptList from "./ConceptList";

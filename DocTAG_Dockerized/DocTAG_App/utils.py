@@ -5,7 +5,7 @@ from DocTAG_App.models import *
 import os
 import numpy
 import zipfile
-# import unlzw3
+import unlzw3
 import hashlib
 from django.db import connection
 import pandas as pd
@@ -266,6 +266,7 @@ def delete_all_mentions(user,report1,language,type,mode,topic):
     # if len(to_del) > 0:
     ass = Annotate.objects.filter(username=user,ns_id=mode, id_report=report1,language = language,name = topic).values('start','stop','label')
     # print(len(ass))
+    topic = UseCase.objects.get(name = topic)
     rem_contains = False
 
     for el in ass:
@@ -331,6 +332,7 @@ def update_mentions(mentions,report1,language,user,mode,topic):
     json_response = {'message':'Mentions and Ground truth saved'}
     var_link = False
     var_conc = False
+    print(mentions)
     topic = UseCase.objects.get(name = topic)
     user_annot = Annotate.objects.filter(username = user,ns_id=mode, language = language, id_report=report1,name = topic)
     for single_ann in user_annot:
@@ -339,7 +341,7 @@ def update_mentions(mentions,report1,language,user,mode,topic):
         #La mention c'era nella lista precedente ma non nella nuova, è stata rimossa la singola mention
         ment_deleted = True
         for mention in mentions:
-            if single_ann.start_id == int(mention['start']) and single_ann.stop == int(mention['stop']):
+            if single_ann.start_id == int(mention['start']) and single_ann.stop == int(mention['stop'] and str(mention['label']) == single_ann.label_id):
                 Annotate.objects.filter(username=user, ns_id=mode, start=mention_cur,name = topic,label = ann_cur,seq_number = ann_cur.seq_number,
                                                      stop=mention_cur.stop, language=language, id_report=report1).delete()
                 Annotate.objects.create(username=user, ns_id=mode, start=mention_cur,name = topic,label = ann_cur,seq_number = ann_cur.seq_number,
@@ -622,7 +624,7 @@ def serialize_gt(gt_type,username,id_report,language,mode,topic):
     # else:
     jsonDict['gt_type'] = gt_type
     if gt_type == 'concept-mention':
-        couples = Linked.objects.filter(topic_name = topic,username=user, ns_id=mode,id_report=report1.id_report,language = language).values('start','stop','concept_url', 'name')
+        couples = Linked.objects.filter(topic_name = topic.name,username=user, ns_id=mode,id_report=report1.id_report,language = language).values('start','stop','concept_url', 'name')
 
         jsonDict['concept-mention_associations'] = []
         for el in couples:
@@ -660,7 +662,7 @@ def serialize_gt(gt_type,username,id_report,language,mode,topic):
         return jsonDict
 
     elif gt_type == 'concepts':
-        concepts1 = Contains.objects.filter(topic_name = topic,username=user,ns_id=mode, id_report=report1,language = language).values('concept_url', 'name')
+        concepts1 = Contains.objects.filter(topic_name = topic.name,username=user,ns_id=mode, id_report=report1,language = language).values('concept_url', 'name')
         concepts = []
 
         concept = {}
@@ -1063,8 +1065,11 @@ def get_keys_and_uses_csv(reports):
             workpath = os.path.dirname(os.path.abspath(__file__))
             report_name = os.path.join(workpath,'static/tmp/'+report)
             report = report_name
+            if report.endswith('json'):
+                report = open(report,'r')
         else:
             report_name = report.name
+
         if report_name.endswith('csv'):
             try:
                     # return keys
@@ -1091,26 +1096,6 @@ def get_keys_and_uses_csv(reports):
                 keys = list(set(keys))
 
 
-
-            # uses = df.usecase.unique()
-            # if 'Colon' in uses:
-            #     if 'colon' not in final_uses:
-            #         final_uses.append('colon')
-            # if 'Uterine cervix' in uses:
-            #     if 'uterine cervix' not in final_uses:
-            #         final_uses.append('uterine cervix')
-            # if 'Lung' in uses:
-            #     if 'lung' not in final_uses:
-            #         final_uses.append('lung')
-            # if 'colon' in uses:
-            #     if 'colon' not in final_uses:
-            #         final_uses.append('colon')
-            # if 'uterine cervix' in uses:
-            #     if 'uterine cervix' not in final_uses:
-            #         final_uses.append('uterine cervix')
-            # if 'lung' in uses:
-            #     if 'lung' not in final_uses:
-            #         final_uses.append('lung')
 
     return keys,uses,final_uses
 
@@ -1389,8 +1374,7 @@ def copy_rows(use_case,user_from,user_to,overwrite = None):
     try:
         with transaction.atomic():
             with connection.cursor() as cursor:
-                cursor.execute(
-                    "SELECT g.username,g.id_report,g.language,g.label,g.seq_number,g.insertion_time,g.ns_id,g.name FROM report AS r INNER JOIN associate AS g ON r.id_report = g.id_report AND r.language = g.language WHERE r.name = %s AND g.username = %s;",
+                cursor.execute("SELECT g.username,g.id_report,g.language,g.label,g.seq_number,g.insertion_time,g.ns_id,g.name FROM report AS r INNER JOIN associate AS g ON r.id_report = g.id_report AND r.language = g.language WHERE g.name = %s AND g.username = %s;",
                     [str(use_case), str(user_from)])
                 rows_asso = cursor.fetchall()
 
@@ -1398,7 +1382,6 @@ def copy_rows(use_case,user_from,user_to,overwrite = None):
                     mode = NameSpace.objects.get(ns_id = row[6])
                     username = User.objects.get(username=user_to, ns_id=mode)
                     report = Report.objects.get(id_report=row[1], language=row[2])
-                    label = AnnotationLabel.objects.get(seq_number=row[4], label=row[3])
                     topic = UseCase.objects.get(name = row[7])
                     if overwrite == True and GroundTruthLogFile.objects.filter(name = topic,username=username,ns_id=mode,id_report=report,language=report.language,gt_type='labels').exists():
                         GroundTruthLogFile.objects.filter(username=username, ns_id=mode, id_report=report,
@@ -1406,7 +1389,12 @@ def copy_rows(use_case,user_from,user_to,overwrite = None):
                                                           gt_type='labels').delete()
                         Associate.objects.filter(username=username, ns_id=mode, id_report=report,name = topic,
                                                  language=report.language).delete()
-
+                for row in rows_asso:
+                    mode = NameSpace.objects.get(ns_id=row[6])
+                    username = User.objects.get(username=user_to, ns_id=mode)
+                    report = Report.objects.get(id_report=row[1], language=row[2])
+                    label = AnnotationLabel.objects.get(seq_number=row[4], label=row[3])
+                    topic = UseCase.objects.get(name=row[7])
 
                     if (overwrite == False and not GroundTruthLogFile.objects.filter(username=username, ns_id=mode,name = topic,
                                                      id_report=report, language=row[2],gt_type='labels').exists()) or overwrite == True or user_from == 'Robot_user':
@@ -1415,7 +1403,7 @@ def copy_rows(use_case,user_from,user_to,overwrite = None):
                                                  seq_number=row[4],id_report=report, language=row[2])
 
                 cursor.execute(
-                    "SELECT g.insertion_time,g.gt_json,g.id_report,g.language,g.ns_id,g.name FROM report AS r INNER JOIN ground_truth_log_file AS g ON r.id_report = g.id_report AND r.language = g.language WHERE  r.name = %s AND g.username = %s AND gt_type = %s;",
+                    "SELECT g.insertion_time,g.gt_json,g.id_report,g.language,g.ns_id,g.name FROM report AS r INNER JOIN ground_truth_log_file AS g ON r.id_report = g.id_report AND r.language = g.language WHERE  g.name = %s AND g.username = %s AND gt_type = %s;",
                     [str(use_case), str(user_from), 'labels'])
                 rows_gt_lab = cursor.fetchall()
                 for row in rows_gt_lab:
@@ -1427,13 +1415,15 @@ def copy_rows(use_case,user_from,user_to,overwrite = None):
                     if (overwrite == False and not GroundTruthLogFile.objects.filter(username=username, ns_id=mode,name = topic,
                                                      id_report=report_gt, language=report_gt.language,gt_type = 'labels').exists()) \
                             or overwrite == True or user_from == 'Robot_user':
+                        gt = json.loads(row[1])
+                        gt['username'] = user_to
                         GroundTruthLogFile.objects.create(username=username, ns_id=mode, insertion_time=row[0],name = topic,
                                                           id_report=report_gt, language=report_gt.language,
-                                                          gt_json=json.loads(row[1]), gt_type='labels')
+                                                          gt_json=gt, gt_type='labels')
 
 
                 cursor.execute(
-                    "SELECT g.username,g.id_report,g.language,g.start,g.stop,g.insertion_time,g.ns_id,g.name,g.label FROM report AS r INNER JOIN annotate AS g ON r.id_report = g.id_report AND r.language = g.language WHERE  r.name = %s AND g.username = %s;",
+                    "SELECT g.username,g.id_report,g.language,g.start,g.stop,g.insertion_time,g.ns_id,g.name,g.label FROM report AS r INNER JOIN annotate AS g ON r.id_report = g.id_report AND r.language = g.language WHERE  g.name = %s AND g.username = %s;",
                     [str(use_case), str(user_from)])
                 rows = cursor.fetchall()
 
@@ -1451,18 +1441,26 @@ def copy_rows(use_case,user_from,user_to,overwrite = None):
                                                                                language=report.language,
                                                                                gt_type='mentions').exists():
                         GroundTruthLogFile.objects.filter(username=username, ns_id=mode, id_report=report,
-                                                          language=report.language,
+                                                          language=report.language,name = topic,
                                                           gt_type='mentions').delete()
-                        Annotate.objects.filter(username=username, ns_id=mode, id_report=report,label = label,name = topic,
+                        Annotate.objects.filter(username=username, ns_id=mode, id_report=report,name = topic,
                                                  language=report.language).delete()
-
-                    if (overwrite == False  and not GroundTruthLogFile.objects.filter(username=username,gt_type='mentions', ns_id=mode,name = topic,
+                for row in rows:
+                    mode = NameSpace.objects.get(ns_id=row[6])
+                    username = User.objects.get(username=user_to, ns_id=mode)
+                    report = Report.objects.get(id_report=row[1], language=row[2])
+                    mention = Mention.objects.get(start=row[3], stop=row[4], id_report=report,
+                                                  language=report.language)
+                    topic = UseCase.objects.get(name=row[7])
+                    label = AnnotationLabel.objects.get(label=row[8])
+                    if (overwrite == False and not GroundTruthLogFile.objects.filter(username=username,gt_type='mentions', ns_id=mode,name = topic,
                                                                                        id_report=report, language=row[
                             2]).exists()) or overwrite == True or user_from == 'Robot_user':
 
                         Annotate.objects.create(username=username, name = topic, label = label, seq_number = label.seq_number,ns_id=mode, insertion_time=row[5], start=mention, stop=mention.stop,id_report=report,language=row[2])
+
                 cursor.execute(
-                    "SELECT g.insertion_time,g.gt_json,g.id_report,g.language,g.ns_id,g.name FROM report AS r INNER JOIN ground_truth_log_file AS g ON r.id_report = g.id_report AND r.language = g.language WHERE  r.name = %s AND g.username = %s AND gt_type = %s;",
+                    "SELECT g.insertion_time,g.gt_json,g.id_report,g.language,g.ns_id,g.name FROM report AS r INNER JOIN ground_truth_log_file AS g ON r.id_report = g.id_report AND r.language = g.language WHERE  g.name = %s AND g.username = %s AND gt_type = %s;",
                     [str(use_case), str(user_from), 'mentions'])
                 rows_gt_lab = cursor.fetchall()
                 for row in rows_gt_lab:
@@ -1475,13 +1473,15 @@ def copy_rows(use_case,user_from,user_to,overwrite = None):
                                                                                        gt_type='mentions', ns_id=mode,
                                                                                        id_report=report_gt, language=row[
                             3]).exists()) or overwrite == True or user_from == 'Robot_user':
+                        gt = json.loads(row[1])
+                        gt['username'] = user_to
                         GroundTruthLogFile.objects.create(username=username, ns_id=mode, insertion_time=row[0],name = topic,
-                                                          id_report=report_gt, language=report_gt.language, gt_json=json.loads(row[1]),
+                                                          id_report=report_gt, language=report_gt.language, gt_json=gt,
                                                           gt_type='mentions')
 
 
                 cursor.execute(
-                    "SELECT g.username,g.id_report,g.language,g.concept_url,g.name,g.insertion_time,g.ns_id,g.topic_name FROM report AS r INNER JOIN contains AS g ON r.id_report = g.id_report AND r.language = g.language WHERE  r.name = %s AND g.username = %s;",
+                    "SELECT g.username,g.id_report,g.language,g.concept_url,g.name,g.insertion_time,g.ns_id,g.topic_name FROM report AS r INNER JOIN contains AS g ON r.id_report = g.id_report AND r.language = g.language WHERE  g.topic_name = %s AND g.username = %s;",
                     [str(use_case), str(user_from)])
                 rows = cursor.fetchall()
 
@@ -1501,16 +1501,23 @@ def copy_rows(use_case,user_from,user_to,overwrite = None):
                         GroundTruthLogFile.objects.filter(username=username, ns_id=mode, id_report=report,
                                                           language=report.language,name = topic,
                                                           gt_type='concepts').delete()
-                        Contains.objects.filter(username=username, ns_id=mode, id_report=report,
+                        Contains.objects.filter(username=username, ns_id=mode, id_report=report,topic_name = topic.name,
                                                  language=report.language).delete()
+                for row in rows:
+                    mode = NameSpace.objects.get(ns_id=row[6])
+                    username = User.objects.get(username=user_to, ns_id=mode)
+                    report = Report.objects.get(id_report=row[1], language=row[2])
+                    concept = Concept.objects.get(concept_url=row[3])
+                    sem = SemanticArea.objects.get(name=row[4])
+                    topic = UseCase.objects.get(name=row[7])
                     if (overwrite == False and not GroundTruthLogFile.objects.filter(username=username,gt_type='concepts', ns_id=mode,name = topic,
                                                                                        id_report=report, language=row[
                             2]).exists()) or overwrite == True or user_from == 'Robot_user':
 
-                        Contains.objects.create(username=username, ns_id=mode, insertion_time=row[5], concept_url=concept,topic_name = topic,
+                        Contains.objects.create(username=username, ns_id=mode, insertion_time=row[5], concept_url=concept,topic_name = topic.name,
                                             name=sem,id_report=report,language=row[2])
                 cursor.execute(
-                    "SELECT g.insertion_time,g.gt_json,g.id_report,g.language,g.ns_id,g.name FROM report AS r INNER JOIN ground_truth_log_file AS g ON r.id_report = g.id_report AND r.language = g.language WHERE  r.name = %s AND g.username = %s AND gt_type = %s;",
+                    "SELECT g.insertion_time,g.gt_json,g.id_report,g.language,g.ns_id,g.name FROM report AS r INNER JOIN ground_truth_log_file AS g ON r.id_report = g.id_report AND r.language = g.language WHERE  g.name = %s AND g.username = %s AND gt_type = %s;",
                     [str(use_case), str(user_from), 'concepts'])
                 rows_gt_lab = cursor.fetchall()
                 for row in rows_gt_lab:
@@ -1523,12 +1530,15 @@ def copy_rows(use_case,user_from,user_to,overwrite = None):
                                                                                        gt_type='concepts', ns_id=mode,
                                                                                        id_report=report, language=row[
                             3]).exists()) or overwrite == True or user_from == 'Robot_user':
+                        gt = json.loads(row[1])
+                        gt['username'] = user_to
+
                         GroundTruthLogFile.objects.create(username=username, ns_id=mode, insertion_time=row[0],name = topic,
                                                           id_report=report, language=report.language,
-                                                          gt_json=json.loads(row[1]),
+                                                          gt_json=gt,
                                                           gt_type='concepts')
                 cursor.execute(
-                    "SELECT g.username,g.id_report,g.language,g.concept_url,g.name,g.start,g.stop,g.insertion_time,g.ns_id,g.topic_name FROM report AS r INNER JOIN linked AS g ON r.id_report = g.id_report AND r.language = g.language WHERE  r.name = %s AND username = %s;",
+                    "SELECT g.username,g.id_report,g.language,g.concept_url,g.name,g.start,g.stop,g.insertion_time,g.ns_id,g.topic_name FROM report AS r INNER JOIN linked AS g ON r.id_report = g.id_report AND r.language = g.language WHERE  g.topic_name = %s AND username = %s;",
                     [str(use_case), str(user_from)])
                 rows = cursor.fetchall()
 
@@ -1543,7 +1553,7 @@ def copy_rows(use_case,user_from,user_to,overwrite = None):
 
                     from_arr = []
                     to_arr = []
-                    for el in Annotate.objects.filter(name = topic,id_report = report,language = report.language, username = username_from,ns_id = mode).values('start','stop'):
+                    for el in Annotate.objects.filter(name = topic,id_report = report,language = report.language, username = username,ns_id = mode).values('start','stop'):
                         from_arr.append(el['start'])
                     for el in Annotate.objects.filter(id_report=report, language=report.language,name = topic,
                                                           username=username, ns_id=mode).values('start', 'stop'):
@@ -1557,21 +1567,28 @@ def copy_rows(use_case,user_from,user_to,overwrite = None):
                         GroundTruthLogFile.objects.filter(username=username, ns_id=mode, id_report=report,name = topic,
                                                           language=report.language,
                                                           gt_type='concept-mention').delete()
-                        Linked.objects.filter(username=username, ns_id=mode, id_report=report,topic_name = topic,
+                        Linked.objects.filter(username=username, ns_id=mode, id_report=report,topic_name = topic.name,
                                                  language=report.language).delete()
-
+                for row in rows:
+                    mode = NameSpace.objects.get(ns_id=row[8])
+                    username = User.objects.get(username=user_to, ns_id=mode)
+                    username_from = User.objects.get(username=user_from, ns_id=mode)
+                    report = Report.objects.get(id_report=row[1], language=row[2])
+                    concept = Concept.objects.get(concept_url=row[3])
+                    sem = SemanticArea.objects.get(name=row[4])
+                    topic = UseCase.objects.get(name=row[9])
                     if (overwrite == False and set(to_arr) == set(from_arr) and not GroundTruthLogFile.objects.filter(username=username,
                                                                                        gt_type='concept-mention', ns_id=mode,name = topic,
                                                                                        id_report=report, language=row[
                             2]).exists()) or overwrite == True or user_from == 'Robot_user':
 
-                        Linked.objects.create(username=username, ns_id=mode, insertion_time=row[7], name=sem,topic_name = topic,
+                        Linked.objects.create(username=username, ns_id=mode, insertion_time=row[7], name=sem,topic_name = topic.name,
                                           start=mention, stop=mention.stop, concept_url=concept, id_report=report,
                                           language=row[2])
 
 
                 cursor.execute(
-                    "SELECT g.insertion_time,g.gt_json,g.id_report,g.language,g.ns_id,g.name FROM report AS r INNER JOIN ground_truth_log_file AS g ON r.id_report = g.id_report AND r.language = g.language WHERE  r.name = %s AND g.username = %s AND gt_type = %s;",
+                    "SELECT g.insertion_time,g.gt_json,g.id_report,g.language,g.ns_id,g.name FROM report AS r INNER JOIN ground_truth_log_file AS g ON r.id_report = g.id_report AND r.language = g.language WHERE  g.name = %s AND g.username = %s AND gt_type = %s;",
                     [str(use_case), str(user_from), 'concept-mention'])
                 rows_gt_lab = cursor.fetchall()
                 for row in rows_gt_lab:
@@ -1592,9 +1609,10 @@ def copy_rows(use_case,user_from,user_to,overwrite = None):
                                                                                      gt_type='concept-mention', ns_id=mode,
                                                                                      id_report=report, language=row[
                                 3]).exists()) or overwrite == True or user_from == 'Robot_user':
-
+                        gt = json.loads(row[1])
+                        gt['username'] = user_to
                         GroundTruthLogFile.objects.create(username=username, ns_id=mode, insertion_time=row[0],name = topic,
-                                                      id_report=report, language=report.language, gt_json=json.loads(row[1]),
+                                                      id_report=report, language=report.language, gt_json=gt,
                                                       gt_type='concept-mention')
             return True
     except Exception as e:
@@ -1681,30 +1699,34 @@ def get_annotations_count(id_report,language,topic):
     rep_mentions = Mention.objects.filter(id_report = report,language = language)
     for mention in rep_mentions:
         json_val = {}
+        json_val['start'] = mention.start
+        json_val['stop'] = mention.stop
+        json_val['mention'] = mention.mention_text
+        json_val['labels'] = []
+        json_val['count'] = 0
         labels = AnnotationLabel.objects.all()
         for l in labels:
-
+            json_lab = {}
+            json_lab['label'] = l.label
             annotations = Annotate.objects.filter(name = topic, id_report=report, label = l,language=language, ns_id=mode_human, start=mention,stop=mention.stop)
             if annotations.exists() and annotations.count() > 0:
-                json_val['start'] = mention.start
-                json_val['stop'] = mention.stop
-                json_val['label'] = l.label
-                json_val['mention'] = mention.mention_text
-                json_val['count'] = annotations.count()
-                json_val['users_list'] = []
+                json_val['count'] += annotations.count()
+                json_lab['count'] = annotations.count()
+                json_lab['users_list'] = []
                 users = annotations.values('username')
                 for us in users:
-                    if us['username'] not in users_black_list and us['username'] not in json_val['users_list']:
-                        json_val['users_list'].append(us['username'])
-                json_dict['Human']['mentions']['mentions_list'].append(json_val)
+                    if us['username'] not in users_black_list and us['username'] not in json_lab['users_list']:
+                        json_lab['users_list'].append(us['username'])
+                json_val['labels'].append(json_lab)
+        json_dict['Human']['mentions']['mentions_list'].append(json_val)
 
     # CONCEPTS HUMAN
-    rep_concepts = Contains.objects.filter(id_report = report, topic_name = topic,language = language,ns_id=mode_human)
+    rep_concepts = Contains.objects.filter(id_report = report, topic_name = topic.name,language = language,ns_id=mode_human).distinct('concept_url')
     for c in rep_concepts:
         json_val = {}
         concept = Concept.objects.get(concept_url=c.concept_url_id)
         area = SemanticArea.objects.get(name=c.name_id)
-        annotations = Contains.objects.filter(id_report=report, language=language,topic_name = topic, ns_id=mode_human, concept_url = concept,name=area)
+        annotations = Contains.objects.filter(id_report=report, language=language,topic_name = topic.name, ns_id=mode_human, concept_url = concept,name=area)
         if annotations.exists() and annotations.count() > 0:
             json_val['concept_url'] = concept.concept_url
             json_val['concept_name'] = concept.name
@@ -1718,13 +1740,13 @@ def get_annotations_count(id_report,language,topic):
             json_dict['Human']['concepts']['concepts_list'].append(json_val)
 
     # LINKS HUMAN
-    rep_links = Linked.objects.filter(id_report=report,topic_name = topic, language=language, ns_id=mode_human)
+    rep_links = Linked.objects.filter(id_report=report,topic_name = topic.name, language=language, ns_id=mode_human).distinct('start','concept_url','name')
     for c in rep_links:
         json_val = {}
         mention = Mention.objects.get(start = c.start_id,stop = c.stop,id_report = report,language = language)
         concept = Concept.objects.get(concept_url=c.concept_url_id)
         area = SemanticArea.objects.get(name=c.name_id)
-        annotations = Linked.objects.filter(topic_name = topic,id_report=report, language=language, ns_id=mode_human,
+        annotations = Linked.objects.filter(topic_name = topic.name,id_report=report, language=language, ns_id=mode_human,
                                               concept_url=concept, name=area,start = mention,stop = mention.stop)
         if annotations.exists() and annotations.count() > 0:
             json_val['mention'] = mention.mention_text
@@ -1741,402 +1763,7 @@ def get_annotations_count(id_report,language,topic):
                     json_val['users_list'].append(us['username'])
             json_dict['Human']['linking']['linking_list'].append(json_val)
 
-    # # ROBOT
-    # json_dict['Robot'] = {}
-    # json_dict['Robot']['labels'] = {}
-    # json_dict['Robot']['mentions'] = {}
-    # json_dict['Robot']['concepts'] = {}
-    # json_dict['Robot']['linking'] = {}
-    # json_dict['Robot']['labels']['labels_list'] = []
-    # json_dict['Robot']['mentions']['mentions_list'] = []
-    # json_dict['Robot']['concepts']['concepts_list'] = []
-    # json_dict['Robot']['linking']['linking_list'] = []
-    #
-    # json_dict['Robot']['labels']['users_list'] = []
-    # cursor = connection.cursor()
-    # cursor.execute("select distinct(g.username) from ground_truth_log_file as g inner join ground_truth_log_file as gg on g.id_report = gg.id_report and g.language = gg.language and g.gt_type = gg.gt_type AND g.ns_id = gg.ns_id where gg.username = %s and gg.ns_id = %s and g.username != %s and g.gt_type = %s and gg.insertion_time != g.insertion_time AND g.id_report = %s AND g.language = %s",['Robot_user','Robot','Robot_user','labels',str(id_report),str(language)])
-    # ans = cursor.fetchall()
-    # for el in ans:
-    #     json_dict['Robot']['labels']['users_list'].append(el[0])
-    #
-    # json_dict['Robot']['mentions']['users_list'] = []
-    # cursor.execute(
-    #     "select distinct(g.username) from ground_truth_log_file as g inner join ground_truth_log_file as gg on g.id_report = gg.id_report and g.language = gg.language and g.gt_type = gg.gt_type AND g.ns_id = gg.ns_id where gg.username = %s and gg.ns_id = %s and g.username != %s and g.gt_type = %s and gg.insertion_time != g.insertion_time AND g.id_report = %s AND g.language = %s",
-    #     ['Robot_user', 'Robot', 'Robot_user', 'mentions',str(id_report),str(language)])
-    # ans = cursor.fetchall()
-    # for el in ans:
-    #     json_dict['Robot']['mentions']['users_list'].append(el[0])
-    #
-    #
-    # json_dict['Robot']['concepts']['users_list'] = []
-    # cursor.execute(
-    #     "select distinct(g.username) from ground_truth_log_file as g inner join ground_truth_log_file as gg on g.id_report = gg.id_report and g.language = gg.language and g.gt_type = gg.gt_type AND g.ns_id = gg.ns_id where gg.username = %s and gg.ns_id = %s and g.username != %s and g.gt_type = %s and gg.insertion_time != g.insertion_time AND g.id_report = %s AND g.language = %s",
-    #     ['Robot_user', 'Robot', 'Robot_user', 'concepts',str(id_report),str(language)])
-    # ans = cursor.fetchall()
-    # for el in ans:
-    #     json_dict['Robot']['concepts']['users_list'].append(el[0])
-    #
-    # json_dict['Robot']['linking']['users_list'] = []
-    # cursor.execute(
-    #     "select distinct(g.username) from ground_truth_log_file as g inner join ground_truth_log_file as gg on g.id_report = gg.id_report and g.language = gg.language and g.gt_type = gg.gt_type AND g.ns_id = gg.ns_id where gg.username = %s and gg.ns_id = %s and g.username != %s and g.gt_type = %s and gg.insertion_time != g.insertion_time AND g.id_report = %s AND g.language = %s",
-    #     ['Robot_user', 'Robot', 'Robot_user', 'concept-mention',str(id_report),str(language)])
-    # ans = cursor.fetchall()
-    # for el in ans:
-    #     json_dict['Robot']['linking']['users_list'].append(el[0])
-    #
-    # json_dict['Robot']['labels']['users_list'].append('Robot_user')
-    # json_dict['Robot']['mentions']['users_list'].append('Robot_user')
-    # json_dict['Robot']['concepts']['users_list'].append('Robot_user')
-    # json_dict['Robot']['linking']['users_list'].append('Robot_user')
-    # cursor = connection.cursor()
-    # cursor.execute("SELECT COUNT(*) FROM ground_truth_log_file AS g INNER JOIN ground_truth_log_file AS gg ON g.id_report = gg.id_report AND g.language = gg.language AND g.gt_type = gg.gt_type AND g.ns_id = gg.ns_id  WHERE gg.username = %s AND g.gt_type = %s AND  g.insertion_time != gg.insertion_time AND g.ns_id=%s AND g.id_report = %s and g.language = %s",['Robot_user','labels','Robot',str(id_report),str(language)])
-    # gt_labels = cursor.fetchone()[0]
-    #
-    # cursor.execute("SELECT COUNT(*) FROM ground_truth_log_file AS g INNER JOIN ground_truth_log_file AS gg ON g.id_report = gg.id_report AND g.language = gg.language AND g.gt_type = gg.gt_type AND g.ns_id = gg.ns_id  WHERE gg.username = %s AND g.gt_type = %s AND  g.insertion_time != gg.insertion_time AND g.ns_id=%s AND g.id_report = %s and g.language = %s",['Robot_user','mentions','Robot',str(id_report),str(language)])
-    # gt_mentions = cursor.fetchone()[0]
-    #
-    # cursor.execute("SELECT COUNT(*) FROM ground_truth_log_file AS g INNER JOIN ground_truth_log_file AS gg ON g.id_report = gg.id_report AND g.language = gg.language AND g.gt_type = gg.gt_type AND g.ns_id = gg.ns_id  WHERE gg.username = %s AND g.gt_type = %s AND g.insertion_time != gg.insertion_time AND g.ns_id=%s AND g.id_report = %s and g.language = %s",['Robot_user','concepts','Robot',str(id_report),str(language)])
-    # gt_concepts = cursor.fetchone()[0]
-    #
-    # cursor.execute("SELECT COUNT(*) FROM ground_truth_log_file AS g INNER JOIN ground_truth_log_file AS gg ON g.id_report = gg.id_report AND g.language = gg.language AND g.gt_type = gg.gt_type AND g.ns_id = gg.ns_id WHERE gg.username = %s AND g.gt_type = %s AND g.insertion_time != gg.insertion_time AND g.ns_id=%s AND g.id_report = %s and g.language = %s",['Robot_user','concept-mention','Robot',str(id_report),str(language)])
-    # gt_linking = cursor.fetchone()[0]
-    #
-    #
-    # # +1 for robot anno
-    # json_dict['Robot']['mentions']['count'] = gt_mentions +1
-    # json_dict['Robot']['concepts']['count'] = gt_concepts+1
-    # json_dict['Robot']['linking']['count'] = gt_linking+1
-    # json_dict['Robot']['labels']['count'] = gt_labels+1
-    #
-    # users_black_list = []
-    # # LABELS ROBOT
-    # labels_list = AnnotationLabel.objects.filter(name=report.name)
-    # for label in labels_list:
-    #     json_val = {}
-    #     json_val['users_list'] = []
-    #     ins_time = '0001-01-01 00:00:00.000000+00'
-    #     robot_anno = Associate.objects.filter(label = label,seq_number = label.seq_number,id_report = report,language = language, ns_id=mode_robot,username=user_robot)
-    #     if robot_anno.exists() and robot_anno.count() == 1:
-    #         robot_ann = robot_anno.first()
-    #         ins_time = robot_ann.insertion_time
-    #         json_val['users_list'].append('Robot_user')
-    #
-    #     annotations = Associate.objects.filter(label=label, seq_number=label.seq_number, id_report=report,
-    #                                            language=language, ns_id=mode_robot).exclude(insertion_time = ins_time)
-    #
-    #     if annotations.exists() and annotations.count() > 0:
-    #         json_val['count'] = annotations.count()
-    #         json_val['label'] = label.label
-    #         users = annotations.values('username')
-    #         for us in users:
-    #             if us['username'] not in users_black_list:
-    #                 json_val['users_list'].append(us['username'])
-    #         json_dict['Robot']['labels']['labels_list'].append(json_val)
-    #
-    #     elif 'Robot_user' in json_val['users_list']:
-    #         json_val['label'] = label.label
-    #         json_val['count'] = 0
-    #         json_dict['Robot']['labels']['labels_list'].append(json_val)
-    #
-    # # MENTIONS ROBOT
-    # rep_mentions = Mention.objects.filter(id_report=report, language=language)
-    # for mention in rep_mentions:
-    #     json_val = {}
-    #     json_val['users_list'] = []
-    #     ins_time = '0001-01-01 00:00:00.000000+00'
-    #     robot_anno = Annotate.objects.filter(id_report=report, language=language, ns_id=mode_robot,start = mention,stop = mention.stop,
-    #                                           username=user_robot)
-    #     if robot_anno.exists() and robot_anno.count() == 1:
-    #         robot_ann = robot_anno.first()
-    #         ins_time = robot_ann.insertion_time
-    #         json_val['users_list'].append('Robot_user')
-    #
-    #     annotations = Annotate.objects.filter(id_report=report, language=language, ns_id=mode_robot, start=mention,
-    #                                           stop=mention.stop).exclude(insertion_time = ins_time)
-    #     if annotations.exists() and annotations.count() > 0:
-    #
-    #         json_val['mention'] = mention.mention_text
-    #         json_val['start'] = mention.start
-    #         json_val['stop'] = mention.stop
-    #
-    #         json_val['count'] = annotations.count()
-    #
-    #         users = annotations.values('username')
-    #         for us in users:
-    #             if us['username'] not in users_black_list:
-    #                 json_val['users_list'].append(us['username'])
-    #         json_dict['Robot']['mentions']['mentions_list'].append(json_val)
-    #
-    #     elif 'Robot_user' in json_val['users_list']:
-    #
-    #         json_val['mention'] = mention.mention_text
-    #         json_val['start'] = mention.start
-    #         json_val['stop'] = mention.stop
-    #
-    #         json_val['count'] = 0
-    #         json_dict['Robot']['mentions']['mentions_list'].append(json_val)
-    #
-    # # CONCEPTS ROBOT
-    # rep_concepts = Contains.objects.filter(id_report=report, language=language, ns_id=mode_robot).distinct('concept_url','name')
-    # for c in rep_concepts:
-    #     # print(c.concept_url)
-    #     json_val = {}
-    #     json_val['users_list'] = []
-    #     ins_time = '0001-01-01 00:00:00.000000+00'
-    #     concept = c.concept_url
-    #     area = c.name
-    #     robot_anno = Contains.objects.filter(id_report=report, language=language, ns_id=mode_robot,concept_url=c.concept_url,name=area,
-    #                                          username=user_robot)
-    #     if robot_anno.exists() and robot_anno.count() == 1:
-    #         robot_ann = robot_anno.first()
-    #         ins_time = robot_ann.insertion_time
-    #         json_val['users_list'].append('Robot_user')
-    #
-    #     annotations = Contains.objects.filter(id_report=report, language=language, ns_id=mode_robot,
-    #                                           concept_url=concept, name=area).exclude(insertion_time = ins_time)
-    #     if annotations.exists() and annotations.count() > 0:
-    #
-    #         json_val['concept_url'] = concept.concept_url
-    #         json_val['concept_name'] = concept.name
-    #         json_val['area'] = area.name
-    #
-    #         json_val['count'] = annotations.count()
-    #         users = annotations.values('username')
-    #         for us in users:
-    #             if us['username'] not in users_black_list:
-    #                 json_val['users_list'].append(us['username'])
-    #         json_dict['Robot']['concepts']['concepts_list'].append(json_val)
-    #
-    #     elif 'Robot_user' in json_val['users_list']:
-    #
-    #         json_val['concept_url'] = concept.concept_url
-    #         json_val['concept_name'] = concept.name
-    #         json_val['area'] = area.name
-    #
-    #         json_val['count'] = 0
-    #         json_dict['Robot']['concepts']['concepts_list'].append(json_val)
-    #
-    # # LINKS ROBOT
-    # rep_links = Linked.objects.filter(id_report=report, language=language, ns_id=mode_robot).distinct('concept_url','start','name')
-    # for c in rep_links:
-    #     json_val = {}
-    #     ins_time = '0001-01-01 00:00:00.000000+00'
-    #     json_val['users_list'] = []
-    #     concept = c.concept_url
-    #     mention = Mention.objects.get(start = c.start_id,stop=c.stop,id_report = report,language = language)
-    #     area = c.name
-    #     robot_anno = Linked.objects.filter(id_report=report, language=language, ns_id=mode_robot, concept_url=concept,
-    #                                          name=area,start = mention,stop = mention.stop,
-    #                                          username=user_robot)
-    #     if robot_anno.exists() and robot_anno.count() == 1:
-    #         robot_ann = robot_anno.first()
-    #         ins_time = robot_ann.insertion_time
-    #         json_val['users_list'].append('Robot_user')
-    #
-    #     annotations = Linked.objects.filter(id_report=report, language=language, ns_id=mode_robot,
-    #                                         concept_url=concept, name=area, start=mention, stop=mention.stop).exclude(insertion_time=ins_time)
-    #
-    #     if annotations.exists() and annotations.count() > 0:
-    #         json_val['mention'] = mention.mention_text
-    #         json_val['start'] = mention.start
-    #         json_val['stop'] = mention.stop
-    #         json_val['concept_url'] = concept.concept_url
-    #         json_val['concept_name'] = concept.name
-    #         json_val['area'] = area.name
-    #         json_val['count'] = annotations.count()
-    #         users = annotations.values('username')
-    #         for us in users:
-    #             if us['username'] not in users_black_list:
-    #                 json_val['users_list'].append(us['username'])
-    #         json_dict['Robot']['linking']['linking_list'].append(json_val)
-    #
-    #     elif 'Robot_user' in json_val['users_list']:
-    #         json_val['mention'] = mention.mention_text
-    #         json_val['start'] = mention.start
-    #         json_val['stop'] = mention.stop
-    #         json_val['concept_url'] = concept.concept_url
-    #         json_val['concept_name'] = concept.name
-    #         json_val['area'] = area.name
-    #
-    #         json_val['count'] = 0
-    #         json_dict['Robot']['linking']['linking_list'].append(json_val)
-    #
-    # usecase = report.name_id
-    # json_dict['Human_Robot'] = {}
-    # if check_exa_lab_conc_only(usecase):
-    #     json_dict['Human_Robot']['labels'] = {}
-    #     json_dict['Human_Robot']['mentions'] = {}
-    #     json_dict['Human_Robot']['concepts'] = {}
-    #     json_dict['Human_Robot']['linking'] = {}
-    #     json_dict['Human_Robot']['labels']['labels_list'] = []
-    #     json_dict['Human_Robot']['mentions']['mentions_list'] = []
-    #     json_dict['Human_Robot']['concepts']['concepts_list'] = []
-    #     json_dict['Human_Robot']['linking']['linking_list'] = []
-    #     json_dict['Human_Robot']['labels']['users_list'] = list(set(json_dict['Human']['labels']['users_list'] + json_dict['Robot']['labels']['users_list']))
-    #     json_dict['Human_Robot']['labels']['count'] = len(json_dict['Human_Robot']['labels']['users_list'])
-    #     json_dict['Human_Robot']['mentions']['users_list'] = list(set(json_dict['Human']['mentions']['users_list'] + json_dict['Robot']['mentions']['users_list']))
-    #     json_dict['Human_Robot']['mentions']['count'] = len(json_dict['Human_Robot']['mentions']['users_list'])
-    #     json_dict['Human_Robot']['concepts']['users_list'] = list(set(json_dict['Human']['concepts']['users_list'] + json_dict['Robot']['concepts']['users_list']))
-    #     json_dict['Human_Robot']['concepts']['count'] = len(json_dict['Human_Robot']['concepts']['users_list'])
-    #     json_dict['Human_Robot']['linking']['users_list'] = list(set(json_dict['Human']['linking']['users_list'] + json_dict['Robot']['linking']['users_list']))
-    #     json_dict['Human_Robot']['linking']['count'] = len(json_dict['Human_Robot']['linking']['users_list'])
-    #     workpath = os.path.dirname(
-    #         os.path.abspath(__file__))
-    #     with open(os.path.join(workpath, 'automatic_annotation/db_examode_data/examode_db_population.json'),
-    #               'r') as outfile:
-    #         data = json.load(outfile)
-    #         labels = data['labels'][usecase]
-    #     for label in labels:
-    #         json_val = {}
-    #         users_list = []
-    #         json_val['robot_users'] = []
-    #         json_val['human_users'] = []
-    #         json_val['users_list'] = []
-    #         for lab_entry in json_dict['Robot']['labels']['labels_list']:
-    #             if lab_entry['label'] == label:
-    #                 json_val['label'] = label
-    #                 json_val['robot_users'] = lab_entry['users_list']
-    #                 for name in lab_entry['users_list']:
-    #                     if name not in users_list:
-    #                         users_list.append(name)
-    #         for lab_entry in json_dict['Human']['labels']['labels_list']:
-    #             if lab_entry['label'] == label:
-    #                 json_val['label'] = label
-    #                 json_val['human_users'] = lab_entry['users_list']
-    #
-    #                 for name in lab_entry['users_list']:
-    #                     if name not in users_list:
-    #                         users_list.append(name)
-    #         if len(users_list) > 0:
-    #             json_val['count'] = len(users_list)
-    #             json_val['users_list'] = users_list
-    #             json_dict['Human_Robot']['labels']['labels_list'].append(json_val)
-    #
-    #     mentions_list = []
-    #     for lab_entry in json_dict['Robot']['mentions']['mentions_list']:
-    #         if {'start':lab_entry['start'],'stop':lab_entry['stop'],'mention':lab_entry['mention']} not in mentions_list:
-    #             mentions_list.append({'start':lab_entry['start'],'stop':lab_entry['stop'],'mention':lab_entry['mention']})
-    #
-    #     for lab_entry in json_dict['Human']['mentions']['mentions_list']:
-    #         if {'start': lab_entry['start'], 'stop': lab_entry['stop'],'mention': lab_entry['mention']} not in mentions_list:
-    #             mentions_list.append({'start': lab_entry['start'], 'stop': lab_entry['stop'], 'mention': lab_entry['mention']})
-    #
-    #     for entry in mentions_list:
-    #         json_val = {}
-    #         users_list = []
-    #         json_val['robot_users'] = []
-    #         json_val['human_users'] = []
-    #         json_val['users_list'] = []
-    #         for lab_entry in json_dict['Human']['mentions']['mentions_list']:
-    #             if entry['start'] == lab_entry['start'] and entry['stop'] == lab_entry['stop'] and entry['mention'] == lab_entry['mention']:
-    #                 json_val['human_users'] = lab_entry['users_list']
-    #                 for user in lab_entry['users_list']:
-    #                     if user not in users_list:
-    #                         users_list.append(user)
-    #         for lab_entry in json_dict['Robot']['mentions']['mentions_list']:
-    #             if entry['start'] == lab_entry['start'] and entry['stop'] == lab_entry['stop'] and entry['mention'] == lab_entry['mention']:
-    #                 json_val['robot_users'] = lab_entry['users_list']
-    #                 for user in lab_entry['users_list']:
-    #                     if user not in users_list:
-    #                         users_list.append(user)
-    #         json_val['count'] = len(users_list)
-    #         json_val['users_list'] = (users_list)
-    #         if len(users_list) > 0:
-    #             json_val['start'] = entry['start']
-    #             json_val['stop'] = entry['stop']
-    #             json_val['mention'] = entry['mention']
-    #             json_dict['Human_Robot']['mentions']['mentions_list'].append(json_val)
-    #     concepts_list = []
-    #     for lab_entry in json_dict['Robot']['concepts']['concepts_list']:
-    #         cur_entry = {'concept_url': lab_entry['concept_url'], 'concept_name': lab_entry['concept_name'],
-    #                      'area': lab_entry['area']}
-    #         if cur_entry not in concepts_list:
-    #             concepts_list.append(cur_entry)
-    #
-    #     for lab_entry in json_dict['Human']['concepts']['concepts_list']:
-    #         cur_entry = {'concept_url': lab_entry['concept_url'], 'concept_name': lab_entry['concept_name'],
-    #                      'area': lab_entry['area']}
-    #         if cur_entry not in concepts_list:
-    #             concepts_list.append(cur_entry)
-    #
-    #     users_list = []
-    #     for entry in concepts_list:
-    #         json_val = {}
-    #         users_list = []
-    #         json_val['robot_users'] = []
-    #         json_val['human_users'] = []
-    #         json_val['users_list'] = []
-    #         for lab_entry in json_dict['Human']['concepts']['concepts_list']:
-    #             if entry['concept_url'] == lab_entry['concept_url'] and entry['concept_name'] == lab_entry['concept_name'] and entry['area'] == lab_entry['area']:
-    #                 json_val['human_users'] = lab_entry['users_list']
-    #                 for user in lab_entry['users_list']:
-    #                     if user not in users_list:
-    #                         users_list.append(user)
-    #         for lab_entry in json_dict['Robot']['concepts']['concepts_list']:
-    #             if entry['concept_url'] == lab_entry['concept_url'] and entry['concept_name'] == lab_entry['concept_name'] and entry['area'] == lab_entry['area']:
-    #                 json_val['robot_users'] = lab_entry['users_list']
-    #                 for user in lab_entry['users_list']:
-    #                     if user not in users_list:
-    #                         users_list.append(user)
-    #         json_val['count'] = len(users_list)
-    #         json_val['users_list'] = (users_list)
-    #         if len(users_list) > 0:
-    #             json_val['concept_url'] = entry['concept_url']
-    #             json_val['concept_name'] = entry['concept_name']
-    #             json_val['area'] = entry['area']
-    #             json_dict['Human_Robot']['concepts']['concepts_list'].append(json_val)
-    #
-    #
-    #     associations_list = []
-    #     for lab_entry in json_dict['Robot']['linking']['linking_list']:
-    #         cur_entry = {'concept_url': lab_entry['concept_url'], 'concept_name': lab_entry['concept_name'],
-    #                      'area': lab_entry['area'],'mention':lab_entry['mention'],'start':lab_entry['start'],'stop':lab_entry['stop']}
-    #         if cur_entry not in associations_list:
-    #             associations_list.append(cur_entry)
-    #
-    #     for lab_entry in json_dict['Human']['linking']['linking_list']:
-    #         cur_entry = {'concept_url': lab_entry['concept_url'], 'concept_name': lab_entry['concept_name'],
-    #                      'area': lab_entry['area'], 'mention': lab_entry['mention'], 'start': lab_entry['start'],
-    #                      'stop': lab_entry['stop']}
-    #         if cur_entry not in associations_list:
-    #             associations_list.append(cur_entry)
-    #
-    #     users_list = []
-    #     for entry in associations_list:
-    #         json_val = {}
-    #         users_list = []
-    #         json_val['robot_users'] = []
-    #         json_val['human_users'] = []
-    #         json_val['users_list'] = []
-    #         for lab_entry in json_dict['Human']['linking']['linking_list']:
-    #             if entry['concept_url'] == lab_entry['concept_url'] and entry['concept_name'] == lab_entry[
-    #                 'concept_name'] and entry[
-    #                 'area'] == lab_entry['area'] and entry['mention'] == lab_entry['mention'] and entry['start'] == lab_entry['start'] and lab_entry['stop'] == entry['stop']:
-    #                 json_val['human_users'] = lab_entry['users_list']
-    #                 for user in lab_entry['users_list']:
-    #                     if user not in users_list:
-    #                         users_list.append(user)
-    #         for lab_entry in json_dict['Robot']['linking']['linking_list']:
-    #             if entry['concept_url'] == lab_entry['concept_url'] and entry['concept_name'] == lab_entry[
-    #                 'concept_name'] and entry[
-    #                 'area'] == lab_entry['area'] and entry['mention'] == lab_entry['mention'] and entry['start'] == \
-    #                     lab_entry['start'] and lab_entry['stop'] == entry['stop']:
-    #                 json_val['robot_users'] = lab_entry['users_list']
-    #                 for user in lab_entry['users_list']:
-    #                     if user not in users_list:
-    #                         users_list.append(user)
-    #         json_val['count'] = len(users_list)
-    #         if len(users_list) > 0:
-    #             json_val['concept_url'] = entry['concept_url']
-    #             json_val['concept_name'] = entry['concept_name']
-    #             json_val['area'] = entry['area']
-    #             json_val['start'] = entry['start']
-    #             json_val['stop'] = entry['stop']
-    #             json_val['mention'] = entry['mention']
-    #             json_val['users_list'] = (users_list)
-    #             json_dict['Human_Robot']['linking']['linking_list'].append(json_val)
-
-    # print('DICT ',json_dict)
+    print(json_dict)
     return json_dict
 
 
@@ -2164,22 +1791,8 @@ def decompress_files(reports):
             files = os.listdir(dir_path)
             reps_to_ret.extend(files)
         else:
-            reps_to_ret.extend(reports)
+            reps_to_ret.append(report)
 
-        # elif report.name.endswith('.Z'):
-        #     if not os.path.exists(dir_path):
-        #         os.makedirs(dir_path)
-        #     with open(dir_path + '/'+report.name, 'wb+') as f:
-        #         for chunk in report.chunks():
-        #             f.write(chunk)
-        #
-        #     uncompressed_data = unlzw3.unlzw(Path(dir_path + '/'+report.name))
-        #     os.remove(Path(dir_path + '/'+report.name))
-        #     r = report.name.split('.Z')[0] + '.txt'
-        #     with open(dir_path + '/' + r, 'wb+') as f:
-        #         f.write(uncompressed_data)
-        # else:
-        #     reps_to_ret.append(report)
 
 
 

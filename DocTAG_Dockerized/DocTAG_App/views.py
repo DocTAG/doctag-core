@@ -1719,7 +1719,7 @@ def check_files_for_update(request):
     jsonAnn = request.POST.get('json_ann',None)
     jsonDispUp = request.POST.get('json_disp_update',None)
     jsonAnnUp = request.POST.get('json_ann_update',None)
-    tf_idf = request.POST.get('tf_idf', 10)
+    tf_idf = request.POST.get('tf_idf', None)
     # load_concepts = request.POST.get('exa_concepts',None)
     # load_labels = request.POST.get('exa_labels',None)
     msg = check_for_update(type1,pubmedfiles,reports,labels,concepts,jsonDisp,jsonAnn,jsonDispUp,jsonAnnUp,topic,runs,tf_idf)
@@ -1740,7 +1740,7 @@ def update_db(request):
     runs = []
     topic = []
     tf_idf = request.POST.get('tfidf', None)
-
+    print(tf_idf)
 
     for filename, file in request.FILES.items():
         if filename.startswith('reports'):
@@ -1801,7 +1801,8 @@ def configure_db(request):
     concepts = []
     runs = []
     topic = []
-    tf_idf = request.POST.get('tf_idf',10)
+    tf_idf = request.POST.get('tfidf',10)
+    print(tf_idf)
     workpath = os.path.dirname(os.path.abspath(__file__))  # Returns the Path your .py file is in
     path1 = os.path.join(workpath, './config_files/config.json')
     g = open(path1,'r')
@@ -1829,13 +1830,12 @@ def configure_db(request):
         elif filename.startswith('topic'):
             topic.append(file)
             
-    reports = decompress_files(reports)
+    # reports = decompress_files(reports)
     jsonDisp = request.POST.get('json_disp',None)
     jsonAnn = request.POST.get('json_ann',None)
     jsonAll = request.POST.get('json_all',None)
     username = request.POST.get('username',None)
     password = request.POST.get('password',None)
-
     msg = configure_data(pubmedfiles,reports,labels,concepts,jsonDisp,jsonAnn,jsonAll,username,password,topic,runs,tf_idf)
 
     # if 'message' in list(msg.keys()):
@@ -1916,22 +1916,22 @@ def download_ground_truths(request):
         resp = create_csv_to_download(report_type,annotation_mode,username,use,inst,lang,action,response,batch)
         return resp
 
-    elif format == 'biocxml':
-        json_keys_to_display = request.session['fields']
-        json_keys_to_ann = request.session['fields_to_ann']
-        if report_type == 'pubmed':
-            json_keys_to_display = ['year','authors','volume','journal']
-            json_keys_to_ann = ['title','abstract']
-        json_keys = json_keys_to_display + json_keys_to_ann
-        resp = generate_bioc(json_keys,json_keys_to_ann,username,action,lang,use,inst,'xml',annotation_mode,report_type,batch)
-        return HttpResponse(resp,content_type='application/xml')
-
-    elif format == 'biocjson':
-        json_keys_to_display = request.session['fields']
-        json_keys_to_ann = request.session['fields_to_ann']
-        json_keys = json_keys_to_display + json_keys_to_ann
-        resp = generate_bioc(json_keys,json_keys_to_ann,username,action,lang,use,inst,'json',annotation_mode,report_type,batch)
-        return HttpResponse(resp,content_type='application/xml')
+    # elif format == 'biocxml':
+    #     json_keys_to_display = request.session['fields']
+    #     json_keys_to_ann = request.session['fields_to_ann']
+    #     if report_type == 'pubmed':
+    #         json_keys_to_display = ['year','authors','volume','journal']
+    #         json_keys_to_ann = ['title','abstract']
+    #     json_keys = json_keys_to_display + json_keys_to_ann
+    #     # resp = generate_bioc(json_keys,json_keys_to_ann,username,action,lang,use,inst,'xml',annotation_mode,report_type,batch)
+    #     return HttpResponse(resp,content_type='application/xml')
+    #
+    # elif format == 'biocjson':
+    #     json_keys_to_display = request.session['fields']
+    #     json_keys_to_ann = request.session['fields_to_ann']
+    #     json_keys = json_keys_to_display + json_keys_to_ann
+    #     resp = generate_bioc(json_keys,json_keys_to_ann,username,action,lang,use,inst,'json',annotation_mode,report_type,batch)
+    #     return HttpResponse(resp,content_type='application/xml')
 
 
 def download_all_ground_truths(request):
@@ -2291,7 +2291,7 @@ def download_examples(request):
         path = os.path.join(workpath, './static/examples/topic.csv')
 
     elif file_required == 'runs':
-        path = os.path.join(workpath, './static/examples/runs.csv')
+        path = os.path.join(workpath, './static/examples/runs_with_lang.csv')
 
     content = open(path,'r')
     return HttpResponse(content, content_type='text/csv')
@@ -2324,7 +2324,7 @@ def download_templates(request):
         path = os.path.join(workpath, './static/examples/topic.csv')
 
     elif file_required == 'runs':
-        path = os.path.join(workpath, './static/examples/runs.csv')
+        path = os.path.join(workpath, './static/examples/runs_with_lang.csv')
 
     content = open(path,'r')
     return HttpResponse(content, content_type='text/csv')
@@ -3100,7 +3100,7 @@ def create_majority_vote_groundtruth(request):
     report = Report.objects.get(id_report = id_report,language = language)
 
     json_resp = create_majority_vote_gt(action, users, mode, report, topic)
-    # print(json_resp)
+    print(json_resp)
     return JsonResponse(json_resp)
 
 
@@ -3115,7 +3115,7 @@ def download_all_reports(request):
     mode = request_body_json['format']
     action = request_body_json['action']
     annot = request_body_json['annotation_mode']
-    topic = request_body_json['topic']
+    # topic = request_body_json['topic']
 
     if annot == 'Manual':
         annot = 'Human'
@@ -3124,7 +3124,7 @@ def download_all_reports(request):
 
     try:
         response = HttpResponse(content_type='text/csv')
-        resp = download_report_gt(report_list, action, annot, mode, response,topic)
+        resp = download_report_gt(report_list, action, annot, mode, response)
         if mode == 'biocxml' or mode == 'biocjson':
             return HttpResponse(resp, content_type='application/xml')
         elif mode == 'csv':
@@ -3146,10 +3146,10 @@ def download_majority_reports(request):
     action = request_body_json['action']
     mode = request_body_json['annotation_mode']
     chosen_users = request_body_json['chosen_users']
-    topic = request_body_json['topic']
+    # topic = request_body_json['topic']
     try:
         response = HttpResponse(content_type='text/csv')
-        resp = download_majority_gt(chosen_users,report_list, action, mode, format,response,topic)
+        resp = download_majority_gt(chosen_users,report_list, action, mode, format,response)
         if format == 'biocxml' or format == 'biocjson':
             return HttpResponse(resp, content_type='application/xml')
         elif format == 'csv':

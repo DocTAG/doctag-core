@@ -126,6 +126,8 @@ function UpdateConfiguration() {
             SetInstituteList(response.data['institute']);
 
         })
+        axios.get('http://127.0.0.1:8000/get_keys').then(response=>SetKeys(response.data['keys']))
+
 
         // axios.get("http://127.0.0.1:8000/pubmed_missing_auto").then(response => {
         //     SetPubMedMissingAuto(response.data);
@@ -232,6 +234,22 @@ function UpdateConfiguration() {
         }
 
         if(type === 'reports'){
+
+            input = document.getElementById('topic_form');
+            for (let ind=0; ind<input.files.length; ind++) {
+                var name = 'topic' + ind.toString()
+                formData.append(name, input.files[ind]);
+            }
+            input = document.getElementById('runs_form');
+            for (let ind=0; ind<input.files.length; ind++) {
+                var name = 'runs' + ind.toString()
+                formData.append(name, input.files[ind]);
+            }
+            input = document.getElementById('exampleFormControlFile5');
+            for (let ind=0; ind<input.files.length; ind++) {
+                var name = 'pubmed' + ind.toString()
+                formData.append(name, input.files[ind]);
+            }
             input = document.getElementById('exampleFormControlFile1');
             for (let ind=0; ind<input.files.length; ind++) {
                 var name = 'reports' + ind.toString()
@@ -281,12 +299,18 @@ function UpdateConfiguration() {
                 formData.append('exa_concepts', UsesMissingExaConcepts);
             }
         }
-        if(type === 'pubmed'){
-            input = document.getElementById('exampleFormControlFile5');
-            for (let ind=0; ind<input.files.length; ind++) {
-                var name = 'pubmed' + ind.toString()
-                formData.append(name, input.files[ind]);
-            }
+        // if(type === 'pubmed'){
+        //     input = document.getElementById('exampleFormControlFile5');
+        //     for (let ind=0; ind<input.files.length; ind++) {
+        //         var name = 'pubmed' + ind.toString()
+        //         formData.append(name, input.files[ind]);
+        //     }
+        //
+        //
+        // }
+        if(type === 'tfidf'){
+            input = document.getElementById('tfidf_form');
+            formData.append('tfidf', input.value);
 
 
         }
@@ -378,6 +402,20 @@ function UpdateConfiguration() {
                             input.value = null
                             SetShowDeleteReports(false)
                             SetKeysUpdate([])
+
+                        }
+                        input = document.getElementById('topic_form');
+                        // console.log(input.files[0])
+                        if (input.files[0] !== undefined && input.files[0] !== null ) {
+                            input.value = null
+                            SetShowDeleteTopic(false)
+
+                        }
+                        input = document.getElementById('runs_form');
+                        // console.log(input.files[0])
+                        if (input.files[0] !== undefined && input.files[0] !== null ) {
+                            input.value = null
+                            SetShowDeleteRuns(false)
 
                         }
                     }
@@ -495,14 +533,29 @@ function UpdateConfiguration() {
                     var name = 'reports' + ind.toString()
                     formData.append(name, input.files[ind]);
                 }
-            }
-            if(type === 'pubmed'){
+                input = document.getElementById('topic_form');
+                for (let ind=0; ind<input.files.length; ind++) {
+                    var name = 'topic' + ind.toString()
+                    formData.append(name, input.files[ind]);
+                }
+                input = document.getElementById('runs_form');
+                for (let ind=0; ind<input.files.length; ind++) {
+                    var name = 'runs' + ind.toString()
+                    formData.append(name, input.files[ind]);
+                }
                 input = document.getElementById('exampleFormControlFile5');
                 for (let ind=0; ind<input.files.length; ind++) {
                     var name = 'pubmed' + ind.toString()
                     formData.append(name, input.files[ind]);
                 }
             }
+            // if(type === 'pubmed'){
+            //     input = document.getElementById('exampleFormControlFile5');
+            //     for (let ind=0; ind<input.files.length; ind++) {
+            //         var name = 'pubmed' + ind.toString()
+            //         formData.append(name, input.files[ind]);
+            //     }
+            // }
             if(type === 'json_fields' ){
                 var displayed = []
                 var annotate = []
@@ -539,14 +592,6 @@ function UpdateConfiguration() {
                 .then(function (response) {
                     // console.log(response)
                     SetLoadingResponse(false)
-                    // axios.get("http://127.0.0.1:8000/report_missing_auto").then(response => {
-                    //     SetReportsMissingAuto(response.data);
-                    //
-                    // }).catch(function (error){console.log(error)})
-                    // axios.get("http://127.0.0.1:8000/pubmed_missing_auto").then(response => {
-                    //     SetPubMedMissingAuto(response.data);
-                    //
-                    // }).catch(function (error){console.log(error)})
 
                     if(response.data['message'] !== undefined){
                         SetLoadingResponse(false)
@@ -586,13 +631,13 @@ function UpdateConfiguration() {
         SetShowDeleteReports(false)
         SetShowDeleteConcepts(false)
         SetShowDeleteLabels(false)
+        SetShowDeleteTopic(false)
+        SetShowDeleteRuns(false)
         var input = document.getElementById('ControlSelect1');
         // console.log('test input',input.value)
         var type = input.value
         SetSelected(type)
-        if(type === 'json_fields'){
-            axios.get('http://127.0.0.1:8000/get_keys').then(response=>SetKeys(response.data['keys']))
-        }
+
     }
 
 
@@ -668,6 +713,13 @@ function UpdateConfiguration() {
                 formData.append(name, input.files[ind]);
 
             }
+
+        }
+        else if (Selected === 'tfidf'){
+                input = document.getElementById('tfidf_form');
+                formData.append('tfidf', input.value);
+
+
 
         }
 
@@ -780,6 +832,32 @@ function UpdateConfiguration() {
             }
 
         }
+        else if(token === 'topics'){
+            input = document.getElementById('topic_form');
+            // console.log('current',input)
+
+            if(input.files[0] !== undefined && input.files[0] !== null){
+                input.value = null
+                // console.log('current',input)
+                SetShowDeleteTopic(false)
+
+
+            }
+
+        }
+        else if(token === 'runs'){
+            input = document.getElementById('runs_form');
+            // console.log('current',input)
+
+            if(input.files[0] !== undefined && input.files[0] !== null){
+                input.value = null
+                // console.log('current',input)
+                SetShowDeleteRuns(false)
+
+
+            }
+
+        }
 
 
 
@@ -797,6 +875,22 @@ function UpdateConfiguration() {
 
             if(input.files[0] !== undefined && input.files[0] !== null){
                 SetShowDeleteReports(true)
+
+            }
+        }
+        else if(token === 'topics'){
+            var input = document.getElementById('topic_form');
+
+            if(input.files[0] !== undefined && input.files[0] !== null){
+                SetShowDeleteTopic(true)
+
+            }
+        }
+        else if(token === 'runs'){
+            var input = document.getElementById('runs_form');
+
+            if(input.files[0] !== undefined && input.files[0] !== null){
+                SetShowDeleteRuns(true)
 
             }
         }
@@ -1275,131 +1369,7 @@ function UpdateConfiguration() {
                         <div>
                             Please, provide us with all the files and information required to customize the application. You can get the automatic annotations for your reports (available only for <i>colon, uterine cervix, lung</i> use cases), or add some data (report,s labels, concepts) to the current configuration.<br/>
                             <hr/>
-                            {/*<div><h5 style={{display:'inline-block'}}>Get the automatic annotations</h5><IconButton onClick={()=>SetShowAutoSection(prev=>!prev)}><ExpandMoreIcon style={{marginLeft:'2px'}} /></IconButton></div>*/}
-                            {/*<div>*/}
-                            {/*    <Collapse style={{marginTop:'0px'}} in={showAutoSection}>*/}
-                            {/*        {(UseCaseList.length > 0 && (UseCaseList.indexOf('colon') !== -1 || UseCaseList.indexOf('uterine cervix') !== -1 || UseCaseList.indexOf('lung') !== -1)) ? <div>*/}
-                            {/*        <div style={{'margin-bottom':'1%','margin-top':'0px'}}>The automatic annotation of the reports allows you to be provided with a ready to use annotations. The ground truths created by the algorithms will be available to be checked and modified by users.</div>*/}
-                            {/*        <h6>Attention</h6>*/}
-                            {/*        <div>Automatic annotation algorithm:</div>*/}
-                            {/*        <ul>*/}
-                            {/*            <li>is available for <i>Lung, Colon, Uterine Cervix</i> use cases.</li>*/}
-                            {/*            <li>is available for <i>english</i> language</li>*/}
-                            {/*            <li>relies on a set of labels we provide.</li>*/}
-                            {/*            <li>relies on the concepts of the EXAMODE ontology (see the <a href={'http://examode.dei.unipd.it/ontology/'}>EXAMODE ontology website</a>).</li>*/}
-                            {/*        </ul>*/}
-                            {/*        <div>The algorithm can be run on machines that have at least 10GB of RAM, if you are not sure you have such a machine, please, do not run this process, it will fill all your memory ending up with an error.*/}
-                            {/*        </div><hr/>*/}
-                            {/*        <div>*/}
-                            {/*            {PubMedMissingAuto['tot'] !== 0  && <div><h6>Get the automatic annotations of PubMed articles</h6>*/}
-                            {/*            <div>*/}
-                            {/*                You can get the automatic annotations of PubMed articles.*/}
-                            {/*                Remember that <i>title</i> and <i>abstract</i> sections will be annotated.*/}
 
-
-                            {/*                <Form.Group >*/}
-                            {/*                    <Row>*/}
-                            {/*                        <Col md = {6}><Form.Control id="control_auto_pubmed" as="select" defaultValue="Select..." onChange={(e)=>handleChangePubMedAutoOpt(e)}>*/}
-                            {/*                            <option value=''>Select a use case</option>*/}
-
-                            {/*                            {PubMedUsesInserted.map(use=>*/}
-                            {/*                                <option value={use}>{use}</option>*/}
-                            {/*                            )}*/}
-                            {/*                        </Form.Control></Col>*/}
-                            {/*                        {PubMedOptionsBatches.length > 1 && PubMedAutoOpt !== '' && <Col md = {3}>*/}
-                            {/*                            <Form.Control as="select"  id="control_batch_pubmed" defaultValue="Select a batch" onChange={(e)=>handleChangePubMedBatch(e)}>*/}
-                            {/*                                <option value=''>Select a batch</option>*/}
-                            {/*                                {PubMedOptionsBatches.map(batch=>*/}
-                            {/*                                    // console.log('opt',batch)*/}
-                            {/*                                    <option value={batch}>{batch}</option>*/}
-                            {/*                                )}*/}
-                            {/*                                <option value = 'all'>All</option>*/}
-                            {/*                            </Form.Control>*/}
-                            {/*                        </Col>}*/}
-                            {/*                    </Row>*/}
-                            {/*                </Form.Group>*/}
-                            {/*                {PubMedAutoOpt !== '' && PubMedBatch !== '' &&*/}
-                            {/*                <div>*/}
-                            {/*                    <div>Use case <b>{PubMedAutoOpt}</b> {PubMedOptionsBatches.length > 1 && <>batch <b>{Batch}</b></>}: <b>{PubMedMissingAuto[PubMedAutoOpt][PubMedBatch]['annotated']}</b> reports have been automatically annotated, while <b>{PubMedMissingAuto[PubMedAutoOpt][PubMedBatch]['tot'] - PubMedMissingAuto[PubMedAutoOpt][PubMedBatch]['annotated']}</b> have not. </div>*/}
-
-
-                            {/*                    <div style={{'text-align':'center','margin':'2% 0 0 2%'}}>*/}
-                            {/*                    <Button id='commit_extracted' size='lg' variant='success' onClick={()=>{SetShowPubMedModal(true);SetReportType('pubmed')}}>Get the automatic annotations of PubMed articles</Button>*/}
-                            {/*                    </div>*/}
-                            {/*                </div>}*/}
-
-                            {/*                </div><hr/></div>}*/}
-
-
-
-
-                            {/*            <h6>Get the automatic annotations of reports you uploaded</h6>*/}
-                            {/*        </div>*/}
-                            {/*        <div>*/}
-                            {/*            <div >*/}
-                            {/*                <Form.Group >*/}
-                            {/*                    <Row>*/}
-                            {/*                        <Col md = {6}><Form.Control id="control_auto" as="select" defaultValue="Select..." onChange={(e)=>handleChangeAutoOpt(e)}>*/}
-                            {/*                            <option value=''>Select a use case</option>*/}
-
-                            {/*                            {OptionsUsecasesAuto.map(use=>*/}
-                            {/*                                <option value={use}>{use}</option>*/}
-                            {/*                            )}*/}
-                            {/*                        </Form.Control></Col>*/}
-                            {/*                        {OptionsBatches.length > 1 && <Col md = {3}>*/}
-                            {/*                           <Form.Control as="select"  id="control_batch" defaultValue="Select a batch" onChange={(e)=>handleChangeBatch(e)}>*/}
-                            {/*                                <option value=''>Select a batch</option>*/}
-                            {/*                                {OptionsBatches.map(batch=>*/}
-                            {/*                                    // console.log('opt',batch)*/}
-                            {/*                                    <option value={batch}>{batch}</option>*/}
-                            {/*                                )}*/}
-                            {/*                               <option value = 'all'>All</option>*/}
-                            {/*                            </Form.Control>*/}
-                            {/*                        </Col>}*/}
-                            {/*                    </Row></Form.Group>*/}
-                            {/*                {AutoOpt !== '' && Batch !== '' && <div>*/}
-                            {/*                    <div>Use case <b>{AutoOpt}</b> {OptionsBatches.length > 1 && <>batch <b>{Batch}</b></>}: <b>{ReportsMissingAuto[AutoOpt][Batch]['annotated']}</b> reports have been automatically annotated, while <b>{ReportsMissingAuto[AutoOpt][Batch]['tot'] - ReportsMissingAuto[AutoOpt][Batch]['annotated']}</b> have not. </div>*/}
-
-
-                            {/*                    <hr/>*/}
-                            {/*                    {FieldsAlreadyExtracted && FieldsUseCasesToExtract && AutoOpt !== '' && <div>*/}
-                            {/*                        <div>Please select the fields you want to extract the mentions and concepts from. <b>Remember that once you have chosen the fields for a use case, these will not be modifiable. If you want to modify the fields you want to extract automatic concepts from, you will have to extract the concepts from every report again. This will remove the ground-truths automatically created before and those the users revised.</b> </div>*/}
-
-                            {/*                        <div style={{marginTop:'1%'}}>*/}
-                            {/*                                <h5>{AutoOpt}</h5>*/}
-                            {/*                                <div style={{'margin-bottom':'2%'}}>*/}
-                            {/*                                    {FieldsAlreadyExtracted[AutoOpt].length === 0 ? <div style={{'margin-bottom':'2%'}}><i>Select <b>at least</b> a field</i></div> : <div style={{'margin-bottom':'2%'}}><i>These are the fields you used to automatically annotate {ReportsMissingAuto[AutoOpt][Batch]['annotated']} reports. If you want to change them, click on CLEAR and select a new set of fields. All the reports for that use case will be annotated again. </i></div>}*/}
-                            {/*                                    {FieldsUseCasesToExtract[AutoOpt].map(field=>*/}
-                            {/*                                        <label>*/}
-                            {/*                                            <input name={AutoOpt} disabled={FieldsAlreadyExtracted[AutoOpt].length > 0} defaultChecked={FieldsAlreadyExtracted[AutoOpt].indexOf(field) !== -1} value={field} type="checkbox"  onChange={()=>handleChangeInputLabel(field,AutoOpt)}/>{' '}*/}
-                            {/*                                            {field}&nbsp;&nbsp;&nbsp;&nbsp;*/}
-                            {/*                                        </label>*/}
-                            {/*                                    )}*/}
-                            {/*                                </div>*/}
-
-
-
-
-                            {/*                                /!*{FieldsAlreadyExtracted[AutoOpt].length === 0 ?<Button onClick={()=>SetConfirmExtractFields(prev=>!prev)}>Confirm</Button> : <Button variant='danger' onClick={()=>SetShowIrreversibleModal(true)} size='sm'>Clear</Button>}*!/*/}
-                            {/*                                {FieldsAlreadyExtracted[AutoOpt].length > 0 && <Button variant='danger' onClick={()=>SetShowIrreversibleModal(true)} size='sm'>Clear</Button>}*/}
-                            {/*                                {NoSelected.length > 0 && <div>Select <b>at least</b> a field for {NoSelected.join(', ')}</div>}*/}
-
-                            {/*                                <div style={{'text-align':'center','margin-top':'2%'}}>*/}
-                            {/*                                    {(ReportsMissingAuto[AutoOpt][Batch]['annotated']===ReportsMissingAuto[AutoOpt][Batch]['tot'] && CommitPossible) ? <div style={{'color':'green','font-weight':'bold'}}>All the reports for this configuration have been automatically annotated. </div> : <Button id='commit_extracted' disabled={FieldsAlreadyExtracted[AutoOpt].length === 0 && SelectedFields[AutoOpt].length === 0} size='lg' variant='success' onClick={()=>checkemptyuses(AutoOpt)}>Get the automatic annotations</Button>}*/}
-                            {/*                                </div>*/}
-
-                            {/*                            </div>*/}
-
-
-                            {/*                    </div>}*/}
-                            {/*                </div>}*/}
-
-                            {/*            </div>*/}
-                            {/*        </div></div>*/}
-                            {/*        : <div>Sorry. The automatic annotations are available only for <i>Colon, Lung, Uterine cervix</i> use cases.</div>}*/}
-                            {/*        <hr/><hr/>*/}
-                            {/*    </Collapse>*/}
-                            {/*</div>*/}
 
 
                             <div><h5 style={{display:'inline-block'}}>Add some data to the current configuration</h5><IconButton onClick={()=>SetShowAddSection(prev=>!prev)}><ExpandMoreIcon style={{marginLeft:'2px'}} /></IconButton></div>
@@ -1409,106 +1379,12 @@ function UpdateConfiguration() {
                                 <ul>
                                     <li><span>Select the type of file you want to add (the choices are: <i>labels, reports, concepts, fields to display and annotate).</i></span></li>
                                     <li><span>Select the file(s).</span></li>
-                                    <li>Click on <span><Button variant="info" size='sm'>Example</Button></span> to see an example of file accepted by the database.</li>
                                     <li>Click on <span><Button variant="primary" size='sm'>Check</Button></span> to control if the file (or information) you provided complies with the requirements.</li>
                                     <li>Click on <span><Button variant="success" size='sm'>Confirm</Button></span> to insert the data in the database. If some errors occurred you will be informed.</li>
                                 </ul>
                                 <hr/>
                                 <div>
-                                    {/*<div>*/}
-                                    {/*    <h4>Examples</h4>*/}
-                                    {/*    <ul>*/}
-                                    {/*        <li><Row><Col md={4}>Label file:</Col><Col md={8}><Button variant='info' size='sm' onClick={(e)=>SetShowLabelsExamples(prev=>!prev)}>Example</Button></Col></Row>*/}
-                                    {/*            {ShowLabelsExamples && <div style={{'text-align':'center'}}>This is an example of labels file. <br/> Your file must contain the header row (the one in boldface) containing the name of each column. In each row the values must be comma separated.<br/> <span style={{'font-weight':'bold'}}>Null values are not allowed, for each row you must provide a label and a usecase.</span>*/}
-                                    {/*                <br/><br/>*/}
-                                    {/*                /!*<div>If you prefer you can download the csv file.*!/*/}
-                                    {/*                /!*    <span> <Button size='sm' onClick={(e)=>onSaveExample(e,'labels')} variant='warning'> <FontAwesomeIcon icon={faDownload} /> Download</Button></span>*!/*/}
-                                    {/*                /!*</div>*!/*/}
-                                    {/*                <hr/>*/}
-                                    {/*                /!*<div className='examples'>*!/*/}
-                                    {/*                /!*    <div style={{'display':'flex','justify-content':'center'}}>*!/*/}
-                                    {/*                /!*        <div>*!/*/}
-                                    {/*                /!*            <span style={{'font-weight':'bold'}}>usecase,label</span><br/>*!/*/}
-                                    {/*                /!*            /!*name,seq_number,label<br/>*!/*!/*/}
-                                    {/*                /!*            Colon,Cancer<br/>*!/*/}
-                                    {/*                /!*            Colon,Adenomatous polyp - high grade dysplasia<br/>*!/*/}
-                                    {/*                /!*            Colon,Adenomatous polyp - low grade dysplasia<br/>*!/*/}
-                                    {/*                /!*            Colon,Hyperplastic polyp<br/>*!/*/}
-                                    {/*                /!*            Colon,Non-informative<br/>*!/*/}
-                                    {/*                /!*        </div>*!/*/}
-                                    {/*                /!*    </div></div><hr/>*!/*/}
 
-                                    {/*            </div>}*/}
-                                    {/*        </li>*/}
-                                    {/*        <li><Row><Col md={4}>PubMed ids file:</Col><Col md={8}><Button variant='info' size='sm' onClick={(e)=>SetShowPubmedExamples(prev=>!prev)}>Example</Button></Col></Row>*/}
-                                    {/*            {ShowPubmedExamples && <div style={{'text-align':'center'}}>This is an example of file containing PubMed ids. <br/> Your file must contain the header row (the one in boldface) containing the name of each column. In each row the values must be comma separated.<br/> <span style={{'font-weight':'bold'}}>Null values are not allowed, for each row you must provide a ID and a usecase.</span>*/}
-                                    {/*                <br/><br/>*/}
-                                    {/*                /!*<div>If you prefer you can download the csv file.*!/*/}
-                                    {/*                /!*    <span> <Button size='sm' onClick={(e)=>onSaveExample(e,'pubmed')} variant='warning'> <FontAwesomeIcon icon={faDownload} /> Download</Button></span>*!/*/}
-                                    {/*                /!*</div>*!/*/}
-                                    {/*                <hr/>*/}
-                                    {/*                /!*<div className='examples'>*!/*/}
-                                    {/*                /!*    <div style={{'display':'flex','justify-content':'center'}}>*!/*/}
-                                    {/*                /!*        <div>*!/*/}
-                                    {/*                /!*            <span style={{'font-weight':'bold'}}>ID,usecase</span><br/>*!/*/}
-                                    {/*                /!*            /!*name,seq_number,label<br/>*!/*!/*/}
-                                    {/*                /!*            29691659,Colon<br/>*!/*/}
-                                    {/*                /!*            20138539,Colon<br/>*!/*/}
-                                    {/*                /!*            25918287,Colon<br/>*!/*/}
-
-                                    {/*                /!*        </div>*!/*/}
-                                    {/*                /!*    </div></div>*!/*/}
-                                    {/*                /!*<hr/>*!/*/}
-
-                                    {/*            </div>}*/}
-                                    {/*        </li>*/}
-                                    {/*        <li><Row><Col md={4}>Reports file:</Col><Col md={8}> <Button variant='info' size='sm' onClick={(e)=>SetShowReportsExamples(prev=>!prev)}>Example</Button></Col></Row>*/}
-                                    {/*            {ShowReportsExamples && <div style={{'text-align':'center'}}>This is an example of reports file. <br/> Your file must contain the header row (the one in boldface) containing the name of each column. In each row the values must be comma separated.<br/> <span style={{'font-weight':'bold'}}>Null values are not allowed for id_report, usecase, institute, language. </span>*/}
-                                    {/*                <br/><br/>*/}
-                                    {/*                /!*<div>If you prefer you can download the csv file.*!/*/}
-                                    {/*                /!*    <span> <Button size='sm' onClick={(e)=>onSaveExample(e,'reports')} variant='warning'> <FontAwesomeIcon icon={faDownload} /> Download</Button></span>*!/*/}
-                                    {/*                /!*</div>*!/*/}
-                                    {/*                <hr/>*/}
-                                    {/*                /!*<div className='examples'>*!/*/}
-                                    {/*                /!*    <div >*!/*/}
-                                    {/*                /!*        <span style={{'font-weight':'bold'}}>id_report,language,institute,usecase,age,target_diagnosis</span><br/>*!/*/}
-                                    {/*                /!*        024904af0078ed89be428dd5868803ce,English,default_hospital,Colon,63,right colon polyps: tubular adenoma with mild dysplasia glandular epithelium.<br/>*!/*/}
-                                    {/*                /!*        d857a9f16b239c8b0321e0f3245809ec,English,default_hospital,Colon65,villous adenoma tubule with moderate dysplasia glandular epithelium. pseudoinvasione axis.<br/>*!/*/}
-                                    {/*                /!*        369093624905afbb0ef2d5b530ca210e,English,default_hospital,Colon59,"adenoma tightened with mild dysplasia. the lesion spread over hemorrhoidal nodule."<br/>*!/*/}
-                                    {/*                /!*        fc4988c5312da8c65282fdf7f1999af6,English,default_hospital,Colon68,right colon polyps: tubular adenomas with mild dysplasia glandular epithelium.<br/>*!/*/}
-
-                                    {/*                /!*    </div></div><hr/>*!/*/}
-
-                                    {/*            </div>}*/}
-                                    {/*        </li>*/}
-                                    {/*        <li>*/}
-                                    {/*            <Row><Col md={4}>Concepts file:</Col><Col md={8}>*/}
-                                    {/*            <Button variant='info' size='sm' onClick={(e)=>SetShowConceptsExamples(prev=>!prev)}>Example</Button></Col>*/}
-                                    {/*            </Row>*/}
-                                    {/*            /!*{ShowConceptsExamples && <div style={{'text-align':'center'}}>This is an example of concepts file. <br/> Your file must contain the header row (the one in boldface) containing the name of each column. In each row the values must be comma separated.<br/> <span style={{'font-weight':'bold'}}>Null values are not allowed, you must provide a value for concept_url, concept_name, usecase and area. </span>*!/*/}
-                                    {/*            /!*    <br/><br/>*!/*/}
-                                    {/*            /!*    <div>If you prefer you can download the csv file.*!/*/}
-                                    {/*            /!*        <span> <Button size='sm' onClick={(e)=>onSaveExample(e,'concepts')} variant='warning'> <FontAwesomeIcon icon={faDownload} /> Download</Button></span>*!/*/}
-                                    {/*            /!*    </div>*!/*/}
-
-                                    {/*            /!*    <hr/>*!/*/}
-                                    {/*            /!*    <div className='examples'>*!/*/}
-                                    {/*            /!*        <div style={{'display':'flex','justify-content':'center'}}>*!/*/}
-                                    {/*            /!*            <div>*!/*/}
-                                    {/*            /!*                <span style={{'font-weight':'bold'}}>concept_url,concept_name,usecase,area</span><br/>*!/*/}
-                                    {/*            /!*                /!*concept_url,name,json_concept,usecase,area<br/>*!/*!/*/}
-                                    {/*            /!*                http://purl.obolibrary.org/obo/UBERON_0003346,Rectal mucous membrane,Colon,Anatomical Location<br/>*!/*/}
-                                    {/*            /!*                http://purl.obolibrary.org/obo/UBERON_0001157,Transverse Colon,Colon,Anatomical Location<br/>*!/*/}
-                                    {/*            /!*                http://purl.obolibrary.org/obo/UBERON_0001052,"Rectum, NOS",Colon,Anatomical Location<br/>*!/*/}
-                                    {/*            /!*                http://purl.obolibrary.org/obo/UBERON_0001158,Descending colon,Colon,Anatomical Location<br/>*!/*/}
-                                    {/*            /!*                http://purl.obolibrary.org/obo/UBERON_0001153,Caecum,Colon,Anatomical Location<br/>*!/*/}
-                                    {/*            /!*            </div>*!/*/}
-                                    {/*            /!*        </div></div><hr/>*!/*/}
-
-                                    {/*            /!*</div>*!/*/}
-                                    {/*            </li>*/}
-                                    {/*    </ul>*/}
-                                    {/*</div>*/}
                                     <Form>
                                         <Form.Group controlId="ControlSelect1">
                                             <Form.Label>Select the type of your file</Form.Label>
@@ -1517,59 +1393,33 @@ function UpdateConfiguration() {
                                                 <option value='reports'>Collection, topics, runs</option>
                                                 {/*<option value='pubmed'>PubMED IDs</option>*/}
                                                 <option value='concepts'>Concepts</option>
-                                                <option value='json_fields'>Fields to display and annotate</option>
+                                                {Keys.length > 1 && <option value='json_fields'>Fields to display and annotate</option>}
                                                 <option value='tfidf'>tf-idf top-k words</option>
                                             </Form.Control>
                                         </Form.Group>
 
 
-
-                                        {/*{Selected === 'pubmed' && <div>*/}
-                                        {/*    <Form.Group>*/}
-                                        {/*        <Form.File  multiple id="exampleFormControlFile5" onClick={(e) => {SetShowDeletePubMed(false);(e.target.value = null);SetAdded(false);SetWarning('');SetChecked(0)}} onChange={(e)=>{SetAdded(true);showKeys_setUseCase();showDelete(e,'pubmed')}} label="Select the pubmed file" />*/}
-                                        {/*    </Form.Group>*/}
-                                        {/*    {ShowDeletePubMed === true && <div><Button className='delete-button' onClick={(e)=>deleteInput(e,'pubmed')}><FontAwesomeIcon icon={faTimes} />Delete file</Button></div>}*/}
-                                        {/*    {PubMedUsesUpdate.length > 0 && <div>*/}
-                                        {/*        You are uploading reports for {PubMedUsesUpdate.join(', ')}: you have already uploaded reports for these use cases. You can upload these reports as a different <b>batch</b>, that means that you can upload the reports keeping track of the insertion date. This allows users to choose what batch to annotate and allows you to choose what batch to automatically annotate. If you do not want to keep reports in different batches, all the reports belonging to a specific use case will be loaded independetly of when they have been inserted.*/}
-                                        {/*        Do you want to add reports for {PubMedUsesUpdate.join(', ')} in a new batch? If you do not want to and there is more than one batch in the database for that use case, then, the reports will be added to the last inserted batch.&nbsp;&nbsp;*/}
-                                        {/*        <span>*/}
-                                        {/*                <label>*/}
-                                        {/*                    <input name='pubmed' value='yes' defaultChecked={true} onChange={()=>SetInBatch(true)} type="radio" />{' '}*/}
-                                        {/*                    Yes&nbsp;&nbsp;&nbsp;&nbsp;*/}
-                                        {/*                </label>*/}
-                                        {/*                <label>*/}
-                                        {/*                <input name='pubmed' value='no' onChange={()=>SetInBatch(false)} type="radio" />{' '}*/}
-                                        {/*                    No&nbsp;&nbsp;&nbsp;&nbsp;*/}
-                                        {/*            </label>*/}
-                                        {/*            </span>*/}
-                                        {/*    </div>}*/}
-
-                                        {/*</div>*/}
-                                        {/*}*/}
                                         {Selected === 'reports' && <div>
                                             <Form.Group style={{'margin-top':'20px','margin-bottom':'20px'}}>
                                                 <div><span>Insert here the files with the topics.</span><br/>
-                                                    {/*<div className='conf-div'>*/}
-                                                    {/*    <Button onClick={()=>SetShowReportExample(prev=>!prev)} variant="info" size='sm'>Example</Button>*/}
-                                                    {/*</div>*/}
+
                                                 </div>
-                                                {/*<div style={{marginBottom:'2%',fontSize:'0.9rem'}}><i>Please, make sure the ids of the reports you insert do not start with "pubmed" and the institutes you insert are different from "pubmed".</i></div>*/}
                                                 <Form.File id="topic_form" onClick={(e) => {(e.target.value = null);SetShowDeleteTopic(false);}} onChange={(e)=>{showDelete(e,'topics');}} multiple/>
-                                                {ShowDeleteTopic === true && <div><Button className='delete-button' onClick={(e)=>deleteInput(e,'topics')}><FontAwesomeIcon icon={faTimes} />Delete file</Button></div>}
 
                                             </Form.Group>
+                                            {ShowDeleteTopic === true && <div><Button className='delete-button' onClick={(e)=>deleteInput(e,'topics')}><FontAwesomeIcon icon={faTimes} />Delete file</Button></div>}
+
                                             <hr/>
 
                                             <Form.Group >
                                                 <div><span>Insert here the files with the runs (i.e. - tha files containing for each topic the associated documents). The allowed formats are: TREC, csv, json, txt.</span><br/>
-                                                    {/*<div className='conf-div'><Button onClick={()=>SetShowReportExample(prev=>!prev)} variant="info" size='sm'>Example</Button>*/}
-                                                    {/*</div>*/}
+
                                                 </div>
-                                                {/*<div style={{marginBottom:'2%',fontSize:'0.9rem'}}><i>Please, make sure the ids of the reports you insert do not start with "pubmed" and the institutes you insert are different from "pubmed".</i></div>*/}
                                                 <Form.File id="runs_form" onClick={(e) => {(e.target.value = null);SetShowDeleteRuns(false);}} onChange={(e)=>{showDelete(e,'runs');}} multiple/>
-                                                {ShowDeleteRuns === true && <div><Button className='delete-button' onClick={(e)=>deleteInput(e,'runs')}><FontAwesomeIcon icon={faTimes} />Delete file</Button></div>}
 
                                             </Form.Group>
+                                            {ShowDeleteRuns === true && <div><Button className='delete-button' onClick={(e)=>deleteInput(e,'runs')}><FontAwesomeIcon icon={faTimes} />Delete file</Button></div>}
+
 
 
                                             <hr/>
@@ -1649,29 +1499,19 @@ function UpdateConfiguration() {
 
                                         }
                                         {Selected === 'concepts' && <div>
-                                        {UsesPresentExaConcepts.length > 0 && <div style={{color:'royalblue',fontWeight:'bold'}}>For <span style={{color:'midnightblue'}}>{UsesPresentExaConcepts.join(', ')}</span> use cases you are using EXAMODE ontology<hr/></div>}
-                                        {UsesMissingExaConcepts.length > 0 && ShowExaConcepts === true &&<div>
-                                            You inserted reports for: <b>{UsesMissingExaConcepts.join(', ')}</b>; EXAMODE ontology is available for these secases. You can use its concepts or combine them with those you upload. <b>You can choose to insert OR the EXAMODE ontology OR you can update your own concepts.</b>
-                                        {LoadExaConcepts === false ? <Button variant='primary' size = 'sm' onClick={()=>{SetAdded(false);SetChecked(0);SetWarning('');SetLoadExaConcepts(true)}}>Get EXAMODE concepts</Button> : <div style={{fontWeight:'bold',color:'royalblue'}}>You decided to add concepts of EXAMODE ontology <Button className='delete-button' onClick={()=>{SetAdded(false);SetChecked(0);SetWarning('');SetLoadExaConcepts(false)}}><FontAwesomeIcon icon={faTimes} /></Button></div>}
-                                            </div>}
-                                        {LoadExaConcepts !== true && <Form.Group>
+                                            <Form.Group>
                                             <Form.File multiple id="exampleFormControlFile2" onClick={(e) => {SetShowExaConcepts(false);SetShowDeleteConcepts(false);(e.target.value = null);SetAdded(false);SetChecked(0);SetWarning('')}} onChange={(e)=>{SetShowExaConcepts(false);SetAdded(true);showDelete(e,'concepts')}} label="Select the concepts file" />
                                         {ShowDeleteConcepts === true && <div><Button className='delete-button' onClick={(e)=>deleteInput(e,'concepts')}><FontAwesomeIcon icon={faTimes} />Delete file</Button></div>}
-                                            </Form.Group>}
+                                            </Form.Group>
 
 
                                             </div>}
                                         {Selected === 'labels' &&
                                         <div>
-                                            {UsesPresentExaLabels.length > 0 && <div style={{color:'royalblue',fontWeight:'bold'}}>For <span style={{color:'midnightblue'}}>{UsesPresentExaLabels.join(', ')}</span> use cases you are using EXAMODE labels<hr/></div>}
-                                            {UsesMissingExaLabels.length > 0 && ShowExaLabels === true && <div>
-                                                You inserted reports for: <b>{UsesMissingExaLabels.join(', ')}</b>; EXAMODE labels are available for these usecases. You can use its concepts or combine them with those you upload. <b>You can choose to insert these labels or those you upload.</b>
-                                                {LoadExaLabels === false ? <Button variant='primary' size = 'sm' onClick={()=>{SetAdded(false);SetChecked(0);SetWarning('');SetLoadExaLabels(true)}}>Get EXAMODE labels</Button> : <div style={{fontWeight:'bold',color:'royalblue'}}>You decided to add EXAMODE labels <Button className='delete-button' onClick={()=>{SetAdded(false);SetChecked(0);SetWarning('');SetLoadExaLabels(false)}}><FontAwesomeIcon icon={faTimes} /></Button></div>}
-                                            </div>}
-                                            {LoadExaLabels !== true  && <Form.Group>
+                                            <Form.Group>
                                                 <Form.File multiple onChange={(e)=>{SetShowExaLabels(false);SetAdded(true);showDelete(e,'labels')}} id="exampleFormControlFile0" onClick={(e) => {SetShowExaLabels(false);SetShowDeleteLabels(false);SetAdded(false);SetWarning('');(e.target.value = null);SetChecked(0)}} label="Select the labels file" />
                                                 {ShowDeleteLabels === true && <div><Button className='delete-button' onClick={(e)=>deleteInput(e,'labels')}><FontAwesomeIcon icon={faTimes} />Delete file</Button></div>}
-                                            </Form.Group>}
+                                            </Form.Group>
 
 
                                         </div>
@@ -1686,7 +1526,7 @@ function UpdateConfiguration() {
                                             </div>
                                             <hr/>
                                         </div>}
-                                        {((Selected === 'json_fields' && Keys.length > 0)) && <div>
+                                        {((Selected === 'json_fields' && Keys.length > 1)) && <div>
                                             <div style={{'margin-bottom':'20px'}}>Below you can find all the keys detected in your json reports. For each key you have to decide if you want to display, hide or both display and annotate the value corresponding to that key.</div>
                                             <div style = {{'font-weight':'bold'}}>Remember that if you have found some mentions in one or more reports, the fields that you annotated can not turned into Display or Hide, you can add fields to annotate but not remove them.</div>
                                             {Keys.map((key,ind)=>

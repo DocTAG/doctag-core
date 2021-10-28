@@ -245,7 +245,7 @@ function MajorityVoteModal(props) {
     return (
         <div className='container-fluid'>
 
-            {(newInd !== false  && ReportString !== ''  && Reports.length > 0) ? <Row>
+            {(newInd !== false  && ReportString !== ''  && (FieldsToAnn.length > 0 || Fields.length > 0) && Reports.length > 0) ? <Row>
                 <Col md={6} style={{fontSize:'1rem'}}>
                     <div className='report_modal'>
                         <ReportListUpdated report_id = {Reports[newInd].id_report} report = {Reports[newInd].report_json} action={selectedAct}/>
@@ -263,14 +263,7 @@ function MajorityVoteModal(props) {
                             <option value = 'concept-mention'>Linking</option>
                         </Form.Control></div>
                         <hr/>
-                        {/*{selectedAct !== 'none' && <div><div style={{'margin-bottom':'1%','margin-top':'1%'}}>Select an Annotation Mode</div>*/}
-                        {/*<div style={{'padding-left':'1%','padding-right':'1%'}}><Form.Control as="select" defaultValue="choose the annotation mode..." onChange={(e)=>{SetselectedMode(e.target.value);mode.current = e.target.value}}>*/}
-                        {/*    <option value = ''>Select an annotation mode...</option>*/}
-                        {/*    <option value = 'Human'>Manual</option>*/}
-                        {/*    {AutoPresence === true && <option value = 'Robot'>Automatic</option>}*/}
-                        {/*    {(((EXAPresenceLabels === true && EXAPresenceConcepts === true) || (EXAPresenceLabels === true && selectedAct === 'labels') || (EXAPresenceConcepts === true && selectedAct !== 'none' && selectedAct !== 'labels')) && AutoPresence === true )&& <option value = 'both'>Manual & Automatic</option>}*/}
 
-                        {/*</Form.Control></div><hr/></div>}*/}
                         {selectedAct !== 'none'  && (UsersList.length > 0 || ChosenUsers.length > 0 || Username === 'Test') &&<div style={{'padding-left':'1%','padding-right':'1%'}}>
                             <div>Select at least two users you want to consider to create the ground-truth based on majority vote </div>
                             {UsersList.length > 0 &&<Form.Control as="select" onChange={(e)=>changeChosenList(e)} defaultValue="choose the annotation mode..." >
@@ -313,14 +306,8 @@ function MajorityVoteModal(props) {
                                             <div>
                                                 <div style={{color:(val.users_list.indexOf('Robot_user') !==-1 ? 'royalblue':'black')}}>{val.label}</div>
                                                 <div style={{fontSize:'0.9rem'}}>This label occurred in:</div>
-                                                {selectedMode === 'Human' && <i style={{fontSize:'0.9rem'}}>{val.count} / {val.total_gt} manual annotations - users: {val.users_list.filter(name=>name!=='Robot_user').join(', ')}</i>}
-                                                {/*{selectedMode === 'Robot' && <i style={{fontSize:'0.9rem'}}> {val.count} / {val.total_gt} automatic annotations - users: {val.users_list.filter(name=>name!=='Robot_user').join(', ')}</i>}*/}
-                                                {/*{selectedMode === 'both' && <ul>*/}
-                                                {/*    {val.manual_annotators.length > 0 && <li><i style={{fontSize:'0.9rem'}}>{val.manual_annotators.length} / {val.total_human_gt} manual annotations - users: {val.manual_annotators.filter(name=>name!=='Robot_user').join(', ')}</i>*/}
-                                                {/*    </li>}*/}
-                                                {/*    {val.robot_annotators.filter(name=>name!=='Robot_user').length > 0&& <li><i style={{fontSize:'0.9rem'}}>{val.robot_annotators.filter(name=>name!=='Robot_user').length} / {val.total_robot_gt} automatic annotations - users: {val.robot_annotators.filter(name=>name!=='Robot_user').join(', ')}</i>*/}
-                                                {/*    </li>}*/}
-                                                {/*</ul>}*/}
+                                                {selectedMode === 'Human' && <i style={{fontSize:'0.9rem'}}>{val.count} / {val.total_gt} annotations - users: {val.users_list.filter(name=>name!=='Robot_user').join(', ')}</i>}
+
                                             </div></li>}
                                     </>)}
                                 </ul>: <div>There are not labels that have been annotated enough times to take part in the majority vote based ground-truth </div>}
@@ -332,13 +319,13 @@ function MajorityVoteModal(props) {
                         </div>}
                         {selectedAct === 'mentions' &&
                         <div>
-                            <i>Below you can find the mentions belonging to the majority vote ground truth.</i>
+                            <i>Below you can find the passages belonging to the majority vote ground truth.</i>
                             {/*<br/><i style={{fontSize:'0.8rem'}}>The mentions annotated by the algorithm are highlighted in  <span style={{color:'royalblue'}}>blue</span></i><br/>*/}
                             <br/>
                             <div>
-                                {selectedMode === 'both' ? <>{<div>{MajorGT[selectedMode].length === 0 ? <>0</> :  <>{MajorGT[selectedMode][0]['total_human_gt']}</>} <b>manual</b> annotations</div>}
+                                {selectedMode === 'both' ? <>{<div>{MajorGT[selectedMode].length === 0 ? <>0</> :  <>{MajorGT[selectedMode][0]['total_human_gt']}</>} annotations</div>}
                                         {<div>{MajorGT[selectedMode].length === 0 ? <>0</> :  <>{MajorGT[selectedMode][0]['total_robot_gt']}</>} <b>automatic</b> annotations</div>}</> :
-                                    <div>{MajorGT[selectedMode].length === 0 ? <>0</> :  <>{MajorGT[selectedMode][0]['total_gt']}</>} {selectedMode === 'Robot' ? <b>automatic</b> : <b>manual</b>} annotations</div>}
+                                    <div>{MajorGT[selectedMode].length === 0 ? <>0</> :  <>{MajorGT[selectedMode][0]['total_gt']}</>} annotations</div>}
                                 <hr/>
                                 {MajorGT[selectedMode].length > 0 ? <ul>{MajorGT[selectedMode].map((val,index)=>
                                     <>
@@ -346,18 +333,13 @@ function MajorityVoteModal(props) {
                                             <div style={{color:(val.users_list.indexOf('Robot_user') !==-1 ? 'royalblue':'black')}}>
                                                 <Mention id = {index} index = {index} text={val['mention']} start={val['start']} stop={val['stop']} mention_obj = {val}/>
                                             </div><br/>
-                                            <div style={{fontSize:'0.9rem'}}>This mention occurred in:</div>
-                                            {selectedMode === 'Human' && <i style={{fontSize:'0.9rem'}}>{val.count} / {val.total_gt} manual annotations - users: {val.users_list.filter(name=>name!=='Robot_user').join(', ')}</i>}
-                                            {/*{selectedMode === 'Robot' && <i style={{fontSize:'0.9rem'}}> {val.count} / {val.total_gt} automatic annotations - users: {val.users_list.filter(name=>name!=='Robot_user').join(', ')}</i>}*/}
-                                            {/*{selectedMode === 'both' && <ul>*/}
-                                            {/*    {val.manual_annotators.length > 0 && <li><i style={{fontSize:'0.9rem'}}>{val.manual_annotators.length} / {val.total_human_gt} manual annotations - users: {val.manual_annotators.filter(name=>name!=='Robot_user').join(', ')}</i>*/}
-                                            {/*    </li>}*/}
-                                            {/*    {val.robot_annotators.filter(name=>name!=='Robot_user').length > 0&& <li><i style={{fontSize:'0.9rem'}}>{val.robot_annotators.filter(name=>name!=='Robot_user').length} / {val.total_robot_gt} automatic annotations - users: {val.robot_annotators.filter(name=>name!=='Robot_user').join(', ')}</i>*/}
-                                            {/*    </li>}*/}
-                                            {/*</ul>}*/}
+                                            <div>label: <b>{val['label']}</b></div>
+                                            <div style={{fontSize:'0.9rem'}}>This passage occurred in:</div>
+                                            {selectedMode === 'Human' && <i style={{fontSize:'0.9rem'}}>{val.count} / {val.total_gt} annotations - users: {val.users_list.filter(name=>name!=='Robot_user').join(', ')}</i>}
+
                                         </div></li>}
                                     </>)}
-                                </ul> : <div>There are not mentions that have been annotated enough times to take part in the majority vote based ground-truth </div>}
+                                </ul> : <div>There are not passages that have been annotated enough times to take part in the majority vote based ground-truth </div>}
 
 
                                 <div>
@@ -370,9 +352,9 @@ function MajorityVoteModal(props) {
                             {/*<br/><i style={{fontSize:'0.8rem'}}>The concepts annotated by the algorithm are highlighted in  <span style={{color:'royalblue'}}>blue</span></i><br/>*/}
                             <br/>
                             <div>
-                                {selectedMode === 'both' ? <>{<div>{MajorGT[selectedMode].length === 0 ? <>0</> :  <>{MajorGT[selectedMode][0]['total_human_gt']}</>} <b>manual</b> annotations</div>}
+                                {selectedMode === 'both' ? <>{<div>{MajorGT[selectedMode].length === 0 ? <>0</> :  <>{MajorGT[selectedMode][0]['total_human_gt']}</>}  annotations</div>}
                                         {<div>{MajorGT[selectedMode].length === 0 ? <>0</> :  <>{MajorGT[selectedMode][0]['total_robot_gt']}</>} <b>automatic</b> annotations</div>}</> :
-                                    <div>{MajorGT[selectedMode].length === 0 ? <>0</> :  <>{MajorGT[selectedMode][0]['total_gt']}</>} {selectedMode === 'Robot' ? <b>automatic</b> : <b>manual</b>} annotations</div>}
+                                    <div>{MajorGT[selectedMode].length === 0 ? <>0</> :  <>{MajorGT[selectedMode][0]['total_gt']}</>} annotations</div>}
                                 <hr/>
                                 {/*<div>{MajorGT[selectedMode].length > 1</div>*/}
                                 {MajorGT[selectedMode].length > 0 ? <ul>{MajorGT[selectedMode].map((val,ind)=>
@@ -383,14 +365,8 @@ function MajorityVoteModal(props) {
                                                     {val.concept_name} - <span style={{color:'black',fontSize:'0.9rem'}}><i><b>URL</b> {val.concept_url}</i></span>
                                                 </div>
                                                 <div style={{fontSize:'0.9rem'}}>This concept occurred in:</div>
-                                                {selectedMode === 'Human' && <i style={{fontSize:'0.9rem'}}>{val.count} / {val.total_gt} manual annotations - users: {val.users_list.filter(name=>name!=='Robot_user').join(', ')}</i>}
-                                                {/*{selectedMode === 'Robot' && <i style={{fontSize:'0.9rem'}}> {val.count} / {val.total_gt} automatic annotations - users: {val.users_list.filter(name=>name!=='Robot_user').join(', ')}</i>}*/}
-                                                {/*{selectedMode === 'both' && <ul>*/}
-                                                {/*    {val.manual_annotators.length > 0 && <li><i style={{fontSize:'0.9rem'}}>{val.manual_annotators.length} / {val.total_human_gt} manual annotations - users: {val.manual_annotators.filter(name=>name!=='Robot_user').join(', ')}</i>*/}
-                                                {/*    </li>}*/}
-                                                {/*    {val.robot_annotators.filter(name=>name!=='Robot_user').length > 0&& <li><i style={{fontSize:'0.9rem'}}>{val.robot_annotators.filter(name=>name!=='Robot_user').length} / {val.total_robot_gt} automatic annotations - users: {val.robot_annotators.filter(name=>name!=='Robot_user').join(', ')}</i>*/}
-                                                {/*    </li>}*/}
-                                                {/*</ul>}*/}
+                                                {selectedMode === 'Human' && <i style={{fontSize:'0.9rem'}}>{val.count} / {val.total_gt}  annotations - users: {val.users_list.filter(name=>name!=='Robot_user').join(', ')}</i>}
+
                                             </div></li>}
                                     </>)}
                                 </ul> : <div>There are not concepts that have been annotated enough times to take part in the majority vote based ground-truth </div>}
@@ -404,9 +380,9 @@ function MajorityVoteModal(props) {
                             <i>Below you can find the concepts belonging to the majority vote ground truth.</i>
                             {/*<br/><i style={{fontSize:'0.8rem'}}>The associations annotated by the algorithm are highlighted in  <span style={{color:'royalblue'}}>blue</span></i><br/>*/}
                             <div>
-                                {selectedMode === 'both' ? <>{<div>{MajorGT[selectedMode].length === 0 ? <>0</> :  <>{MajorGT[selectedMode][0]['total_human_gt']}</>} <b>manual</b> annotations</div>}
+                                {selectedMode === 'both' ? <>{<div>{MajorGT[selectedMode].length === 0 ? <>0</> :  <>{MajorGT[selectedMode][0]['total_human_gt']}</>} annotations</div>}
                                         {<div>{MajorGT[selectedMode].length === 0 ? <>0</> :  <>{MajorGT[selectedMode][0]['total_robot_gt']}</>} <b>automatic</b> annotations</div>}</> :
-                                    <div>{MajorGT[selectedMode].length === 0 ? <>0</> :  <>{MajorGT[selectedMode][0]['total_gt']}</>} {selectedMode === 'Robot' ? <b>automatic</b> : <b>manual</b>} annotations</div>}
+                                    <div>{MajorGT[selectedMode].length === 0 ? <>0</> :  <>{MajorGT[selectedMode][0]['total_gt']}</>} annotations</div>}
                                 <hr/>
                                 {MajorGT[selectedMode].length>0 ? <ul>{MajorGT[selectedMode].map((val,ind)=>
                                     <>
@@ -422,13 +398,7 @@ function MajorityVoteModal(props) {
                                                 </div>
                                                 <div style={{fontSize:'0.9rem'}}>This concept occurred in:</div>
                                                 {selectedMode === 'Human' && <i style={{fontSize:'0.9rem'}}>{val.count} / {val.total_gt} annotations - users: {val.users_list.filter(name=>name!=='Robot_user').join(', ')}</i>}
-                                                {/*{selectedMode === 'Robot' && <i style={{fontSize:'0.9rem'}}> {val.count} / {val.total_gt} automatic annotations - users: {val.users_list.filter(name=>name!=='Robot_user').join(', ')}</i>}*/}
-                                                {/*{selectedMode === 'both' && <ul>*/}
-                                                {/*    {val.manual_annotators.length > 0 && <li><i style={{fontSize:'0.9rem'}}>{val.manual_annotators.length} / {val.total_human_gt} manual annotations - users: {val.manual_annotators.filter(name=>name!=='Robot_user').join(', ')}</i>*/}
-                                                {/*    </li>}*/}
-                                                {/*    {val.robot_annotators.filter(name=>name!=='Robot_user').length > 0&& <li><i style={{fontSize:'0.9rem'}}>{val.robot_annotators.filter(name=>name!=='Robot_user').length} / {val.total_robot_gt} automatic annotations - users: {val.robot_annotators.filter(name=>name!=='Robot_user').join(', ')}</i>*/}
-                                                {/*    </li>}*/}
-                                                {/*</ul>}*/}
+
                                             </div></li>}
                                     </>)}
                                 </ul> : <div>There are not associations that has been annotated enough times to take part in the majority vote based ground-truth </div>}
@@ -439,7 +409,7 @@ function MajorityVoteModal(props) {
                         </div>}
                         <div style={{position:'absolute',bottom:0}}>
                             <div>
-                                <span><Button variant='success' size='sm' onClick={()=>{SetSelectedFormat('');SetselectedMode('');SetselectedAct('none');SetToDownload(false);SetMajorGT(false)}}>Change configuration</Button>
+                                <span><Button variant='success' size='sm' onClick={()=>{SetSelectedFormat('');SetselectedMode('Human');SetselectedAct('none');SetToDownload(false);SetMajorGT(false)}}>Change configuration</Button>
                                 </span>&nbsp;&nbsp;
                                 <div>
 
@@ -474,7 +444,6 @@ function MajorityVoteModal(props) {
         </div>
     );
 }
-
 
 
 export default MajorityVoteModal

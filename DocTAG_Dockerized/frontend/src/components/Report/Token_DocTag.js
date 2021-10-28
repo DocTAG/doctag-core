@@ -51,8 +51,8 @@ function Token_DocTag(props){
                 words.push(t[0])
                 scores.push(t[1])
             })
-            console.log('words',words)
-            console.log('words',scores)
+            // console.log('words',words)
+            // console.log('words',scores)
             SetTokenWords(words)
             SetTokenScores(scores)
         }
@@ -62,11 +62,11 @@ function Token_DocTag(props){
 
     useEffect(()=>{ //Cambio azione e inizializzo tutto
         if((props.action === 'mentions' || props.action === 'concept-mention') && SelectedLang === Language){
-            console.log('PASSO DI QUA, TOKENS')
+            // console.log('PASSO DI QUA, TOKENS')
             var array = Array.from(document.getElementsByName('butt'))
             //console.log('ARRARRA',array)
             var child = document.getElementById(props.start_token.toString())
-            console.log('child',child.id)
+            // console.log('child',child.id)
             child.removeAttribute('style')
             child.setAttribute('class','token')
 
@@ -79,7 +79,7 @@ function Token_DocTag(props){
 
             //console.log('ARR',array)
             if(FinalCount === array.length){
-                console.log('AGG')
+                // console.log('AGG')
                 SetReportWords(array)
             }
 

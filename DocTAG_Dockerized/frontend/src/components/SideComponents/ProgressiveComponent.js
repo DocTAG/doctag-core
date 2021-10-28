@@ -21,8 +21,9 @@ function ProgressiveComponent(props){
 
             <div style={{'text-align':'center'}}>
                 <div style={{ maxWidth: 180, maxHeight: 180, display: "inline-block" }}>
-                    <ChangingProgressProvider values={[0, getRandomInt(100)]}>
-                        {percentage => (
+                    {/*<ChangingProgressProvider values={[0, random]}>*/}
+                    <ChangingProgressProvider values={[0, props.stats_array_percent[props.action]]}>
+                    {percentage => (
                             <CircularProgressbar
                                 // value={percentage}
                                 value={percentage}
@@ -44,6 +45,14 @@ function ProgressiveComponent(props){
                     </div>
 
                 </div>
+                {/*<div>*/}
+                {/*    <h6>{Actions[props.index]}</h6>*/}
+                {/*    <div style={{textAlign:'center'}}>*/}
+                {/*        <div ><span>Annotated: </span><span style={{textAlign:'right'}}>{random} ({random}%) </span></div>*/}
+                {/*        <div ><span>Missing: </span><span style={{textAlign:'right'}}>{100 - random} ({ 100 - random}%) </span></div>*/}
+                {/*    </div>*/}
+
+                {/*</div>*/}
 
             </div>
 

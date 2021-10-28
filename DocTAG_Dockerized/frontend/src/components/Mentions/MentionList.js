@@ -11,7 +11,7 @@ import Button from "react-bootstrap/Button";
 import LabelItem from "../Labels/LabelItem";
 import AddMention from "./AddMention";
 import {AppContext}  from "../../App";
-import {LinkedContext, MentionContext} from '../../BaseIndex'
+import {LinkedContext, MentionContext} from '../../Prova_BaseIndex'
 import './mention.css';
 import '../General/first_row.css';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";

@@ -10,7 +10,7 @@ import { faTimesCircle,faEdit, faInfoCircle} from '@fortawesome/free-solid-svg-i
 import './mention.css';
 import {AppContext}  from "../../App";
 import {PassageContext}  from "../Passages/PassageLabelsList";
-import {LinkedContext, MentionContext} from '../../BaseIndex'
+import {LinkedContext, MentionContext} from '../../Prova_BaseIndex'
 import {Container,Row,Col} from "react-bootstrap";
 
 // import { useForm } from "react-hook-form";
@@ -190,11 +190,13 @@ function Mention(props){
     function mouseHover(e,mention,action){
         // GESTIONE HOVER NEL REPORTLISTUPDATED DELLE MODALI
         var token_list = fromMentionToArray(mention.mention,mention.start)
+        var doc = document.getElementById(token_list[0].startToken)
         console.log('hover')
         if(action === 'hover'){
-
+            doc.scrollIntoView()
             // var tokens_butt = Array.from(document.getElementById(mention.start))
             token_list.map((ment,ind)=>{
+
                 var token_sel = document.getElementById(ment.startToken)
                 token_sel.style.color = 'royalblue'
                 token_sel.style.fontWeight = 'bold'
@@ -202,6 +204,8 @@ function Mention(props){
         }
         else{
             console.log('out')
+
+            // token_list[0].scrollIntoView({ behavior: 'smooth',block: "nearest"})
             // var tokens_butt = Array.from(document.getElementById(mention.start))
             token_list.map((ment,ind)=>{
                 var token_sel = document.getElementById(ment.startToken)

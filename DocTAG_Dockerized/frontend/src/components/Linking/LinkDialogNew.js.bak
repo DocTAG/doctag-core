@@ -5,7 +5,8 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { faLink,faEye, faTimesCircle,faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {AppContext, LinkedContext} from "../../BaseIndex";
+import {AppContext}  from "../../App";
+import {LinkedContext, MentionContext} from '../../BaseIndex'
 //import 'bootstrap/dist/css/bootstrap.min.css';
 import './linked.css';
 import Select from 'react-select';
@@ -80,7 +81,7 @@ function LinkDialogNew(props){
             SetOptions_area(options_area)
         }
 
-        console.log('GROUP',group)
+        // console.log('GROUP',group)
         SetGrouped(group)
         // SetArea(options_area[options_area.length-1])
         // SetAll(true)
@@ -88,7 +89,7 @@ function LinkDialogNew(props){
 
     useEffect(()=>{
         if(Options_area.length>0){
-            console.log('area-1',Options_area[Options_area.length-1])
+            // console.log('area-1',Options_area[Options_area.length-1])
             var area = Options_area[Options_area.length-1].value
             SetArea(area)
             if(Options_area[Options_area.length-1].value.toString() === 'All'){
@@ -140,7 +141,7 @@ function LinkDialogNew(props){
             Setoptions_concepts([])
             SetConceptChosen('')
             //SetEnable(false)
-            console.log('CAMBIATO')
+            // console.log('CAMBIATO')
         }
         else if(Area === 'All'){
             SetAll(true)
@@ -182,9 +183,9 @@ function LinkDialogNew(props){
         console.log('association',association)
         var exist = false
         associations_to_show.map(ass => {
-            console.log('currentass',ass)
-            console.log('currentment',props.mention)
-            console.log(props.mention.mention_text)
+            // console.log('currentass',ass)
+            // console.log('currentment',props.mention)
+            // console.log(props.mention.mention_text)
             if ((ass['mention_text'] === props.text && ass['start'] === props.mention.start && ass['stop'] === props.mention.stop
                 && ass['concept_name'] === concept_name && ass['concept_url'] === concept_url && ass['semantic_area'] === areaToInsert)) {
                 // alert('This association already exists!')
@@ -227,11 +228,11 @@ function LinkDialogNew(props){
     useEffect(()=>{
         if(Show) {
             var elem = (document.getElementsByClassName('modal-backdrop'))
-            console.log('elems', elem)
+            // console.log('elems', elem)
             for(var i = 0; i < elem.length; i++){
-                console.log('entro qua dentro')
+                // console.log('entro qua dentro')
                 elem[i].style.opacity = '0';
-                console.log('el',elem[i])
+                // console.log('el',elem[i])
             }
 
             //elem.style.opcaity = 0
@@ -283,23 +284,23 @@ function LinkDialogNew(props){
                 <Modal onHide={handleClose} dialogAs={DraggableModalDialog} show={Show}
 
             >
-                <Modal.Header closeButton>
+                <Modal.Header closeButton className='headModal'>
                     <h5><span>New Association for: </span><span style={{'color':'royalblue'}}>{props.mention.mention_text}</span></h5>
                 </Modal.Header>
                 <Modal.Body>
                     {Exist && <div style={{'font-size':'18px','color':'red'}}><FontAwesomeIcon icon={faTimesCircle}/> This association already exists <FontAwesomeIcon icon={faTimesCircle}/></div>}
 
                     <div style={{'width':'100%'}}>
-                        <div><span>Please, select the </span><span style={{'font-weight':'bold'}}>semantic area</span>:</div>
-                        <span>
-                        {Area !== '' && <Select styles={styles}
-                            onChange={(option)=>handleChange_area(option)}
-                            className='selection'
-                            options={Options_area}
-                            defaultValue={Options_area.slice(-1)[0]}
+                        {/*<div><span>Please, select the </span><span style={{'font-weight':'bold'}}>semantic area</span>:</div>*/}
+                        {/*<span>*/}
+                        {/*{Area !== '' && <Select styles={styles}*/}
+                        {/*    onChange={(option)=>handleChange_area(option)}*/}
+                        {/*    className='selection'*/}
+                        {/*    options={Options_area}*/}
+                        {/*    defaultValue={Options_area.slice(-1)[0]}*/}
 
-                        />}
-                        </span>
+                        {/*/>}*/}
+                        {/*</span>*/}
                         <span>
                         {All === false && <div>
                             <span> Select a </span><span style={{'font-weight':'bold'}}>concept</span>:

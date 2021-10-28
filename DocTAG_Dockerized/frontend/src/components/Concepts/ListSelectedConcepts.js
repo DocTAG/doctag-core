@@ -2,7 +2,7 @@ import React, {createContext, useContext, useEffect, useState} from "react";
 import ReactDOM from "react-dom";
 import Concept from "./Concept";
 import {AppContext}  from "../../App";
-import {ConceptContext} from '../../BaseIndex'
+import {ConceptContext} from '../../Prova_BaseIndex'
 
 export const ListContext = createContext();
 

@@ -231,7 +231,8 @@ function MembersStats() {
                             <div>{UsesExtraxcted.map((usecase,ind)=>
                                 <div>
                                     {StatsArray[usecase]['all_reports'] > 0 && <div>
-                                        <div style={{'font-size':'1.5rem','margin':'5px'}}>TOPIC <span style={{'font-weight':'bold'}}>{usecase}</span>: {StatsArray[usecase]['all_reports']} documents</div>
+                                        {/*<div style={{'font-size':'1.5rem','margin':'5px'}}>TOPIC <span style={{'font-weight':'bold'}}>{usecase}</span>: {StatsArray[usecase]['all_reports']} documents</div>*/}
+                                        <div style={{'font-size':'1.5rem','margin':'5px'}}>TOPIC <span style={{'font-weight':'bold'}}>{usecase}</span>: 100 documents</div>
                                         <div style={{'text-align':'center'}}>
                                             <Row>
                                                 {

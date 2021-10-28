@@ -11,7 +11,7 @@ import { faTimesCircle,faEye, faInfoCircle,faUser} from '@fortawesome/free-solid
 import './linked.css';
 import '../General/first_row.css';
 import {AppContext}  from "../../App";
-import {LinkedContext, MentionContext} from '../../BaseIndex'
+import {LinkedContext} from '../../Prova_BaseIndex'
 import {Container,Row,Col} from "react-bootstrap";
 import Zoom from "@material-ui/core/Zoom";
 

@@ -94,47 +94,28 @@ function ChangeMemberGT(props){
         console.log('changegt',LoadingChangeGT)
     },[LoadingChangeGT])
 
-    useEffect(()=>{
-        SetMakeReq(true)
-    },[ShowAutoAnn,ShowMemberGt,UserChosen])
+    // useEffect(()=>{
+    //     SetMakeReq(true)
+    // },[ShowMemberGt,UserChosen])
 
     useEffect(()=>{
-        SetMakeReq(true)
+        // SetMakeReq(true)
         but1.current.className = 'btn btn-outline-primary btn-sm'
         // but2.current.className = 'btn btn-outline-primary btn-sm'
         but3.current.className = 'btn btn-outline-primary btn-sm'
 
-        // axios.get("http://0.0.0.0:8000/get_users_list")
-        //     .then(response => {
-        //         if(response.data.length>0){
-        //             console.log(response.data)
-        //             SetUsersList(response.data)
-        //         }})
-        //     .catch(error=>{
-        //         console.log(error)
-        //     })
 
-        // axios.get("http://0.0.0.0:8000/check_auto_presence_for_configuration",
-        //     {params: {batch:BatchNumber,usecase:UseCase,institute:Institute,language:Language,report_type:ReportType}})
-        //     .then(response => {
-        //         if(response.data['count'] > 0){
-        //             SetRobotPresence(true)
-        //         }
-        //         else{
-        //             SetRobotPresence(false)
-        //         }})
-        //     .catch(error=>{
-        //         console.log(error)
-        //     })
     },[])
-
-
 
     useEffect(()=>{
         // but1.current.focus()
         but1.current.className = 'btn btn-primary btn-sm'
-        // but2.current.className = 'btn btn-outline-primary btn-sm'
         but3.current.className = 'btn btn-outline-primary btn-sm'
+
+        SetShowMajorityGt(false)
+        SetShowAutoAnn(false)
+        SetShowMemberGt(false)
+        SetClickBottomMenu(false)
         SetChangeButton(false)
     },[Index,Action])
 
@@ -148,8 +129,22 @@ function ChangeMemberGT(props){
             //     SetLoadingChangeGT(true)
             //
             // }
-            SetClickBottomMenu(true)
+            Children.map(child=>{
+                child.setAttribute('fontWeight','normal')
+            })
+            var but_mentions = Array.from(document.getElementsByClassName('butt_mention'))
+            but_mentions.map(el=>{
+                el.style.fontWeight = 'normal'
+            })
+            if(Action === 'mentions' || Action === 'concept-mention'){
+                var all = (document.getElementById('select_all_butt'))
+                all.style.fontWeight = 'normal'
+            }
 
+            SetClickBottomMenu(true)
+            Children.map(child=>{
+                child.style.fontWeight = 'normal'
+            })
             // SetShowAutoAnn(false)
             SetShowMemberGt(false)
             SetChangeButton(false)
@@ -170,6 +165,21 @@ function ChangeMemberGT(props){
             // if(ShowMemberGt === false){
             //     SetLoadingChangeGT(true)
             // }
+            Children.map(child=>{
+                child.setAttribute('fontWeight','normal')
+            })
+            var but_mentions = Array.from(document.getElementsByClassName('butt_mention'))
+            but_mentions.map(el=>{
+                el.style.fontWeight = 'normal'
+            })
+            if(Action === 'mentions' || Action === 'concept-mention'){
+                var all = (document.getElementById('select_all_butt'))
+                all.style.fontWeight = 'normal'
+            }
+            SetClickBottomMenu(true)
+            Children.map(child=>{
+                child.style.fontWeight = 'normal'
+            })
             SetShowMemberGt(true)
             SetClickBottomMenu(true)
 
@@ -179,17 +189,20 @@ function ChangeMemberGT(props){
 
         }
 
-
-
-
     }
     useEffect(()=>{
         SetClickBottomMenu(true)
+        SetChangeButton(false)
+        Children.map(child=>{
+            child.setAttribute('font-weight','normal')
+        })
     },[UserChosen])
 
     useEffect(()=>{
         // console.log('userchosen',MakeReq)
         var username_to_call = Username
+        console.log('clickbut',ClickBottomMenu)
+
         if (Annotation === 'Automatic'){
             var ns_id = 'Robot'
         }
@@ -208,7 +221,6 @@ function ChangeMemberGT(props){
 
         if(ClickBottomMenu){
             SetLoadingChangeGT(true)
-            console.log('load true')
             // if(MakeReq && ChangeButton){
             axios.get("http://0.0.0.0:8000/report_start_end", {params: {ns_id:ns_id,report_id: Reports[Index].id_report.toString()}}).then(response => {
                 SetFinalCount(response.data['final_count']);SetFinalCountReached(false);SetChangeButton(true)
@@ -230,6 +242,8 @@ function ChangeMemberGT(props){
                 axios.get("http://0.0.0.0:8000/contains", {params: {language:Language,ns_id:ns_id,username:username_to_call,report_id: Reports[Index].id_report.toString()}}).then(response => {setSelectedConcepts(response.data);SetLoadingChangeGT(false);console.log('load false 2');})
                 SetMakeReq(false)
             }
+            console.log('click setto 1')
+
             SetClickBottomMenu(false)
             SetLoadingChangeGT(false)
         }
@@ -241,16 +255,11 @@ function ChangeMemberGT(props){
 
 
 
-    useEffect(()=>{
-        SetShowMajorityGt(false)
-        SetShowAutoAnn(false)
-        SetShowMemberGt(false)
-        SetClickBottomMenu(false)
-    },[Report,Index,Action])
+
 
     useEffect(()=>{
         console.log('change',ChangeButton)
-        if(ChangeButton === true && (Fields.length > 0 || FieldsToAnn.length > 0) && MakeReq){ // Adedd 3092021
+        if(ChangeButton === true && (Fields.length > 0 || FieldsToAnn.length > 0) ){ // Adedd 3092021
             var username = Username
             if(Annotation === 'Automatic'){
                 var mode = 'Robot'
@@ -267,7 +276,7 @@ function ChangeMemberGT(props){
 
             }
             // if((ShowAutoAnn === true || ShowMemberGt === true) && ChangeButton === true){
-            if(Action === 'mentions' && MakeReq){
+            if(Action === 'mentions' ){
                 SetLoadingChangeGT(true)
                 SetLoadingChangeGT(false);console.log('load true 1');
                 axios.get("http://0.0.0.0:8000/mention_insertion", {params: {language:Language,username:username,ns_id:mode,report_id: Reports[Index].id_report.toString()}}).then(response => {
@@ -285,7 +294,7 @@ function ChangeMemberGT(props){
                 SetLoadingChangeGT(true)
             }
 
-            else if(Action === 'concept-mention' && MakeReq){
+            else if(Action === 'concept-mention' ){
                 SetLoadingChangeGT(true)
                 axios.get("http://0.0.0.0:8000/insert_link/linked", {params: {language:Language,username:username,ns_id:mode,report_id: Reports[Index].id_report.toString()}}).then(response => {
                     SetAssociations_to_show(response.data['associations']);SetLoadingChangeGT(false);SetMakeReq(false)
@@ -303,7 +312,7 @@ function ChangeMemberGT(props){
                 SetLoadingChangeGT(true)
             }
         }
-    },[ChangeButton,MakeReq])
+    },[ChangeButton])
 
 
     // },[ChangeButton,MakeReq])

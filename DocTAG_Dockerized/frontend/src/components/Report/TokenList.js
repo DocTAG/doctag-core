@@ -29,8 +29,8 @@ function TokenList(props){
                 words.push(t[0])
                 scores.push(t[1])
             })
-            console.log('words',words)
-            console.log('words',scores)
+            // console.log('words',words)
+            // console.log('words',scores)
             SetTokenWords(words)
             SetTokenScores(scores)
         }
@@ -44,7 +44,7 @@ function TokenList(props){
 
         var stringa = props.testo.toString() //The age is considered an integer!!
         words = stringa.split(' ')
-        console.log('testo malvagio',words)
+        // console.log('testo malvagio',words)
         //
         // if(stringa.indexOf(' ')){
         //

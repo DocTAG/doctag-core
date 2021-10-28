@@ -31,8 +31,8 @@ function DownloadModalRep(props) {
     const [selectedFormatMajor,SetselectedFormatMajor] = useState('')
     const [selectedActMajor,SetselectedActMajor] = useState('none')
     const [selectedActAll,SetselectedActAll] = useState('none')
-    const [selectedModeAll,SetselectedModeAll] = useState('')
-    const [selectedModeMajor,SetselectedModeMajor] = useState('')
+    const [selectedModeAll,SetselectedModeAll] = useState('Human')
+    const [selectedModeMajor,SetselectedModeMajor] = useState('Human')
     const [MissingParamsAll,SetMissingParamsAll] = useState(false)
     const [MissingParamsMajor,SetMissingParamsMajor] = useState(false)
 
@@ -127,7 +127,7 @@ function DownloadModalRep(props) {
         SetChosenUsers(back_arr)
     }
     function downloadAllReports(){
-        if(selectedActAll !== 'none' && selectedModeAll !== ''  && selectedFormatAll !== '') {
+        if(selectedActAll !== 'none'  && selectedFormatAll !== '') {
             axios.post('http://127.0.0.1:8000/download_all_reports',
                 {
                     report_list:RowsToDownload,
@@ -139,7 +139,7 @@ function DownloadModalRep(props) {
                 .then(function (response){
                     console.log('message', response.data);
                     SetselectedActAll('none')
-                    SetselectedModeAll('')
+                    SetselectedModeAll('Human')
                     SetselectedFormatAll('')
                     if (selectedFormatAll === 'json') {
                         if (selectedActAll === 'concept-mention') {
@@ -151,7 +151,7 @@ function DownloadModalRep(props) {
                         }
 
 
-                    } else if (selectedFormatAll === 'csv') {
+                    } else if (selectedActAll === 'csv') {
                         if (selectedActMajor === 'concept-mention') {
                             FileDownload((response.data), 'linking_csv_ground_truth.csv');
                         } else {
@@ -189,7 +189,7 @@ function DownloadModalRep(props) {
         }
     }
     function downloadMajorityReports(){
-        if(selectedActMajor !== 'none' && selectedModeMajor !== '' && ChosenUsers.length > 1 && selectedFormatMajor !== '') {
+        if(selectedActMajor !== 'none' && ChosenUsers.length > 1 && selectedFormatMajor !== '') {
             axios.post('http://127.0.0.1:8000/download_majority_reports',
                 {
                     reports:RowsToDownload,
@@ -202,7 +202,7 @@ function DownloadModalRep(props) {
                 .then(function (response){
                     console.log('message', response.data);
                     SetselectedFormatMajor('')
-                    SetselectedModeMajor('')
+                    SetselectedModeMajor('Human')
                     SetselectedActMajor('none')
                     SetChosenUsers([])
                     if (selectedFormatMajor === 'json') {
@@ -266,7 +266,7 @@ function DownloadModalRep(props) {
                         </div>}
 
                         <div className='sel_class'>Select an annotation type</div>
-                        <div className='sel_class'><Form.Control value={selectedActAll} ref ={act} className='selection all_sel'  as="select" onChange={(e)=>{act.current = e.target.value;SetMissingParamsAll(false);SetselectedActAll(e.target.value);SetselectedFormatAll('');SetselectedModeAll('')}}>
+                        <div className='sel_class'><Form.Control value={selectedActAll} ref ={act} className='selection all_sel'  as="select" onChange={(e)=>{act.current = e.target.value;SetMissingParamsAll(false);SetselectedActAll(e.target.value);SetselectedFormatAll('');SetselectedModeAll('Human')}}>
                             <option value="none">Select an annotation type...</option>
                             <option value='labels'>Labels</option>
                             <option value='mentions'>Passages</option>
@@ -287,9 +287,9 @@ function DownloadModalRep(props) {
                         {/*{selectedActAll !== 'none' && <div><div  className='sel_class'>Select an Annotation Mode</div>*/}
                         {/*<div className='sel_class'><Form.Control value={selectedModeAll} className='selection all_sel' as="select" defaultValue="choose the annotation mode..." onChange={(e)=>{SetMissingParamsAll(false);SetselectedModeAll(e.target.value);mode.current = e.target.value}}>*/}
                         {/*    <option value = ''>Select an annotation mode...</option>*/}
-                        {/*    <option value = 'Human'>Manual</option>*/}
+                        {/*    <option value = 'Human'>Human</option>*/}
                         {/*    {AutoPresence === true && <option value ='Robot'>Automatic</option>}*/}
-                        {/*    {(((EXAPresenceLabels === true && EXAPresenceConcepts === true) || (EXAPresenceLabels === true && selectedActAll === 'labels') || (EXAPresenceConcepts === true && selectedActAll !== 'none' && selectedActMajor !== 'labels')) && AutoPresence === true )&& <option value = 'both'>Manual & Automatic</option>}*/}
+                        {/*    {(((EXAPresenceLabels === true && EXAPresenceConcepts === true) || (EXAPresenceLabels === true && selectedActAll === 'labels') || (EXAPresenceConcepts === true && selectedActAll !== 'none' && selectedActMajor !== 'labels')) && AutoPresence === true )&& <option value = 'both'>Human & Automatic</option>}*/}
                         {/*</Form.Control></div></div>}*/}
                         <hr/>
                         <Button onClick={()=>downloadAllReports()} variant='primary'>Download</Button>
@@ -303,7 +303,7 @@ function DownloadModalRep(props) {
                         </div>}
 
                         <div className='sel_class'>Select an annotation type</div>
-                        <div className='sel_class'><Form.Control value={selectedActMajor} as="select" defaultValue="Select an action..." onChange={(e)=>{SetMissingParamsMajor(false);SetselectedActMajor(e.target.value);SetselectedModeMajor('');SetselectedFormatMajor('');act.current = e.target.value;console.log('act',act.current)}}>
+                        <div className='sel_class'><Form.Control value={selectedActMajor} as="select" defaultValue="Select an action..." onChange={(e)=>{SetMissingParamsMajor(false);SetselectedActMajor(e.target.value);SetselectedModeMajor('Human');SetselectedFormatMajor('');act.current = e.target.value;console.log('act',act.current)}}>
                             <option value = 'none'>Select an annotation type...</option>
                             <option value = 'labels'>Labels</option>
                             <option value = 'mentions'>Passages</option>
@@ -324,9 +324,9 @@ function DownloadModalRep(props) {
                         {/*{selectedActMajor !== 'none' && <div><div className='sel_class'>Select an Annotation Mode</div>*/}
                         {/*<div className='sel_class'><Form.Control value = {selectedModeMajor} className='selection maj_sel' as="select" defaultValue="choose the annotation mode..." onChange={(e)=>{SetMissingParamsMajor(false);SetselectedModeMajor(e.target.value);mode.current = e.target.value}}>*/}
                         {/*    <option value = ''>Select an annotation mode...</option>*/}
-                        {/*    <option value = 'Human'>Manual</option>*/}
+                        {/*    <option value = 'Human'>Human</option>*/}
                         {/*    {AutoPresence === true && <option value = 'Robot'>Automatic</option>}*/}
-                        {/*    {(((EXAPresenceLabels === true && EXAPresenceConcepts === true) || (EXAPresenceLabels === true && selectedActMajor === 'labels') || (EXAPresenceConcepts === true && selectedActMajor !== 'none' && selectedActMajor !== 'labels')) && AutoPresence === true )&& <option value = 'both'>Manual & Automatic</option>}*/}
+                        {/*    {(((EXAPresenceLabels === true && EXAPresenceConcepts === true) || (EXAPresenceLabels === true && selectedActMajor === 'labels') || (EXAPresenceConcepts === true && selectedActMajor !== 'none' && selectedActMajor !== 'labels')) && AutoPresence === true )&& <option value = 'both'>Human & Automatic</option>}*/}
 
                         {/*</Form.Control></div><hr/></div>}*/}
                         {selectedActMajor !== 'none'  && (UsersList.length > 0 || ChosenUsers.length > 0) &&<div style={{'padding-left':'1%','padding-right':'1%'}}>

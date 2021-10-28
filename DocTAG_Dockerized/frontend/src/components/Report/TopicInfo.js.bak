@@ -77,7 +77,7 @@ function TopicInfo(props) {
     // useEffect(()=>{
     //     var new_arr = []
     //     if(ShowAnnotationsStats === true || ShowMajorityModal === true){
-    //         axios.get('http://127.0.0.1:8000/get_post_fields_for_auto').then(response=>{
+    //         axios.get('http://0.0.0.0:8000/get_post_fields_for_auto').then(response=>{
     //             Object.keys(response.data['extract_fields']).map(val=>{
     //
     //
@@ -132,7 +132,7 @@ function TopicInfo(props) {
             // console.log('AUTOANN',Report)
             if((ShowAutoAnn || ShowMemberGt)){
                 console.log('AXIOS')
-                axios.get('http://127.0.0.1:8000/get_insertion_time_record',
+                axios.get('http://0.0.0.0:8000/get_insertion_time_record',
                     {params:{ns_id:ns_id,username:username_to_call,rep:Reports[Index]['id_report'],language:SelectedLang,action:Action}})
                     .then(response=>{
                         if(response.data['date'] !== ''){
@@ -184,7 +184,7 @@ function TopicInfo(props) {
     useEffect(()=>{
         console.log('trans')
         if(ReportString !== undefined){
-            axios.get('http://127.0.0.1:8000/get_report_translations',{params:{id_report:Report.id_report}}).then(response=>{
+            axios.get('http://0.0.0.0:8000/get_report_translations',{params:{id_report:Report.id_report}}).then(response=>{
                 SetReportTranslation(response.data['languages'])
                 console.log('respp',response.data['languages'])
             })
@@ -196,7 +196,7 @@ function TopicInfo(props) {
         SetSelectedLang(rep)
         if(rep !== Language){
             // SetLoadingReport(true)
-            axios.get("http://127.0.0.1:8000/report_start_end", {params: {language:rep,report_id: Reports[Index].id_report.toString()}}).then(response => {
+            axios.get("http://0.0.0.0:8000/report_start_end", {params: {language:rep,report_id: Reports[Index].id_report.toString()}}).then(response => {
                 SetTranslation(response.data['rep_string']); SetFinalCount(response.data['final_count']);SetFinalCountReached(false);
                 // SetLoadingReport(false)
             })

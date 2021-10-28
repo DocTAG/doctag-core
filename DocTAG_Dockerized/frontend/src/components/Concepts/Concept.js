@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useContext } from "react";
 import { faTimesCircle,faSearch, faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 import {AppContext}  from "../../App";
-import {ConceptContext} from '../../BaseIndex'
+import {ConceptContext} from '../../Prova_BaseIndex'
 import cookie from "react-cookies";
 import LabelItem from "../Labels/LabelItem";
 import './concept.css';

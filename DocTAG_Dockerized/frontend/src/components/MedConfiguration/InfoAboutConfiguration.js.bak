@@ -246,42 +246,53 @@ function InfoAboutConfiguration() {
                                     Each JSON file containing your collection must be formatted as follows. all the collection must be stored in an array associated to the key <i>collection</i>. Each element of the array is a JSON element<br/>
                                     which must include: <i>document_id</i> key with the identifier of the document. If you are interested in the language of the document insert a <i>language</i> key <b>for each element of the <i>collection</i> list</b>.
                                     You can include all the corpus of each document under a unique field. By the way if you want to choose what keys to annotate, display and hide, you can store your document in more than one field.
-                                    <br/>
-                                    <div style={{display:"flex",justifyContent:"center"}}>
+                                    <br/><br/>
+                                    <div>
                                         Below a json file subdivided into fields and where the language is defined is the following (in this case you will decide if you want to annotate all the fields or many of them):
-                                        {/*<code>*/}
-                                        {/*    {"collection":[*/}
-                                        {/*        {*/}
-                                        {/*            "document_id":"document_1",*/}
-                                        {/*            "language":"english",*/}
-                                        {/*            "introduction":"this is the introduction of document_1",*/}
-                                        {/*            "body":"this is the body of document_1",*/}
-                                        {/*            "conclusion":"this is the conclusion of document_1",*/}
-                                        {/*        },*/}
-                                        {/*        {*/}
-                                        {/*            "document_id":"document_2",*/}
-                                        {/*            "language":"english",*/}
-                                        {/*            "introduction":"this is the introduction of document_2",*/}
-                                        {/*            "body":"this is the body of document_2",*/}
-                                        {/*            "conclusion":"this is the conclusion of document_3",*/}
-                                        {/*        }*/}
-                                        {/*    ]}*/}
-                                        {/*</code>*/}
+                                    </div><br/>
+                                    <div style={{display:"flex",justifyContent:"center"}}>
+
+                                            <div >
+                                                <pre style={{fontSize:'0.8rem',color:'#e83e8c'}}>
+
+                                                    {JSON.stringify(                   {"collection":[{
+                                                "document_id":"document_1",
+                                                "language":"english",
+                                                "introduction":"this is the introduction of document_1",
+                                                "body":"this is the body of document_1",
+                                                "conclusion":"this is the conclusion of document_1",
+                                            },
+                                                {
+                                                    "document_id":"document_2",
+                                                    "language":"english",
+                                                    "introduction":"this is the introduction of document_2",
+                                                    "body":"this is the body of document_2",
+                                                    "conclusion":"this is the conclusion of document_3",
+                                                }
+                                            ]}, null, 2) }</pre>
+                                            </div>
+
                                     </div>
-                                    <div style={{display:"flex",justifyContent:"center"}}>
+                                    <br/>
+                                    <div>
                                         Below a json file subdivided into fields and where the language is defined is the following (in this case you will decide if you want to annotate all the fields or many of them):
-                                        {/*<code>*/}
-                                        {/*    {"collection":[*/}
-                                        {/*        {*/}
-                                        {/*        "document_id":"document_1",*/}
-                                        {/*        "text":"this is the  document_1"*/}
-                                        {/*        },*/}
-                                        {/*        {*/}
-                                        {/*            "document_id":"document_2",*/}
-                                        {/*            "text":"this is the  document_2"*/}
-                                        {/*        }*/}
-                                        {/*    ]}*/}
-                                        {/*</code>*/}
+                                    </div><br/>
+                                    <div style={{display:"flex",justifyContent:"center"}}>
+                                        <div >
+                                            <pre style={{fontSize:'0.8rem',color:'#e83e8c'}}>
+                                                {JSON.stringify(
+                                                        {"collection":[
+                                                        {
+                                                        "document_id":"document_1",
+                                                        "text":"this is the  document_1"
+                                                        },
+                                                        {
+                                                            "document_id":"document_2",
+                                                            "text":"this is the  document_2"
+                                                        }
+
+                                                    ]}, null, 2) }</pre>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -302,6 +313,20 @@ function InfoAboutConfiguration() {
                                     </div>
                                     <h6>JSON</h6>
                                     <div>The PubMed ids stored in the json files must be stored in an array. Each element of the array must contain the key <i>pubmed_ids</i> key which is mandatory.</div><br/>
+                                        <div>
+                                            Below a json file containing the id of the pubmed articles to add to DocTAG configuration:
+                                        </div><br/>
+                                        <div style={{display:"flex",justifyContent:"center"}}>
+
+                                            <div >
+                                                <pre style={{fontSize:'0.8rem',color:'#e83e8c'}}>
+                                                    {JSON.stringify(
+                                                        {"pubmed_ids":[
+                                                                "pubmed_1","pubmed_2","pubmed_3"
+
+                                                            ]}, null, 2) }</pre>
+                                            </div>
+                                        </div>
                                     <h6>txt format</h6>
                                     <div>In this case each line contains and ID:</div>
                                     <div style={{display:"flex",justifyContent:"center",fontSize:'0.8rem'}}>
@@ -328,19 +353,60 @@ function InfoAboutConfiguration() {
                                     </div>
                                     <h6>JSON</h6>
                                     <div>The topics stored in the json files must be stored in an array. Each element of the array must contain the key <i>topic_id</i> key which is mandatory. Other keys are: <i>title, description</i> and <i>narrative</i>: these keys are not mandatory, by the way they are useful indicators of what the topics are about.</div><br/>
+                                    <div>
+                                        Below a json file containing the topics' definition:
+                                    </div><br/>
+                                    <div style={{display:"flex",justifyContent:"center"}}>
+
+                                        <div >
+                                                <pre style={{fontSize:'0.8rem',color:'#e83e8c'}}>
+                                                    {JSON.stringify(
+                                                        {"topics":[
+                                                                {
+                                                                    "topic_id":"topic_1",
+                                                                    "title":"title_topic_1",
+                                                                    "description":"description_topic_1",
+                                                                    "narrative":"narrative topic_1"
+                                                                },
+                                                                {
+                                                                    "topic_id":"topic_2",
+                                                                    "title":"title_topic_2",
+                                                                    "description":"description_topic_2",
+                                                                    "narrative":"narrative topic_2"
+                                                                }
+                                                                ]
+                                                        }
+
+                                                            , null, 2) }</pre>
+                                        </div>
+                                    </div>
+
                                     <h6>TREC txt format</h6>
                                     <div>In this case each file is a txt formatted as follows:</div>
-                                    <div style={{display:"flex",justifyContent:"center",fontSize:'0.8rem'}}>
-                                        <code><div style={{textAlign:"left"}}>
 
-                                        </div></code>
-                                    </div><br/>
+                                    <div style={{display:"flex",justifyContent:"center"}}>
+                                        <pre style={{fontSize:'0.8rem',color:'#e83e8c'}}>
+                                                &lt;top&gt;<br/>
+
+                                            &lt;num&gt; Number: <i>number</i><br/>
+                                            &lt;title&gt; <i>title</i><br/>
+
+                                            &lt;desc&gt; Description:<br/>
+                                                <i>description</i><br/>
+
+                                            &lt;narr&gt; Narrative:<br/>
+                                                <i>narrative</i><br/>
+
+                                            &lt;/top&gt;
+                                        </pre>
+                                    </div>
+                                    <br/>
                                 </div><hr/>
                                 <h5>The Runs files</h5>
                                 <div>
                                     The allowed file formats for runs files are <b>json, csv, txt</b> formats.<br/><br/>
                                     <h6>CSV</h6>
-                                    <div>The header must contain two columns <i>topic_id</i> and <i>document_id</i>. If you inserted the language of each document in the collection in <i>language</i> column or key, provide it also in the runs (otherwise some errors can occur). Other columns are: <i>title, description</i> and <i>narrative</i>: these columns are not mandatory, by the way they are useful indicators of what the topics are about.</div><br/>
+                                    <div>The header must contain two columns <i>topic_id</i> and <i>document_id</i>. If you inserted the language of each document in the collection in <i>language</i> column or key, provide it also in the runs (otherwise some errors can occur).</div><br/>
                                     <div style={{display:"flex",justifyContent:"center",fontSize:'0.8rem'}}>
                                         <code><div style={{textAlign:"left"}}>
                                             <div><b>topic_id,document_id,language</b></div>
@@ -351,6 +417,77 @@ function InfoAboutConfiguration() {
                                     </div>
                                     <h6>JSON</h6>
                                     <div>The topic-document associations must be stored in an array associated to the key <i>run</i>. Each element of this array is a json object with <i>topic_id</i> key and <i>documents</i> key. the former stores the information about the topic identifier, the letter is a list of documents associated to the corresponding <i>topic_id</i>. If you specified a language for each document, the array <i>documents</i> must contain json objects composed by <i>document_id</i> and <i>language</i> keys</div><br/>
+                                    <div>
+                                        Below a json file containing the topics' definition where language is specified:
+                                    </div><br/>
+                                    <div style={{display:"flex",justifyContent:"center"}}>
+
+                                        <div >
+                                                <pre style={{fontSize:'0.8rem',color:'#e83e8c'}}>
+                                                    {JSON.stringify(
+                                                        {"run":[
+                                                                {
+                                                                    "topic_id":"topic_1",
+                                                                    "documents":[
+                                                                        {
+                                                                            "document_id":"doc_1",
+                                                                            "language":"english"
+                                                                        },
+                                                                        {
+                                                                            "document_id":"doc_2",
+                                                                            "language":"spanish"
+                                                                        }
+
+
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "topic_id":"topic_2",
+                                                                    "documents":[
+                                                                        {
+                                                                            "document_id":"doc_12",
+                                                                            "language":"english"
+                                                                        },
+                                                                        {
+                                                                            "document_id":"doc_14",
+                                                                            "language":"italian"
+                                                                        }
+
+
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+
+                                                        , null, 2) }</pre>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        Below a json file containing the topics' definition where language is <b>NOT</b> specified:
+                                    </div><br/>
+                                    <div style={{display:"flex",justifyContent:"center"}}>
+
+                                        <div >
+                                            <pre style={{fontSize:'0.8rem',color:'#e83e8c'}}>
+                                                {JSON.stringify(
+                                                    {"run":[
+                                                            {
+                                                                "topic_id":"topic_1",
+                                                                "documents":["doc_1","doc_2","doc_3"]
+
+                                                            },
+                                                            {
+                                                                "topic_id":"topic_2",
+                                                                "documents":["doc_10","doc_20","doc_30"]
+                                                            }
+                                                        ]
+                                                    }
+
+                                                    , null, 2) }</pre>
+                                        </div>
+                                    </div>
+
                                     <h6>TREC format</h6>
                                     <div>In this case each file is a txt formatted as follows:</div>
                                     <div style={{display:"flex",justifyContent:"center",fontSize:'0.8rem'}}>
@@ -384,6 +521,18 @@ function InfoAboutConfiguration() {
                                     </div><br/>
                                     <h6>JSON</h6>
                                     <div>The json file must contain a list of labels associated to the <i>labels</i> key.</div><br/>
+                                    <div>
+                                        Below a json file containing the labels' definition:
+                                    </div><br/>
+                                    <div style={{display:"flex",justifyContent:"center"}}>
+
+                                        <div >
+                                                <pre style={{fontSize:'0.8rem',color:'#e83e8c'}}>
+                                                    {JSON.stringify(
+                                                        {"labels":["Relevant","Not Relevant"]}
+
+                                                        , null, 2) }</pre>
+                                        </div></div>
                                     <h6>txt format</h6>
                                     <div>In this case each file is a txt where each line contains a label.</div>
                                     <div style={{display:"flex",justifyContent:"center",fontSize:'0.8rem'}}>
@@ -409,9 +558,32 @@ function InfoAboutConfiguration() {
                                     </div>
                                     <h6>JSON</h6>
                                     <div>The json file must contain a list of concepts associated to the <i>concepts</i> key. Each element of the array must contain two keys: <i>concept_url, concept_name</i></div><br/>
+                                    <div>
+                                        Below a json file containing the concepts' definition:
+                                    </div><br/>
+                                    <div style={{display:"flex",justifyContent:"center"}}>
 
+                                        <div >
+                                                <pre style={{fontSize:'0.8rem',color:'#e83e8c'}}>
+                                                    {JSON.stringify(
+                                                        {"concepts_list":[
+                                                                {
+                                                                    "concept_url":"www.concept_1.com",
+                                                                    "name":"concept_1"
+                                                                },{
+                                                                    "concept_url":"www.concept_2.com",
+                                                                    "name":"concept_2"
+                                                                }
+                                                                ]
+                                                        }
+
+
+
+
+                                                        , null, 2) }</pre>
+                                        </div>
                                 </div>
-
+                                </div>
                             </div>
 
                         </Collapse><hr/>

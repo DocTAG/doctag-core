@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimesCircle,faEye, faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 import './linked.css';
 import {AppContext}  from "../../App";
-import {LinkedContext, MentionContext} from '../../BaseIndex'
+import {LinkedContext, MentionContext} from '../../Prova_BaseIndex'
 import Select from 'react-select';
 //import { useForm } from "react-hook-form";
 // import DjangoCSRFToken from 'django-react-csrftoken'

@@ -43,13 +43,10 @@ def check_uploaded_files(files):
         else:
             # check if colunns are allowed and without duplicates
             cols = list(df.columns)
-            labels = ['username', 'annotation_mode', 'id_report', 'language', 'institute', 'topic', 'label']
-            mentions = ['username', 'annotation_mode', 'id_report', 'language', 'institute', 'topic', 'start', 'stop',
-                     'mention_text','label']
-            concepts = ['username', 'annotation_mode', 'id_report', 'language', 'institute', 'topic', 'start', 'stop',
-                     'mention_text', 'concept_name', 'concept_url', 'area']
-            linking = ['username', 'annotation_mode', 'id_report', 'language', 'institute', 'topic', 'concept_url',
-                     'concept_name', 'area']
+            labels = ['username', 'annotation_mode','id_report', 'language','batch', 'institute', 'topic', 'label']
+            mentions = ['username','annotation_mode', 'id_report', 'language','batch', 'institute', 'topic','label', 'start','stop','mention_text']
+            linking = ['username','annotation_mode', 'id_report', 'language','batch', 'institute', 'topic', 'start', 'stop', 'mention_text','concept_name','concept_url','area']
+            concepts = ['username','annotation_mode', 'id_report', 'language','batch', 'institute', 'topic', 'concept_url','concept_name','area']
 
             if set(cols) != set(labels) and set(cols) != set(mentions) and set(cols) != set(concepts) and set(cols) != set(linking):
                 json_resp['message'] = 'ERROR - ' + files[
@@ -58,8 +55,8 @@ def check_uploaded_files(files):
                 return json_resp
 
 
-            if 'usecase' in cols:
-                df['usecase'] = df['usecase'].str.lower()
+            # if 'topic' in cols:
+            #     df['topic'] = df['topic'].str.lower()
 
             # Check if the csv is empty with 0 rows
             if df.shape[0] == 0:
@@ -82,19 +79,20 @@ def upload_files(files,user_to,overwrite):
     try:
         with transaction.atomic():
             for i in range(len(files)):
+                print(files[i].name)
                 df = pd.read_csv(files[i])
                 df = df.where(pd.notnull(df), None)
                 df = df.reset_index(drop=True)  # Useful if the csv includes only commas
-                df.sort_values(['id_report','language','annotation_mode'])
+                df.sort_values(['id_report','language'])
                 cols = list(df.columns)
-                labels = ['username', 'annotation_mode', 'id_report', 'language','batch', 'institute', 'topic', 'label']
-                mentions = ['username', 'annotation_mode', 'id_report', 'language','batch', 'institute', 'topic', 'start', 'stop',
-                         'mention_text','label']
-                concepts = ['username', 'annotation_mode', 'id_report', 'language','batch', 'institute', 'topic', 'concept_url',
-                         'concept_name', 'area']
-                linking = ['username', 'annotation_mode', 'id_report', 'language','batch', 'institute', 'topic', 'start', 'stop',
-                         'mention_text', 'concept_name', 'concept_url', 'area']
-
+                labels = ['username', 'annotation_mode', 'id_report', 'language', 'batch', 'institute', 'topic',
+                          'label']
+                mentions = ['username', 'annotation_mode', 'id_report', 'language', 'batch', 'institute', 'topic',
+                            'label', 'start', 'stop', 'mention_text']
+                linking = ['username', 'annotation_mode', 'id_report', 'language', 'batch', 'institute', 'topic',
+                           'start', 'stop', 'mention_text', 'concept_name', 'concept_url', 'area']
+                concepts = ['username', 'annotation_mode', 'id_report', 'language', 'batch', 'institute', 'topic',
+                            'concept_url', 'concept_name', 'area']
 
                 for i, g in df.groupby(['id_report','language','topic']):
                     count_rows = g.shape[0]
@@ -109,7 +107,7 @@ def upload_files(files,user_to,overwrite):
                     action = ''
                     for i in range(count_rows):
                         usecase = str(df.loc[i, 'topic'])
-                        usecase_obj = UseCase.objects.get(name=usecase.lower())
+                        usecase_obj = UseCase.objects.get(name=usecase)
                         mode = str(g.loc[i, 'annotation_mode'])
                         id_report = str(g.loc[i, 'id_report'])
                         language = str(g.loc[i, 'language'])
@@ -126,7 +124,7 @@ def upload_files(files,user_to,overwrite):
 
                         report = Report.objects.get(id_report=id_report, language=language, institute=institute)
                         if set(cols) == set(labels):
-                            label = AnnotationLabel.objects.get(label = str(g.loc[i, 'label']),name = usecase_obj)
+                            label = AnnotationLabel.objects.get(label = str(g.loc[i, 'label']))
                             if overwrite == True and GroundTruthLogFile.objects.filter(username=user,
                                                                                              ns_id=mode,name = usecase_obj,
                                                                                              id_report=report,
@@ -150,6 +148,7 @@ def upload_files(files,user_to,overwrite):
 
                             mention = Mention.objects.get(id_report = report, language = language, start = int(g.loc[i, 'start']),
                                                           stop = int(g.loc[i, 'stop']))
+                            label = AnnotationLabel.objects.get(label = str(g.loc[i, 'label']))
                             if overwrite == True and GroundTruthLogFile.objects.filter(username=user,
                                                                                              ns_id=mode,
                                                                                              id_report=report,name = usecase_obj,
@@ -157,14 +156,14 @@ def upload_files(files,user_to,overwrite):
                                                                                              gt_type='mentions').exists():
                                 GroundTruthLogFile.objects.filter(username=user,ns_id=mode,id_report=report,language=report.language,name = usecase_obj,
                                                                   gt_type='mentions').delete()
-                                Annotate.objects.filter(username=user,ns_id=mode,id_report=report,name = usecase_obj,language=report.language).delete()
+                                Annotate.objects.filter(username=user,ns_id=mode,id_report=report,name = usecase_obj,language=report.language,label = label,seq_number = label.seq_number).delete()
                             if (overwrite == False and not GroundTruthLogFile.objects.filter(username=user,
                                                                                              ns_id=mode,
                                                                                              id_report=report,name = usecase_obj,
                                                                                              language=report.language,
                                                                                              gt_type='mentions').exists()) or overwrite == True:
                                 Annotate.objects.create(username=user, ns_id=mode,name = usecase_obj, id_report=report,start = mention,stop = mention.stop,
-                                                            language=report.language, insertion_time=Now())
+                                                            language=report.language,label = label,seq_number = label.seq_number, insertion_time=Now())
                                 action = 'mentions'
 
                         elif set(cols) == set(concepts):
@@ -178,13 +177,13 @@ def upload_files(files,user_to,overwrite):
                                                                                              gt_type='concepts').exists():
                                 GroundTruthLogFile.objects.filter(username=user,ns_id=mode,id_report=report,language=report.language,name = usecase_obj,
                                                                   gt_type='concepts').delete()
-                                Contains.objects.filter(username=user,ns_id=mode,topic_name = usecase_obj,id_report=report,language=report.language).delete()
+                                Contains.objects.filter(username=user,ns_id=mode,topic_name = usecase_obj.name,id_report=report,language=report.language).delete()
                             if (overwrite == False and not GroundTruthLogFile.objects.filter(username=user,
                                                                                              ns_id=mode,name = usecase_obj,
                                                                                              id_report=report,
                                                                                              language=report.language,
                                                                                              gt_type='concepts').exists()) or overwrite == True:
-                                Contains.objects.create(topic_name = usecase_obj,username = user, ns_id =mode, id_report = report,concept_url = concept,name = area,
+                                Contains.objects.create(topic_name = usecase_obj.name,username = user, ns_id =mode, id_report = report,concept_url = concept,name = area,
                                                                language = report.language,insertion_time = Now())
                                 action = 'concepts'
                         elif set(cols) == set(linking):
@@ -209,20 +208,20 @@ def upload_files(files,user_to,overwrite):
                                                                                              gt_type='concept-mention').exists():
                                 GroundTruthLogFile.objects.filter(username=user,ns_id=mode,id_report=report,language=report.language,name = usecase_obj,
                                                                   gt_type='concept-mention').delete()
-                                Linked.objects.filter(username=user,ns_id=mode,id_report=report,language=report.language,topic_name = usecase_obj).delete()
+                                Linked.objects.filter(username=user,ns_id=mode,id_report=report,language=report.language,topic_name = usecase_obj.name).delete()
 
                             if (overwrite == False and set(to_arr) == set(from_arr) and not GroundTruthLogFile.objects.filter(username=user,
                                                                                              ns_id=mode,
                                                                                              id_report=report,name = usecase_obj,
                                                                                              language=report.language,
                                                                                              gt_type='concept-mention').exists()) or overwrite == True:
-                                Linked.objects.create(topic_name = usecase_obj,username = user, ns_id = mode, id_report = report,concept_url = concept,name = area,
+                                Linked.objects.create(topic_name = usecase_obj.name,username = user, ns_id = mode, id_report = report,concept_url = concept,name = area,
                                                                language = report.language,start=mention,stop = mention.stop,insertion_time = Now())
                                 action = 'concept-mention'
                     if action != '':
 
                         gt_json = serialize_gt(action, user_to, report_cur.id_report, report_cur.language,
-                                               anno_mode,usecase_obj)
+                                               anno_mode,usecase_obj.name)
                         GroundTruthLogFile.objects.create(username=user, ns_id=anno_mode, gt_type=action,
                                                           gt_json=gt_json, insertion_time=Now(),name = usecase_obj,
                                                           id_report=report_cur, language=language)

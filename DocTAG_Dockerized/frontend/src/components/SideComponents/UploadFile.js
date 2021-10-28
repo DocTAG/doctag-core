@@ -81,6 +81,7 @@ function UploadFile() {
                     SetCompleteUpload(false);
                     if (response.data['message'] === 'Ok'){
                         SetCompleteUpload(true)
+                        SetShowDeleteFiles(false)
                         SetChecked(0)
                         var input = ''
                         input = document.getElementById('input_upload');

@@ -140,6 +140,7 @@ function BaseIndex() {
 
     useEffect(()=>{
         window.scroll(0,0)
+        console.log('ciaone')
     },[])
 
     useEffect(()=>{
@@ -186,7 +187,7 @@ function BaseIndex() {
         // console.log('setto colori')
         // SetColor(colori)
         SetLoadingMentionsColor(true)
-        SetMakeReq(true)
+        // SetMakeReq(true) // DA METTERE
 
     },[Action,Index,Report,reportsString])
 

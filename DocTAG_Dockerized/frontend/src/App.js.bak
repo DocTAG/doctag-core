@@ -32,6 +32,7 @@ import UpdateConfiguration from "./components/MedConfiguration/UpdateConfigurati
 import MembersStats from "./components/SideComponents/MembersStats";
 import ConfigureResult from "./components/MedConfiguration/ConfigureResult";
 import UploadFile from "./components/SideComponents/UploadFile";
+import Prova_BaseIndex from "./Prova_BaseIndex";
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 
@@ -98,7 +99,7 @@ function App() {
     const [Disabled_Buttons, SetDisable_Buttons] = useState(false)
     const [Username, SetUsername] = useState('')
     // State for each ConceptList
-    const [MakeReq,SetMakeReq] = useState(true)
+    const [MakeReq,SetMakeReq] = useState(false)
     const [ShowErrorSnack, SetShowErrorSnack] = useState(false);
     const [ShowConceptModal, SetShowConceptModal] = useState(false)
     const [selectedConcepts, setSelectedConcepts] = useState({"Diagnosis":[], "Anatomical Location":[], "Test":[], "Procedure":[], "General Entity":[] })
@@ -240,7 +241,7 @@ function App() {
                         <Switch>
 
                             <Route path="/index">
-                                {(LoadingMenu) ? <div className='spinnerDiv'><Spinner animation="border" role="status"/></div> : <BaseIndex />}
+                                {(LoadingMenu) ? <div className='spinnerDiv'><Spinner animation="border" role="status"/></div> : <Prova_BaseIndex />}
                             </Route>
 
                            <Route path="/credits">
