@@ -447,6 +447,18 @@ COPY public.use_case (name, title, description, narrative) FROM stdin;
 375	hydrogen energy	What is the status of research on hydrogen as a feasible energy source?	A relevant document will describe progress in research on controlled hydrogen fusion or the use of hydrogen as fuel to power engines.
 \.
 
+COPY public.concept (concept_url, name) FROM stdin;
+https://dbpedia.org/page/Hydrogen	Hydrogen
+https://dbpedia.org/page/Energy	Energy
+https://dbpedia.org/page/Renewable_energy	Renewable energy
+https://dbpedia.org/page/Electric_energy_consumption	Electric energy consumption
+https://dbpedia.org/page/Electric_car	Electric car
+https://dbpedia.org/page/Petroleum	Petroleum
+https://dbpedia.org/page/Falkland_Islands	Falkland Islands
+https://dbpedia.org/page/Petroleum_industry	Petroleum industry
+https://dbpedia.org/page/Gasoline	Gasoline
+\.
+
 
 COPY public.topic_has_document (id_report, name, language) FROM stdin;
 FBIS3-10551	351	english
@@ -471,19 +483,6 @@ FBIS3-42460	375	english
 FBIS3-42749	375	english
 \.
 
-
-COPY public.concept (concept_url, name) FROM stdin;
-https://dbpedia.org/page/Hydrogen	Hydrogen
-https://dbpedia.org/page/Energy	Energy
-https://dbpedia.org/page/Renewable_energy	Renewable energy
-https://dbpedia.org/page/Electric_energy_consumption	Electric energy consumption
-https://dbpedia.org/page/Electric_car	Electric car
-https://dbpedia.org/page/Petroleum	Petroleum
-https://dbpedia.org/page/Falkland_Islands	Falkland Islands
-https://dbpedia.org/page/Petroleum_industry	Petroleum industry
-https://dbpedia.org/page/Gasoline	Gasoline
-\.
-
 COPY public.belong_to (concept_url, name) FROM stdin;
 https://dbpedia.org/page/Hydrogen	default_area
 https://dbpedia.org/page/Energy	default_area
@@ -495,3 +494,6 @@ https://dbpedia.org/page/Falkland_Islands	default_area
 https://dbpedia.org/page/Petroleum_industry	default_area
 https://dbpedia.org/page/Gasoline	default_area
 \.
+
+
+
