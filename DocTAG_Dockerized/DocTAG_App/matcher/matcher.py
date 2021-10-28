@@ -34,7 +34,7 @@ with open(os.path.join(workpath, '../config_files/config.json')) as out:
     top_k = int(data['TF-IDF_k'])
 
 class QueryDocMatcher:
-    def __init__(self, topic, doc, corpus, df_tfidf, language="english",  k=top_k):
+    def __init__(self, topic, doc, corpus, df_tfidf,language="english", k=top_k):
         self.topic = topic
         self.doc = doc
         self.corpus = corpus
@@ -49,7 +49,6 @@ class QueryDocMatcher:
         self.matching_bow = set()
         self.map_stemmed_bow_doc_to_not_stemmed = None
         self.map_stemmed_bow_topic_to_not_stemmed = None
-        # nltk.download('stopwords')
 
     def get_bag_of_words(self, text, stopwords_removal=True, stemming=True, lemmatization=False, verbose=False):
         """Return the bag of words for the given text according to the parameters specified (stopwords_removal, stemming and lemmatization).
@@ -69,7 +68,8 @@ class QueryDocMatcher:
             List of bag of words to return.
         """
 
-        CUSTOM_FILTERS = [lambda x: x.lower(), strip_tags, strip_punctuation, strip_multiple_whitespaces, strip_numeric, strip_short]
+        CUSTOM_FILTERS = [lambda x: x.lower(), strip_tags, strip_punctuation, strip_multiple_whitespaces, strip_numeric,
+                          strip_short]
 
         preprocessed_text = preprocess_string(text, CUSTOM_FILTERS)
 
@@ -167,11 +167,11 @@ class QueryDocMatcher:
 
         return matching_words
 
-    def get_top_k_matching_words(self, docno, verbose=False):
-        """Return the top-k matching words for the given document identifier (docno).
+    def get_top_k_matching_words(self, document_id, verbose=False):
+        """Return the top-k matching words for the given document identifier (document_id).
         Parameters
         ----------
-        docno : string
+        document_id : string
             The document identifier with respect to we want to compute the top-k matching words.
         Returns
         -------
@@ -190,20 +190,25 @@ class QueryDocMatcher:
         processed_words = []
 
         for w in self.matching_bow:
-            c_w = None
-            if w in self.df_tfidf.columns:
-                c_w = w
-                if c_w is not None:
-                    c_words_not_stemmed = self.map_stemmed_bow_doc_to_not_stemmed[c_w]
-                    c_words_not_stemmed_topic = self.map_stemmed_bow_topic_to_not_stemmed[c_w]
-                    for c_w_not_stemmed in c_words_not_stemmed:
-                        if c_w_not_stemmed not in processed_words:
-                            top_k_matching_words.append((c_w_not_stemmed, round(self.df_tfidf._get_value(docno, c_w), 2)))
-                            processed_words.append(c_w_not_stemmed)
-                    for c_w_not_stemmed_topic in c_words_not_stemmed_topic:
-                        if c_w_not_stemmed_topic not in processed_words:
-                            top_k_matching_words.append((c_w_not_stemmed_topic, round(self.df_tfidf._get_value(docno, c_w), 2)))
-                            processed_words.append(c_w_not_stemmed)
+            try:
+                c_w = None
+                if w in self.df_tfidf.columns:
+                    c_w = w
+                    if c_w is not None:
+                        c_words_not_stemmed = self.map_stemmed_bow_doc_to_not_stemmed[c_w]
+                        c_words_not_stemmed_topic = self.map_stemmed_bow_topic_to_not_stemmed[c_w]
+                        for c_w_not_stemmed in c_words_not_stemmed:
+                            if c_w_not_stemmed not in processed_words:
+                                top_k_matching_words.append(
+                                    (c_w_not_stemmed, round(self.df_tfidf._get_value(document_id, c_w), 2)))
+                                processed_words.append(c_w_not_stemmed)
+                        for c_w_not_stemmed_topic in c_words_not_stemmed_topic:
+                            if c_w_not_stemmed_topic not in processed_words:
+                                top_k_matching_words.append(
+                                    (c_w_not_stemmed_topic, round(self.df_tfidf._get_value(document_id, c_w), 2)))
+                                processed_words.append(c_w_not_stemmed)
+            except Exception as e:
+                pass
 
         ic_logger.log(top_k_matching_words)
 
@@ -216,8 +221,6 @@ class QueryDocMatcher:
         ic_logger.log(top_k_matching_words)
 
         return top_k_matching_words
-
-
 
     def gen_map_bow(self):
         """Generate and save a dict that acts as a map for each stemmed word to the set of corresponding (not-stemmed) words.
@@ -262,7 +265,7 @@ class QueryDocMatcher:
         topic_joint_text = ' '.join([title, desc])
 
         # document data
-        docno = self.doc['document_id']
+        document_id = self.doc['document_id']
         doc_text = self.doc['text']
 
         # compute bow for topic and document (for the document compute bow in both cases: (not) stemmed)
@@ -282,10 +285,10 @@ class QueryDocMatcher:
         self.gen_map_bow()
 
         # compute top-k matching words sorted (descending) according to tfidf score
-        top_k_matching_words = self.get_top_k_matching_words(docno)
+        top_k_matching_words = self.get_top_k_matching_words(document_id)
 
         return top_k_matching_words
-
+    
     @staticmethod
     def demo():
         """

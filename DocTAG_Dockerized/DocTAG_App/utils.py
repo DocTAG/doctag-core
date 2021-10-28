@@ -265,7 +265,7 @@ def delete_all_mentions(user,report1,language,type,mode,topic):
     # if len(to_del) > 0:
     ass = Annotate.objects.filter(username=user,ns_id=mode, id_report=report1,language = language,name = topic).values('start','stop','label')
     # print(len(ass))
-    topic = UseCase.objects.get(name = topic)
+    # topic = UseCase.objects.get(name = topic)
     rem_contains = False
 
     for el in ass:
