@@ -1186,9 +1186,9 @@ def configure_data(pubmedfiles,reports, labels, concepts, jsondisp, jsonann, jso
                         print('elaborated in '+str(end-start)+' seconds')
             else:
                 json_to_write = {}
-                path2 = os.path.join(workpath, './config_files/tf_idf_map.json')
-                with open(path2, 'w') as f:
-                    json.dump(json_to_write, f)
+            path2 = os.path.join(workpath, './config_files/tf_idf_map.json')
+            with open(path2, 'w') as f:
+                json.dump(json_to_write, f)
 
         json_resp = {'message': 'Ok'}
         return json_resp
