@@ -333,15 +333,15 @@ def find_docs_in_json_pubmed_collection(arr_tuples,file,batch = None):
         pubmed_ids = d['pubmed_ids']
     elif file.name.endswith('csv'):
         df = pd.read_csv(file)
-        pubmed_ids = df.document_id()
-        if 'language' in df:
-            languages = df.language()
+        pubmed_ids = [str(id) for id in df.document_id.unique()]
+        # if 'language' in df:
+        #     languages = df.language()
     elif file.name.endseith('txt'):
         pubmed_lines = file.readlines()
         for line in pubmed_lines:
             pubmed_ids.append(line.split()[0])
-            if len(line.split()) > 1:
-                languages.append(line.split()[1])
+            # if len(line.split()) > 1:
+            #     languages.append(line.split()[1])
 
     i = 0
     var = True
@@ -351,8 +351,8 @@ def find_docs_in_json_pubmed_collection(arr_tuples,file,batch = None):
         for count in range(3):
             id_report_original = str(pubmed_ids[i])
 
-            if len(languages) > 0:
-                language = languages[i]
+            # if len(languages) > 0:
+            #     language = languages[i]
             id_report = 'PUBMED_' + str(id_report_original)
             if id_report in arr_ids:
 
@@ -363,7 +363,7 @@ def find_docs_in_json_pubmed_collection(arr_tuples,file,batch = None):
                 # Duplicates are not inserted
                 cursor = connection.cursor()
                 cursor.execute("SELECT * FROM report WHERE id_report = %s AND language = %s;",
-                               (str(id_report), language))
+                               (str(id_report), 'english'))
                 ans = cursor.fetchall()
                 if len(ans) == 0:
                     cursor.execute(
@@ -389,57 +389,61 @@ def find_docs_in_csv_collection(arr_tuples,file,batch = None):
 
     # build an array with the ids of the docs which appear in the array of tuples.
     arr_ids = [str(i[1]) for i in arr_tuples]
+    arr_tops = list(set([str(i[0]) for i in arr_tuples]))
     arr_found = []
     # for file in docs:
     cursor = connection.cursor()
-    if batch == 'batch':
-        cursor.execute("SELECT MAX(batch) FROM report")
-        ans = cursor.fetchone()[0]
-        b = int(ans) +1
-    else:
-        b = 1
-    if isinstance(file, str):
-        # workpath = os.path.dirname(os.path.abspath(__file__))  # Returns the Path your .py file is in
-        # rep_name = os.path.join(workpath, 'static/tmp/' + file)
-        rep_name = file
-    else:
-        rep_name = file.name
-    if rep_name.endswith('.csv'):
-        df = pd.read_csv(file)
-        df = df.where(pd.notnull(df), None)
-        df = df.reset_index(drop=True)
-
-        institute = 'default'
-        insertion_time = str(date.today())
-        ids = [str(i) for i in list(df.document_id.unique())]
-        if bool(set(ids) & set(arr_ids)):
-            for col in df:
-                if col != 'document_id':
-                    col.replace(' ', '_')
-            count_rows = df.shape[0]
-            for i in range(count_rows):
-                id_report = str(df.loc[i, 'document_id'])
-
-                if 'language' in df:
-                    language = str(df.loc[i, 'language'])
-                else:
-                    language = 'english'
-
-                if id_report in arr_ids:
-                    arr_found.append(id_report)
-                    json_rep = {}
-                    for col in df:
-                        if df.loc[i, col] is not None:
-                            col1 = col.replace(' ', '_')
-                            testo = str(df.loc[i, col])
-                            filtered_characters = list(s for s in testo if s.isprintable())
-                            testo = ''.join(filtered_characters)
-                            json_rep[col1] = testo
-                    if not Report.objects.filter(id_report = id_report,language = language).exists():
-                        Report.objects.create(id_report = id_report,language = language,institute = institute,report_json = json_rep,batch = b,insertion_date = insertion_time)
-    #     if len(arr_ids) == len(arr_found):
-    #         return True
-    # return list(set(arr_ids) - set(arr_found))
+    for t in arr_tops:
+        if batch == 'batch':
+            cursor.execute(
+                "SELECT MAX(batch) FROM report as r inner join topic_has_document as t on t.id_report = r.id_report and t.language = r.language where t.name = %s",
+                [str(t)])
+            ans = cursor.fetchone()[0]
+            b = int(ans) + 1
+        else:
+            b = 1
+        if isinstance(file, str):
+            # workpath = os.path.dirname(os.path.abspath(__file__))  # Returns the Path your .py file is in
+            # rep_name = os.path.join(workpath, 'static/tmp/' + file)
+            rep_name = file
+        else:
+            rep_name = file.name
+        if rep_name.endswith('.csv'):
+            df = pd.read_csv(file)
+            df = df.where(pd.notnull(df), None)
+            df = df.reset_index(drop=True)
+    
+            institute = 'default'
+            insertion_time = str(date.today())
+            ids = [str(i) for i in list(df.document_id.unique())]
+            if bool(set(ids) & set(arr_ids)):
+                for col in df:
+                    if col != 'document_id':
+                        col.replace(' ', '_')
+                count_rows = df.shape[0]
+                for i in range(count_rows):
+                    id_report = str(df.loc[i, 'document_id'])
+    
+                    if 'language' in df:
+                        language = str(df.loc[i, 'language'])
+                    else:
+                        language = 'english'
+    
+                    if id_report in arr_ids:
+                        arr_found.append(id_report)
+                        json_rep = {}
+                        for col in df:
+                            if df.loc[i, col] is not None:
+                                col1 = col.replace(' ', '_')
+                                testo = str(df.loc[i, col])
+                                filtered_characters = list(s for s in testo if s.isprintable())
+                                testo = ''.join(filtered_characters)
+                                json_rep[col1] = testo
+                        if not Report.objects.filter(id_report = id_report,language = language).exists():
+                            Report.objects.create(id_report = id_report,language = language,institute = institute,report_json = json_rep,batch = b,insertion_date = insertion_time)
+        #     if len(arr_ids) == len(arr_found):
+        #         return True
+        # return list(set(arr_ids) - set(arr_found))
 
 
 def process_TREC_and_txt_runs(run):

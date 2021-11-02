@@ -39,15 +39,16 @@ def check_file(reports,pubmedfiles, labels, concepts, jsonDisp, jsonAnn, usernam
     json_resp['fields_message'] = ''
     json_resp['keys'] = json_keys
 
-    if (len(labels) == 0 and len(concepts) == 0) or len(topics) == 0 or len(reports) == 0 or len(runs) == 0:
+    #added 2/11
+    if (len(labels) == 0 and len(concepts) == 0) and len(topics) == 0 and (len(reports) == 0 and len(pubmedfiles) == 0) and len(runs) == 0:
         json_resp[
             'general_message'] = 'ERROR - You must provide at least four files: the lables (or concepts), the topics, the runs and the reports.'
-    if len(jsonAnn) == 0:
-        json_resp[
-            'general_message'] = 'ERROR - You must provide at least one field to annotate.'
+    # if len(jsonAnn) == 0:
+    #     json_resp[
+    #         'general_message'] = 'ERROR - You must provide at least one field to annotate.'
     elif len(reports) == 0 and len(pubmedfiles) == 0:
         json_resp['general_message'] = 'ERROR - You must provide a file with one or more reports or one or more pubmed files.'
-    elif len(pubmedfiles) > 0 and len(concepts) == 0 and len(labels) == 0 and len(jsonAnn) == 0:
+    elif len(pubmedfiles) > 0 and len(concepts) == 0 and len(labels) == 0:
         json_resp['general_message'] = 'PUBMED - only mentions allowed.'
 
     try:
@@ -82,7 +83,8 @@ def check_file(reports,pubmedfiles, labels, concepts, jsonDisp, jsonAnn, usernam
         jsonann = jsonann.split(',')
 
         for el in jsondisp:
-            fields.append(el)
+            if len(el) > 0:
+                fields.append(el)
         for el in jsonann:
             if len(el) > 0:
                 fields_to_ann.append(el)
@@ -318,21 +320,22 @@ def check_file(reports,pubmedfiles, labels, concepts, jsonDisp, jsonAnn, usernam
                             df_dup = df[df.duplicated(subset=['document_id'], keep=False)]
                         if df_dup.shape[0] > 0:
                             json_resp['pubmed_message'] = 'WARNING PUBMED FILE - ' + pubmedfiles[i].name + ' - The rows: ' + str(df_dup.index.to_list()) + ' are duplicated. The duplicates are ignored.'
-
+                    ids = ['PUBMED_'+str(id) for id in list(df.pubmed_ids.unique())]
+                    documents_ids.extend(ids)
             elif pubmedfiles[i].name.endswith('json'):
 
-                d = json.load(runs[i])
+                d = json.load(pubmedfiles[i])
 
                 if 'pubmed_ids' not in d.keys():
-                    json_resp['pubmed_message'] = 'PUBMED FILE - ' + runs[
+                    json_resp['pubmed_message'] = 'PUBMED FILE - ' + pubmedfiles[
                         i].name + ' - json is not well formatted.'
                     break
                 if d['pubmed_ids'] == []:
-                    json_resp['pubmed_message'] = 'PUBMED FILE - ' + runs[
+                    json_resp['pubmed_message'] = 'PUBMED FILE - ' + pubmedfiles[
                         i].name + ' - you must provide at least an article id.'
                     break
                 if not isinstance(d['pubmed_ids'],list):
-                    json_resp['pubmed_message'] = 'PUBMED FILE - ' + runs[
+                    json_resp['pubmed_message'] = 'PUBMED FILE - ' + pubmedfiles[
                         i].name + ' - you must provide at least an article id.'
                     break
 
@@ -340,12 +343,15 @@ def check_file(reports,pubmedfiles, labels, concepts, jsonDisp, jsonAnn, usernam
                     json_resp['pubmed_message'] = 'WARNING PUBMED FILE - ' + runs[
                         i].name + ' - some ids seem to be duplicated. They will be ignored.'
                     break
+                ids = ['PUBMED_'+str(id) for id in d['pubmed_ids']]
+                documents_ids.extend(ids)
 
 
 
             elif pubmedfiles[i].name.endswith('txt'):
 
                 lines = pubmedfiles[i].readlines()
+                ids = ['PUBMED_'+str(line) for line in lines]
                 if len(lines) == 0 :
                     json_resp['pubmed_message'] = 'PUBMED FILE - ' + runs[
                         i].name + ' - the file is empty.'
@@ -353,6 +359,7 @@ def check_file(reports,pubmedfiles, labels, concepts, jsonDisp, jsonAnn, usernam
                 if len(lines) != len(list(set(lines))):
                     json_resp['pubmed_message'] = 'WARNING PUBMED FILE - ' + runs[
                         i].name + ' - the file contain some duplicates: they will be ignored.'
+                documents_ids.extend(ids)
 
         if len(pubmedfiles)>0:
             if json_resp['pubmed_message'] == '':
@@ -603,8 +610,8 @@ def check_file(reports,pubmedfiles, labels, concepts, jsonDisp, jsonAnn, usernam
                                             i].name + ' - you must provide a document_id and a language'
                                         break
 
-                        tops.append(r['topic_id'])
-                        docs.extend(doc1)
+                            tops.append(r['topic_id'])
+                            docs.extend(doc1)
 
                         for el in tops:
                             if el not in topics_ids:
@@ -969,7 +976,8 @@ def configure_data(pubmedfiles,reports, labels, concepts, jsondisp, jsonann, jso
                 if len(el) == 3:
                     language = el[2]
                 topic = UseCase.objects.get(name = el[0])
-                doc = Report.objects.get(id_report = el[1],language = language)
+                doc = Report.objects.get(id_report =str(el[1]),language = 'english')
+
                 TopicHasDocument.objects.get_or_create(name = topic,language = doc.language,id_report =doc)
 
 
@@ -1154,8 +1162,8 @@ def configure_data(pubmedfiles,reports, labels, concepts, jsondisp, jsonann, jso
                         r_j1['document_id'] = str(el[0])
                         r_j1['text'] = ''
                         for k in e.keys():
-                            if k != 'document_id':
-                                r_j1['text'] = r_j1['text'] + ' ' + e[k]
+                            if k != 'document_id' or (str(el[0]).startswith('PUBMED_') and (k == 'abstract' or k == 'title')):
+                                r_j1['text'] = r_j1['text'] + ' ' + str(e[k])
                         corpus.append(r_j1)
                     topic['title'] = top.title
                     topic['description'] = top.description
@@ -1169,7 +1177,11 @@ def configure_data(pubmedfiles,reports, labels, concepts, jsondisp, jsonann, jso
                         r_j1['document_id'] = str(el[0])
                         r_j1['text'] = ''
                         for k in e.keys():
-                            if k != 'document_id' and k != 'language':
+                            print(k)
+                            print(e[k])
+                            if isinstance(e[k],list):
+                                e[k] = ', '.join(e[k])
+                            if k != 'document_id' and k != 'language' and e[k] is not None:
                                 r_j1['text'] = r_j1['text'] + ' ' + e[k]
                         tfidf_matcher = QueryDocMatcher(topic, r_j1, corpus,df_tfidf)
                         top_k_matching_words = []
@@ -1479,10 +1491,10 @@ def check_for_update(type_req, pubmedfiles, reports, labels, concepts, jsonDisp,
                             return message
                         else:
                             # check if columns id_report and language have no duplicates
-                            if 'language' in df:
-                                df_dup = df[df.duplicated(subset=['document_id', 'language'], keep=False)]
-                            else:
-                                df_dup = df[df.duplicated(subset=['document_id'], keep=False)]
+                            # if 'language' in df:
+                            #     df_dup = df[df.duplicated(subset=['document_id', 'language'], keep=False)]
+                            # else:
+                            df_dup = df[df.duplicated(subset=['document_id'], keep=False)]
                             if df_dup.shape[0] > 0:
                                 message = 'WARNING PUBMED FILE - ' + pubmedfiles[
                                     i].name + ' - The rows: ' + str(
@@ -2437,7 +2449,11 @@ def update_db_util(reports,pubmedfiles,labels,concepts,jsondisp,jsonann,jsondisp
                         r_j1['document_id'] = str(el[0])
                         r_j1['text'] = ''
                         for k in e.keys():
-                            if k != 'document_id':
+                            print(k)
+                            print(e[k])
+                            if isinstance(e[k], list):
+                                e[k] = ', '.join(e[k])
+                            if k != 'document_id' and k != 'language' and e[k] is not None:
                                 r_j1['text'] = r_j1['text'] + ' ' + e[k]
                         corpus.append(r_j1)
                     topic['title'] = top.title
