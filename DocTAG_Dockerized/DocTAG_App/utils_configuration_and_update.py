@@ -320,7 +320,7 @@ def check_file(reports,pubmedfiles, labels, concepts, jsonDisp, jsonAnn, usernam
                             df_dup = df[df.duplicated(subset=['document_id'], keep=False)]
                         if df_dup.shape[0] > 0:
                             json_resp['pubmed_message'] = 'WARNING PUBMED FILE - ' + pubmedfiles[i].name + ' - The rows: ' + str(df_dup.index.to_list()) + ' are duplicated. The duplicates are ignored.'
-                    ids = ['PUBMED_'+str(id) for id in list(df.pubmed_ids.unique())]
+                    ids = ['PUBMED_'+str(id) for id in list(df.document_id.unique())]
                     documents_ids.extend(ids)
             elif pubmedfiles[i].name.endswith('json'):
 
