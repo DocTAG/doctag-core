@@ -74,7 +74,7 @@ function StartingMenu(props){
             if(LanguageList.length === 1){
                 SetLang(LanguageList[0])
             }
-            SetIns('default')
+            // SetIns('default')
             SetAnno('Manual')
             var options_institute = []
             var options_language = []
@@ -127,7 +127,7 @@ function StartingMenu(props){
             SetIns('PUBMED')
             SetLang('english')
 
-            axios.get("http://127.0.0.1:8000/pubmed_missing_auto").then(response => {
+            axios.get("http://127.0.0.1:8000/pubmed_reports").then(response => {
                 (response.data['usecase'].map(uc=>{
                     options_usecases.push({value: uc, label: uc})
 
@@ -139,9 +139,14 @@ function StartingMenu(props){
             if(LanguageList.length === 1){
                 SetLang(LanguageList[0])
             }
-            UseCaseList.map((uc)=>{
-                options_usecases.push({value: uc, label: uc})
-            })
+            SetIns('default')
+            axios.get("http://127.0.0.1:8000/doctag_reports").then(response => {
+                (response.data['usecase'].map(uc=>{
+                    options_usecases.push({value: uc, label: uc})
+
+                }));
+
+            }).catch(function (error){console.log(error)})
         }
         Setoptions_usecases(options_usecases)
 
@@ -154,6 +159,7 @@ function StartingMenu(props){
         else if(PubMedPresence === false && DocTAGPresence === true){
             SetRep('reports')
         }
+
     },[PubMedPresence,DocTAGPresence])
 
     function onSave(e){
@@ -185,7 +191,7 @@ function StartingMenu(props){
 
 
                         axios.post("http://127.0.0.1:8000/new_credentials", {
-                            usecase: Use, language: Lang, institute: 'default', report_type: Rep,batch:Batch
+                            usecase: Use, language: Lang, institute: Ins, report_type: Rep,batch:Batch
                         })
                             .then(function (response) {
                                 SetUseCase(Use)
@@ -294,18 +300,20 @@ function StartingMenu(props){
     useEffect(()=>{
         if(Use !== ''){
             var opt = []
-            axios.get('http://127.0.0.1:8000/get_batch_list',{params:{usecase:Use}}).then(response=>{
-                SetBatchList(response.data['batch_list'])
-                if(response.data['batch_list'].length === 1){
-                    SetBatch(1)
-                }
-                else{
-                    response.data['batch_list'].map(el=>{
-                        opt.push({value:el,label:el})
-                    })
-                }
+            if(Rep === 'reports') {
 
-            })
+                axios.get('http://127.0.0.1:8000/get_batch_list', {params: {usecase: Use}}).then(response => {
+                    SetBatchList(response.data['batch_list'])
+                    if (response.data['batch_list'].length === 1) {
+                        SetBatch(1)
+                    } else {
+                        response.data['batch_list'].map(el => {
+                            opt.push({value: el, label: el})
+                        })
+                    }
+
+                })
+            }
             if(Rep === 'pubmed'){
                 axios.get('http://127.0.0.1:8000/get_PUBMED_batch_list',{params:{usecase:Use}}).then(response=>{
 

@@ -49,30 +49,24 @@ function UpdateConfiguration() {
     const [NoSelected,SetNoSelected] = useState(false)
     const [ShowIrreversibleModal,SetShowIrreversibleModal] = useState(false)
     const [ReportsMissingAuto, SetReportsMissingAuto] = useState({})
-    const [ShowLabelsExamples,SetShowLabelsExamples] = useState(false)
-    const [ShowReportsExamples,SetShowReportsExamples] = useState(false)
-    const [ShowConceptsExamples,SetShowConceptsExamples] = useState(false)
-    const [ShowPubmedExamples,SetShowPubmedExamples] = useState(false)
+
     const [UpdateConfirm,SetUpdateConfirm] = useState(true)
     const [Warning,SetWarning] = useState('')
     const [ShowExaConcepts,SetShowExaConcepts] = useState(true)
     const [ShowExaLabels,SetShowExaLabels] = useState(true)
     const [UsesMissingExaConcepts,SetUsesMissingExaConcepts] = useState([])
     const [UsesMissingExaLabels,SetUsesMissingExaLabels] = useState([])
-    const [UsesPresentExaLabels,SetUsesPresentExaLabels] = useState([])
-    const [UsesPresentExaConcepts,SetUsesPresentExaConcepts] = useState([])
+
     const [UsesInserted,SetUsesInserted] = useState([])
     const [PubMedUsesInserted,SetPubMedUsesInserted] = useState([])
-    const [ConceptsUsesInserted,SetConceptsUsesInserted] = useState([]) //Needed for exalabels and exaconcepts
-    const [LabelsUsesInserted,SetLabelsUsesInserted] = useState([]) //Needed for exalabels and exaconcepts
+
     const [ShowDeleteReports,SetShowDeleteReports] = useState(false)
     const [ShowDeleteLabels,SetShowDeleteLabels] = useState(false)
     const [ShowDeleteConcepts,SetShowDeleteConcepts] = useState(false)
     const [ShowDeleteTopic,SetShowDeleteTopic] = useState(false)
     const [ShowDeleteRuns,SetShowDeleteRuns] = useState(false)
     const [ShowModalConfirm,SetShowModalConfirm] = useState(false)
-    const [ReportType,SetReportType] = useState('reports')
-    // const [ConfirmExtractFields,SetConfirmExtractFields] = useState(false)
+
     const [Checked,SetChecked] = useState(0)
     const [Batch,SetBatch] = useState('')
     const [Added,SetAdded] = useState(false)
@@ -82,7 +76,6 @@ function UpdateConfiguration() {
     const [Missing,SetMissing] = useState('')
     const [BackClick, SetBackClick] = useState(false)
     const [InBatch, SetInBatch] = useState(true)
-    const [AgentPresence, setAgentPresence] = useState(0)
     const [UsesUpdate, SetUsesUpdate] = useState([])
     const [PubMedUsesUpdate, SetPubMedUsesUpdate] = useState([])
     const [Selected,SetSelected] = useState('reports')
@@ -1433,8 +1426,8 @@ function UpdateConfiguration() {
                                             </Form.Group>
                                             {ShowDeleteReports === true && <div><Button className='delete-button' onClick={(e)=>deleteInput(e,'reports')}><FontAwesomeIcon icon={faTimes} />Delete file</Button></div>}
                                             {UsesUpdate.length > 0 && <div>
-                                                You are uploading reports for {UsesUpdate.join(', ')}: you have already uploaded reports for these use cases. You can upload these reports as a different <b>batch</b>, that means that you can upload the reports keeping track of the insertion date. This allows users to choose what batch to annotate and allows you to choose what batch to automatically annotate. If you do not want to keep reports in different batches, all the reports belonging to a specific use case will be loaded independetly of when they have been inserted.
-                                                Do you want to add reports for {UsesUpdate.join(', ')} in a new batch? If you do not want to and there is more than one batch in the database for that use case, then, the reports will be added to the last inserted batch.&nbsp;&nbsp;
+                                                You are uploading reports for {UsesUpdate.join(', ')}: you have already uploaded documents for these topics. You can upload these documents as a different <b>batch</b>, that means that you can upload the documents keeping track of the insertion date. This allows users to choose what batch to annotate and allows you to choose what batch to automatically annotate. If you do not want to keep reports in different batches, all the reports belonging to a specific use case will be loaded independetly of when they have been inserted.
+                                                Do you want to add documents for {UsesUpdate.join(', ')} in a new batch? If you do not want to and there is more than one batch in the database for that topic, then, the documents will be added to the last inserted batch.&nbsp;&nbsp;
                                                     <span>
                                                         <label>
                                                             <input name='pubmed' value='yes' defaultChecked={true} onChange={()=>SetInBatch(true)} type="radio" />{' '}
@@ -1451,7 +1444,7 @@ function UpdateConfiguration() {
                                         }
 
                                         {(Selected === 'reports' && KeysUpdate.length > 0) && <div>
-                                            <div>In the reports file(s) you have just uploaded there are some fields that have never been seen before. Please notify us if you want to hide, display or annotate them.</div>
+                                            <div>In the documents file(s) you have just uploaded there are some fields that have never been seen before. Please notify us if you want to hide, display or annotate them.</div>
                                             <div style = {{'font-weight':'bold'}}>Remember that if you have found some mentions in one or more reports, the fields that you annotated can not turned into Display or Hide, you can add fields to annotate but not remove them. </div>
                                             {KeysUpdate.map((key,ind)=>
                                                 <Row><Col md = {4}>{key}</Col>

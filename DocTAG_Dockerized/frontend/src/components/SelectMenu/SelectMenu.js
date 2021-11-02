@@ -65,15 +65,13 @@ function SelectMenu(props){
 
     useEffect(()=>{
 
-        if(Language !== '' && UseCase !== '' && Institute !== '' && BatchNumber !== '' && Action !== ''){
+        if(Language !== '' && UseCase !== '' && Institute !== '' && BatchNumber !== ''){
 
             SetLang(Language)
             SetInst(Institute)
             SetUse(UseCase)
             SetBatch(BatchNumber)
-
         }
-
 
     },[])
 
@@ -92,15 +90,28 @@ function SelectMenu(props){
 
     },[Action,Index,TopicIndex,SavedGT])
 
-
-
     useEffect(()=>{
-        if(Use !== '') {
-            axios.get('http://0.0.0.0:8000/get_batch_list', {params: {usecase: Use}}).then(response => {
-                SetBatchList(response.data['batch_list']);
-            })
+        if(UseCase !== ''){
+            SetUse(UseCase)
+
         }
-    },[UseCase,Use])
+    },[UseCase])
+    useEffect(()=>{
+
+        if(Use !== '' ) {
+            if(ReportType === 'reports'){
+                axios.get('http://0.0.0.0:8000/get_batch_list', {params: {usecase: Use}}).then(response => {
+                    SetBatchList(response.data['batch_list']);
+                })
+            }
+            else if(ReportType === 'pubmed'){
+                axios.get('http://0.0.0.0:8000/get_PUBMED_batch_list', {params: {usecase: Use}}).then(response => {
+                    SetBatchList(response.data['batch_list']);
+                })
+            }
+
+        }
+    },[Use,Inst,Institute,ReportType])
 
 
     function handleChange(e){
@@ -115,7 +126,7 @@ function SelectMenu(props){
     function handleChangeLanguage(e){
         SetLanguage(e.target.value)
         axios.post("http://0.0.0.0:8000/new_credentials", {
-            usecase: UseCase, language: e.target.value, institute: Institute, annotation: Annotation,report_type: ReportType,batch:BatchNumber
+            usecase: UseCase, language: e.target.value, institute: Institute, annotation: Annotation,report_type: ReportType,batch:1
         })
             .then(function (response) {
                 SetLanguage(e.target.value)
@@ -134,11 +145,26 @@ function SelectMenu(props){
 
     function handleChangeInstitute(e){
         SetInstitute(e.target.value)
+        // console.log('batch',BatchList[0])
+        if(e.target.value === 'PUBMED'){
+            var r = ('pubmed')
+
+        }
+        else{
+            var r = ('reports')
+
+        }
         axios.post("http://0.0.0.0:8000/new_credentials", {
-            usecase: UseCase, language: Language, institute: e.target.value, annotation: Annotation,report_type: ReportType,batch:BatchNumber
+            usecase: UseCase, language: Language, institute: e.target.value, annotation: Annotation,report_type: r,batch:1
         })
             .then(function (response) {
-                SetInstitute(e.target.value)
+                // SetInstitute(e.target.value)
+                SetUpdateMenu(true)
+                SetReportType(r)
+                SetBatch(1)
+                SetBatchNumber(1)
+
+
                 SetUpdateMenu(true)
 
 
@@ -151,32 +177,7 @@ function SelectMenu(props){
 
     }
 
-    function handleChangeUseCase(e){
-        SetUse(e.target.value)
-        var opt_batches = []
-        axios.get('http://0.0.0.0:8000/get_batch_list', {params: {usecase: e.target.value}}).then(response => {
-            SetBatchList(response.data['batch_list']);
-            opt_batches = response.data['batch_list']
-            axios.post("http://0.0.0.0:8000/new_credentials", {
-                usecase: e.target.value, language: Language, institute: Institute, annotation: Annotation,report_type: ReportType,batch:opt_batches[opt_batches.length -1]
-            })
-                .then(function (response) {
-                    console.log('usecase cambio',e.target.value)
-                    SetUseCase(e.target.value)
-                    SetUpdateMenu(true)
-                    SetBatch(opt_batches[opt_batches.length -1])
-                    SetBatchNumber(opt_batches[opt_batches.length -1])
 
-                })
-                .catch(function (error) {
-                    console.log('ERROR', error);
-                });
-        })
-
-
-
-
-    }
     function handleChangeBatch(e){
         SetBatch(e.target.value)
         axios.post("http://0.0.0.0:8000/new_credentials", {
@@ -205,7 +206,7 @@ function SelectMenu(props){
 
                 <Col md={8} style={{'text-align':'center'}}>
                     <div>
-                        {(LanguageList.length > 1 || BatchList.length > 1) && <>
+                        {(LanguageList.length > 1 || BatchList.length > 1 || InstituteList.length > 1) && <>
                                 {BatchList.length > 1 && Batch !== '' && <span>
                                     <span className='configuration'><b>Batch:</b></span>&nbsp;
                                     <select style={{'vertical-align':'bottom','font-size':'0.8rem'}} className='select_class'
@@ -217,6 +218,7 @@ function SelectMenu(props){
                                     </select>
                                 </span>
                                 }
+
 
 
                                 {Language !== '' && LanguageList.length > 1 && <span>
@@ -231,17 +233,17 @@ function SelectMenu(props){
                                         </select> :
                                         <span>{Language}</span>}
                                 </span>}
-                            {/*{Institute !== '' && InstituteList.length > 1 && <span>*/}
-                            {/*        <span className='configuration'><b>Institute:</b></span>&nbsp;*/}
+                            {Institute !== '' && InstituteList.length > 1 && <span>
+                                    <span className='configuration'><b>Institute:</b></span>&nbsp;
 
-                            {/*        <select style={{'vertical-align':'bottom','font-size':'0.8rem'}} className='select_class'*/}
-                            {/*                value = {Institute}*/}
-                            {/*                onChange={(e)=>handleChangeInstitute(e)}>*/}
-                            {/*            {InstituteList.map(ins=>*/}
-                            {/*                <option value = {ins}>{ins}</option>*/}
-                            {/*            )}*/}
-                            {/*        </select>*/}
-                            {/*    </span>}*/}
+                                    <select style={{'vertical-align':'bottom','font-size':'0.8rem'}} className='select_class'
+                                            value = {Institute}
+                                            onChange={(e)=>handleChangeInstitute(e)}>
+                                        {InstituteList.map(ins=>
+                                            <option value = {ins}>{ins}</option>
+                                        )}
+                                    </select>
+                                </span>}
 
 
 

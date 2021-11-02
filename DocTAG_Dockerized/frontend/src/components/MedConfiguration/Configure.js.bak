@@ -1151,7 +1151,9 @@ function Configure() {
                                 <div><h3>Runs <i style={{'font-size':'1rem'}}>(Mandatory)</i></h3></div>
 
                                 <Form.Group style={{'margin-top':'20px','margin-bottom':'20px'}}>
-                                    <div><span>Insert here the files with the runs (i.e. - tha files containing for each topic the associated documents). The allowed formats are: TREC, csv, json, txt.</span><br/>
+                                    <div><span>Insert here the files with the runs (i.e. - the files containing for each topic the associated documents). The allowed formats are: TREC, csv, json, txt.</span><br/>
+                                        <div><b>NOTE: If you are uploading a run file whose document_id are PUBMED IDS, please, before the pubmed id put "PUBMED_". For example if your PubMed id is 123, in the run this will be: PUBMED_123</b></div>
+                                        <div><b>NOTE: If you are uploading a run file whose document_id are PUBMED IDS, defining a language is not allowed, the language considered is <i>english</i> and it is set by default.</b></div>
                                         {/*<div className='conf-div'><Button onClick={()=>SetShowReportExample(prev=>!prev)} variant="info" size='sm'>Example</Button>*/}
                                         {/*</div>*/}
                                     </div>

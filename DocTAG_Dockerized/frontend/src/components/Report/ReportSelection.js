@@ -12,19 +12,51 @@ import Autocomplete from '@mui/material/Autocomplete';
 import './search_select.css'
 
 function ReportSelection(props){
-    const { reportArray,reports,annotation,indexList,reportString, orderVar,index, report,action, save, insertionTimes } = useContext(AppContext);
+    const { reportArray,indexList, orderVar, insertionTimes } = useContext(AppContext);
+    const { fieldsToAnn,userchosen,finalcount,language,username,showmember,showmajority,reached,showautoannotation,reportString,fields,annotation,report,usecase,concepts,semanticArea, disButton,labelsToInsert, selectedconcepts,linkingConcepts, radio, checks,save, userLabels, labelsList, mentionsList, action, reports, index, mentionSingleWord, allMentions, tokens, associations } = useContext(AppContext);
+
     const [AnnotatedIndexList,SetAnnotatedIndexList] = indexList;
     const [OrderVar, SetOrderVar] = orderVar;
     const [Reports,SetReports] = reports
-    const [Annotation,SetAnnotation] = annotation
     const [Action,SetAction] = action
     const [Index,SetIndex] = index
     const [Report,SetReport] = report
-    const [SavedGT,SetSavedGT] = save;
     const [ArrayInsertionTimes,SetArrayInsertionTimes] = insertionTimes;
     const [SelectOptions,SetSelectOptions] = reportArray;
     const [NotAnn,SetNotAnn] = useState(false)
     const [AlreadyAnn,SetAlreadyAnn] = useState(false)
+    const [associations_to_show,SetAssociations_to_show] = associations;
+    const [labels, setLabels] = labelsList
+    const [Checks, setChecks] = checks;
+    const [Fields,SetFields] = fields;
+    const [FieldsToAnn,SetFieldsToAnn] = fieldsToAnn;
+    const [SavedGT,SetSavedGT] = save;
+    const [LabToInsert,SetLabToInsert] = labelsToInsert;
+    const [Annotation,SetAnnotation] = annotation
+    const [UseCase,SetUseCase] = usecase;
+    const [reportsString, setReportsString] = reportString;
+    const [FinalCount, SetFinalCount] = finalcount;
+    const [FinalCountReached, SetFinalCountReached] = reached;
+    const [ShowAutoAnn,SetShowAutoAnn] = showautoannotation;
+    const [ShowMemberGt,SetShowMemberGt] =showmember
+    const [ShowMajorityGt,SetShowMajorityGt] = showmajority
+    const [Disable_Buttons, SetDisable_Buttons] = disButton;
+    const [labels_to_show, setLabels_to_show] = userLabels;
+    const [RadioChecked, SetRadioChecked] = radio;
+    const [selectedConcepts, setSelectedConcepts] = selectedconcepts;
+    const [Children,SetChildren] = tokens;
+    const [mentions_to_show,SetMentions_to_show] = mentionsList;
+    const [WordMention, SetWordMention] = mentionSingleWord;
+    const [AllMentions, SetAllMentions] = allMentions;
+    const [UserLabels, SetUserLables] = userLabels;
+    const [Disabled,SetDisabled] = useState(true); //PER CLEAR
+    const [ExaRobot,SetExaRobot] = useState(false)
+    const [Concepts, SetConcepts] = concepts;
+    // const [SelectedLang,SetSelectedLang] = selectedLang
+    const [Username,SetUsername] = username
+    const [SemanticArea, SetSemanticArea] = semanticArea;
+    const [UserChosen,SetUserChosen] = userchosen
+    const [Language, SetLanguage] = language;
 
 
     useEffect(()=>{
@@ -166,6 +198,121 @@ function ReportSelection(props){
     //     console.log('notann',NotAnn)
     //     console.log('already',AlreadyAnn)
     // },[NotAnn,AlreadyAnn])
+    const submit = (event,token) => {
+        event.preventDefault();
+        // if(Saved === false){
+        //     SetSaved(true)
+        if(Action === 'labels'){
+            token = 'annotation'
+        }
+        if(Action === 'concept-mention'){
+            token = 'linked'
+        }
+        if (token.startsWith('mentions')) {
+            SetWordMention('')
+            Children.map(child=>{
+                if(child.getAttribute('class') === 'token-selected' || child.getAttribute('class') === 'token-adj-dx' ||child.getAttribute('class') === 'token-adj-sx'){
+                    child.setAttribute('class','token')
+                }
+            })
+            var data_to_ret = {'mentions': mentions_to_show.filter(x=>x.seq_number !== 0)}
+            // console.log('mentions: ' ,mentions_to_show)
+
+            axios.post('http://0.0.0.0:8000/mention_insertion/insert', {
+                mentions: data_to_ret['mentions'],language:Language,
+                report_id: Reports[Index].id_report
+            })
+                .then(function (response) {
+
+                    SetSavedGT(prevState => !prevState)
+                    // console.log('RISPOSTA',response);
+                })
+                .catch(function (error) {
+                    //alert('ATTENTION')
+                    console.log(error);
+                });
+
+        }else if (token.startsWith('annotation')) {
+            //const data = new FormData(document.getElementById("annotation-form"));
+            // console.log('labtoinsert',LabToInsert)
+            axios.post('http://0.0.0.0:8000/annotationlabel/insert', {
+                //labels: data.getAll('labels'),
+                labels: LabToInsert,language:Language,
+                report_id: Reports[Index].id_report,
+            })
+                .then(function (response) {
+                    // console.log(response);
+
+                    // {concepts_list.length > 0 ? SetSavedGT(true) : SetSavedGT(false)}
+                    if (LabToInsert.length === 0) {
+                        SetRadioChecked(false)
+
+                    }
+                    // SetLabToInsert([])
+                    SetSavedGT(prevState => !prevState)
+                })
+                .catch(function (error) {
+
+                    console.log(error);
+                });
+
+        } else if (token.startsWith('linked')) {
+            const data = new FormData(document.getElementById("linked-form"));
+            //var data_to_ret = {'linked': data.getAll('linked')}
+
+
+            data_to_ret = {'linked': associations_to_show}
+            if (data_to_ret['linked'].length >= 0) {
+                axios.post('http://0.0.0.0:8000/insert_link/insert', {
+                    linked: data_to_ret['linked'],language:Language,
+                    report_id: Reports[Index].id_report
+                })
+                    .then(function (response) {
+                        // console.log(response);
+                        // {concepts_list.length > 0 ? SetSavedGT(true) : SetSavedGT(false)}
+                        SetWordMention('')
+                        // console.log('aggiornato concepts');
+
+                        SetSavedGT(prevState => !prevState)
+                    })
+                    .catch(function (error) {
+
+                        console.log(error);
+                    });
+            }
+        } else if (token.startsWith('concepts')) {
+            // console.log(selectedConcepts);
+
+            let concepts_list = []
+
+            for (let area of SemanticArea) {
+                for (let concept of selectedConcepts[area]) {
+                    concepts_list.push(concept);
+                }
+            }
+
+            // console.log(concepts_list);
+
+            axios.post('http://0.0.0.0:8000/contains/update', {
+                    concepts_list: concepts_list,language:Language,
+                    report_id: Reports[Index].id_report,
+                },
+            )
+                .then(function (response) {
+                    // console.log(response);
+                    // {concepts_list.length > 0 ? SetSavedGT(true) : SetSavedGT(false)}
+                    SetSavedGT(prevState => !prevState)
+
+                })
+                .catch(function (error) {
+
+                    console.log(error);
+                });
+        }
+
+
+
+    }
 
     return(
 
@@ -180,6 +327,7 @@ function ReportSelection(props){
                 options={SelectOptions}
                 value={SelectOptions[AnnotatedIndexList.indexOf(Index)]}
                 onChange={(event, newValue) => {
+                    submit(event,Action)
                     if(OrderVar !== 'annotation'){
                         SetIndex(Number(newValue['id']))
                         SetReport(Reports[Number(newValue['id'])])

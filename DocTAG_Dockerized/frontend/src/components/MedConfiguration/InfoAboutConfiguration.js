@@ -403,6 +403,7 @@ function InfoAboutConfiguration() {
                                     <br/>
                                 </div><hr/>
                                 <h5>The Runs files</h5>
+                                <b>in the run file with PUBMED article ids, please before each article ID put "PUBMED_". For example, if your ID is "123", in the run file this must be: "PUBMED_123"</b>
                                 <div>
                                     The allowed file formats for runs files are <b>json, csv, txt</b> formats.<br/><br/>
                                     <h6>CSV</h6>
