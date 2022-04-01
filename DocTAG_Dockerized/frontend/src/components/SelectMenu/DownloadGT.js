@@ -91,7 +91,7 @@ function DownloadGT(props){
             Setoptions_format(options_form)
             Setoptions_format_red(options_form_red)
         }
-        axios.get('http://0.0.0.0:8000/get_post_fields_for_auto').then(function(response){
+        axios.get('http://127.0.0.1:8000/get_post_fields_for_auto').then(function(response){
             SetFieldsUseCasesToExtract(response.data['total_fields'])
             SetFieldsAlreadyExtracted(response.data['extract_fields'])
 
@@ -118,7 +118,7 @@ function DownloadGT(props){
             SetBiocError(true)
         }
         else if(Format !== '' || token === 'all') {
-            axios.get('http://0.0.0.0:8000/get_gt_list',{params:{token:token,action:Act,inst:Ins,lang:Lang,use:Use}})
+            axios.get('http://127.0.0.1:8000/get_gt_list',{params:{token:token,action:Act,inst:Ins,lang:Lang,use:Use}})
                 .then(response => {
                     if (response.data['ground_truths'] === 0) {
                         SetShowNotDownload(true)
@@ -127,7 +127,7 @@ function DownloadGT(props){
                         if (token === 'conf') {
 
 
-                            axios.get('http://0.0.0.0:8000/download_ground_truths', {
+                            axios.get('http://127.0.0.1:8000/download_ground_truths', {
                                 params: {
                                     institute: Ins,
                                     usec: Use,
@@ -219,7 +219,7 @@ function DownloadGT(props){
                         else if (token === 'all') {
                             SetShowError(false)
 
-                            axios.get('http://0.0.0.0:8000/download_ground_truths', {params: {all_gt: 'all'}})
+                            axios.get('http://127.0.0.1:8000/download_ground_truths', {params: {all_gt: 'all'}})
                                 .then(function (response) {
                                     console.log('message', response.data);
                                     FileDownload(JSON.stringify(response.data), 'all_json_ground_truth.json');
@@ -291,7 +291,7 @@ function DownloadGT(props){
     function onSaveKeyFiles(e,type_key){
         e.preventDefault()
         if(type_key === 'mentions'){
-            axios.get('http://0.0.0.0:8000/download_key_files', {params:{type_key:'mentions'}})
+            axios.get('http://127.0.0.1:8000/download_key_files', {params:{type_key:'mentions'}})
                 .then(function (response) {
                     console.log('message', response.data);
                     FileDownload((response.data), 'mentions.key');
@@ -303,7 +303,7 @@ function DownloadGT(props){
         }
         else if(type_key === 'concept-mention') {
 
-            axios.get('http://0.0.0.0:8000/download_key_files', {params: {type_key: 'linking'}})
+            axios.get('http://127.0.0.1:8000/download_key_files', {params: {type_key: 'linking'}})
                 .then(function (response) {
                     console.log('message', response.data);
                     FileDownload((response.data), 'linking.key');

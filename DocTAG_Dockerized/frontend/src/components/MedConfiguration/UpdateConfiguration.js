@@ -102,27 +102,27 @@ function UpdateConfiguration() {
 
     useEffect(()=>{
         window.scrollTo(0, 0)
-        // axios.get('http://0.0.0.0:8000/get_uses_missing_exa').then(response=>{
+        // axios.get('http://127.0.0.1:8000/get_uses_missing_exa').then(response=>{
         //     SetUsesMissingExaConcepts(response.data['concepts_missing']);
         //     SetUsesPresentExaConcepts(response.data['concepts_present']);
         //     SetUsesMissingExaLabels(response.data['labels_missing'])
         //     SetUsesPresentExaLabels(response.data['labels_present'])
         // })
-        axios.get("http://0.0.0.0:8000/get_fields",{params:{all:'all'}}).then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
+        axios.get("http://127.0.0.1:8000/get_fields",{params:{all:'all'}}).then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
         SetMissing('')
         SetWarning('')
 
 
-        axios.get("http://0.0.0.0:8000/get_usecase_inst_lang").then(response => {
+        axios.get("http://127.0.0.1:8000/get_usecase_inst_lang").then(response => {
             SetUseCaseList(response.data['usecase']);
             SetLanguageList(response.data['language']);
             SetInstituteList(response.data['institute']);
 
         })
-        axios.get('http://0.0.0.0:8000/get_keys').then(response=>SetKeys(response.data['keys']))
+        axios.get('http://127.0.0.1:8000/get_keys').then(response=>SetKeys(response.data['keys']))
 
 
-        // axios.get("http://0.0.0.0:8000/pubmed_missing_auto").then(response => {
+        // axios.get("http://127.0.0.1:8000/pubmed_missing_auto").then(response => {
         //     SetPubMedMissingAuto(response.data);
         //
         //     SetPubMedUsesInserted(response.data['usecase'])
@@ -136,7 +136,7 @@ function UpdateConfiguration() {
     },[])
 
     useEffect(()=>{
-        // axios.get("http://0.0.0.0:8000/pubmed_missing_auto").then(response => {
+        // axios.get("http://127.0.0.1:8000/pubmed_missing_auto").then(response => {
         //     SetPubMedMissingAuto(response.data);
         //     SetPubMedUsesInserted(response.data['usecase'])
         //     var arr = {}
@@ -146,7 +146,7 @@ function UpdateConfiguration() {
         //     SetCommitPossible(true)
         // }).catch(function (error){console.log(error)})
 
-        // axios.get("http://0.0.0.0:8000/report_missing_auto").then(response => {
+        // axios.get("http://127.0.0.1:8000/report_missing_auto").then(response => {
         //     SetReportsMissingAuto(response.data);
         //     setOptionsUsecasesAuto(Object.keys(response.data))
         //     var arr = {}
@@ -157,7 +157,7 @@ function UpdateConfiguration() {
         //     SetSelectedFields(arr)
         // }).catch(function (error){console.log(error)})
         //
-        // axios.get("http://0.0.0.0:8000/pubmed_missing_auto").then(response => {
+        // axios.get("http://127.0.0.1:8000/pubmed_missing_auto").then(response => {
         //     SetPubMedMissingAuto(response.data);
         //     SetPubMedUsesInserted(response.data['usecase'])
         //     var arr = {}
@@ -172,7 +172,7 @@ function UpdateConfiguration() {
         // }).catch(function (error){console.log(error)})
 
 
-        // axios.get('http://0.0.0.0:8000/get_post_fields_for_auto').then(function(response){
+        // axios.get('http://127.0.0.1:8000/get_post_fields_for_auto').then(function(response){
         //     SetFieldsUseCasesToExtract(response.data['total_fields'])
         //     SetFieldsAlreadyExtracted(response.data['extract_fields'])
         //
@@ -343,7 +343,7 @@ function UpdateConfiguration() {
 
         axios({
             method: "post",
-            url: "http://0.0.0.0:8000/check_files_for_update",
+            url: "http://127.0.0.1:8000/check_files_for_update",
             data: formData,
             headers: { "Content-Type": "multipart/form-data" },
         })
@@ -578,7 +578,7 @@ function UpdateConfiguration() {
             }
             axios({
                 method: "post",
-                url: "http://0.0.0.0:8000/update_db",
+                url: "http://127.0.0.1:8000/update_db",
                 data: formData,
                 headers: { "Content-Type": "multipart/form-data" },
             })
@@ -646,7 +646,7 @@ function UpdateConfiguration() {
             }
             axios({
                 method: "post",
-                url: "http://0.0.0.0:8000/get_keys_from_csv_update",
+                url: "http://127.0.0.1:8000/get_keys_from_csv_update",
                 data: formData,
                 headers: { "Content-Type": "multipart/form-data" },
             })
@@ -673,7 +673,7 @@ function UpdateConfiguration() {
             }
             axios({
                 method: "post",
-                url: "http://0.0.0.0:8000/get_keys_from_csv_update",
+                url: "http://127.0.0.1:8000/get_keys_from_csv_update",
                 data: formData,
                 headers: { "Content-Type": "multipart/form-data" },
             })
@@ -718,7 +718,7 @@ function UpdateConfiguration() {
 
         axios({
             method: "post",
-            url: "http://0.0.0.0:8000/get_keys_and_uses_from_csv",
+            url: "http://127.0.0.1:8000/get_keys_and_uses_from_csv",
             data: formData,
             headers: { "Content-Type": "multipart/form-data" },
         })
@@ -738,7 +738,7 @@ function UpdateConfiguration() {
 
     function onSaveExample(e,token){
         e.preventDefault()
-        axios.get('http://0.0.0.0:8000/download_examples', {params:{token:token}})
+        axios.get('http://127.0.0.1:8000/download_examples', {params:{token:token}})
             .then(function (response) {
                 if(token === 'reports'){
                     FileDownload((response.data), 'reports_example.csv');
@@ -964,7 +964,7 @@ function UpdateConfiguration() {
         var opt = []
 
         if(PubMedAutoOpt !== ''){
-            axios.get('http://0.0.0.0:8000/get_auto_anno_PUBMED_batch_list',{params:{usecase:PubMedAutoOpt}}).then(response=>{
+            axios.get('http://127.0.0.1:8000/get_auto_anno_PUBMED_batch_list',{params:{usecase:PubMedAutoOpt}}).then(response=>{
                 // SetBa(response.data['batch_list'])
                 SetPubMedOptionsBatches(response.data['batch_list'])
                 response.data['batch_list'].map(el=>{
@@ -989,7 +989,7 @@ function UpdateConfiguration() {
         if(AutoOpt !== ''){
             var els = document.getElementsByName(AutoOpt)
 
-            axios.get('http://0.0.0.0:8000/get_auto_anno_batch_list',{params:{usecase:AutoOpt}}).then(response=>{
+            axios.get('http://127.0.0.1:8000/get_auto_anno_batch_list',{params:{usecase:AutoOpt}}).then(response=>{
                 // SetBa(response.data['batch_list'])
                 console.log('resp',response.data['batch_list'])
                 SetOptionsBatches(response.data['batch_list'])
@@ -1118,7 +1118,7 @@ function UpdateConfiguration() {
         })
         setShowModalAuto(false)
         SetShowPubMedModal(false)
-        axios.post('http://0.0.0.0:8000/create_auto_annotations',{usecase:[PubMedAutoOpt],batch:PubMedBatch,report_type:'pubmed',selected:selected_obj}).then(function(response){
+        axios.post('http://127.0.0.1:8000/create_auto_annotations',{usecase:[PubMedAutoOpt],batch:PubMedBatch,report_type:'pubmed',selected:selected_obj}).then(function(response){
             console.log(response.data)
             // setShowModalAuto(false)
             SetUpdateFields(true)
@@ -1161,7 +1161,7 @@ function UpdateConfiguration() {
 
         setShowModalAuto(false)
         SetShowPubMedModal(false)
-        axios.post('http://0.0.0.0:8000/create_auto_annotations',{usecase:[AutoOpt],batch:Batch,report_type:'reports',selected:selected_obj}).then(function(response){
+        axios.post('http://127.0.0.1:8000/create_auto_annotations',{usecase:[AutoOpt],batch:Batch,report_type:'reports',selected:selected_obj}).then(function(response){
             console.log(response.data)
             // setShowModalAuto(false)
             SetUpdateFields(true)
@@ -1194,7 +1194,7 @@ function UpdateConfiguration() {
         console.log('uses',UsesUpdate)
     },[UsesUpdate])
     function downloadAllAuto(){
-        axios.get('http://0.0.0.0:8000/download_all_ground_truths',{params:{gt_mode:'automatic'}})
+        axios.get('http://127.0.0.1:8000/download_all_ground_truths',{params:{gt_mode:'automatic'}})
             .then(function (response) {
                 FileDownload(JSON.stringify(response.data['ground_truth']), 'all_automatic_json_ground_truth.json');
 
@@ -1290,7 +1290,7 @@ function UpdateConfiguration() {
                 {ErrorAuto === true && <div>
                     <h3>ERROR</h3>
                     <div>
-                        Something went wrong with the automatic configuration. Try to do it again or drop us an email (section: <a href='http://0.0.0.0:8000/credits'>Credits</a>)
+                        Something went wrong with the automatic configuration. Try to do it again or drop us an email (section: <a href='http://127.0.0.1:8000/credits'>Credits</a>)
                     </div>
                     <hr/>
                     <div><Link to="/updateConfiguration"><Button onClick={()=>SetErrorAuto(0)} variant='success'>Back to Update</Button></Link></div>
@@ -1326,7 +1326,7 @@ function UpdateConfiguration() {
 
                         </div>
                         <div style={{'text-align':'center'}}>
-                            <span><a href="http://0.0.0.0:8000/logout"><Button variant = 'primary'>Login</Button></a>&nbsp;&nbsp;<a href="http://0.0.0.0:8000/updateConfiguration"><Button variant = 'primary'>Update configuration</Button></a></span>
+                            <span><a href="http://127.0.0.1:8000/logout"><Button variant = 'primary'>Login</Button></a>&nbsp;&nbsp;<a href="http://127.0.0.1:8000/updateConfiguration"><Button variant = 'primary'>Update configuration</Button></a></span>
                         </div>
                     </Container>
                     }

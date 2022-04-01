@@ -1,4 +1,4 @@
-import React, {Component, useContext, useEffect, useState} from 'react'
+import React, {Component, useContext,useRef, useEffect, useState} from 'react'
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -47,6 +47,10 @@ function Buttons(props){
     const [NoConcepts,SetNoConcepts] = useState(0)
     const [NoMentions,SetNoMentions] = useState(0)
     const [NoLink,SetNoLink] = useState(0)
+    const labels_but = useRef(null)
+    const mentions_but = useRef(null)
+    const concepts_but = useRef(null)
+    const linking_but = useRef(null)
 
     function get_empty_concepts(){
         var empty = true
@@ -188,6 +192,19 @@ function Buttons(props){
     const submit1 = (event,token) => {
 
         event.preventDefault();
+        var id = event.target.id
+
+        // console.log('ACTION123',Action)
+        var arr = Array.from(document.getElementsByClassName('act'))
+        arr.map(el=>{
+            if(el.id !== id) {
+                el.setAttribute('class', 'act btn btn-primary')
+            }
+        })
+
+        document.getElementById(id).setAttribute('class','act btn btn-primary active_button')
+
+
         // if(Saved === false){
         //     SetSaved(true)
         if(ShowAutoAnn === false && ShowMajorityGt === false && ShowMemberGt === false) {
@@ -201,7 +218,7 @@ function Buttons(props){
                 var data_to_ret = {'mentions': mentions_to_show.filter(x=>x.seq_number !== 0)}
                 console.log('mentions: ', mentions_to_show)
 
-                axios.post('http://0.0.0.0:8000/mention_insertion/insert', {
+                axios.post('http://127.0.0.1:8000/mention_insertion/insert', {
                     mentions: data_to_ret['mentions'],
                     language:Language,
                     report_id: Reports[Index].id_report
@@ -222,7 +239,7 @@ function Buttons(props){
 
             } else if (token.startsWith('annotation')) {
 
-                axios.post('http://0.0.0.0:8000/annotationlabel/insert', {
+                axios.post('http://127.0.0.1:8000/annotationlabel/insert', {
                     //labels: data.getAll('labels'),
                     labels: LabToInsert,
                     language:Language,
@@ -237,7 +254,7 @@ function Buttons(props){
 
                         }
                         // SetLabToInsert([]) added 30082021
-                        SetSavedGT(prevState => !prevState)
+                        // SetSavedGT(prevState => !prevState)
                     })
                     .catch(function (error) {
 
@@ -251,7 +268,7 @@ function Buttons(props){
 
                 data_to_ret = {'linked': associations_to_show}
                 if (data_to_ret['linked'].length >= 0) {
-                    axios.post('http://0.0.0.0:8000/insert_link/insert', {
+                    axios.post('http://127.0.0.1:8000/insert_link/insert', {
                         linked: data_to_ret['linked'],language:Language,
                         report_id: Reports[Index].id_report
                     })
@@ -283,7 +300,7 @@ function Buttons(props){
 
                 // console.log(concepts_list);
 
-                axios.post('http://0.0.0.0:8000/contains/update', {
+                axios.post('http://127.0.0.1:8000/contains/update', {
                         concepts_list: concepts_list,language:Language,
                         report_id: Reports[Index].id_report,
                     },
@@ -301,7 +318,12 @@ function Buttons(props){
                     });
             }
 
-            var id = event.target.id
+            //
+
+
+
+
+
             // console.log('ID',id)
             //SetIndex(0)
             SetWordMention('')
@@ -313,11 +335,11 @@ function Buttons(props){
 
     }
 
-
+    //
     useEffect(()=>{
         if(Action !== undefined && Action !== '' && Action !== 'none' && Action !== false){
             //document.getElementById(Action).focus()
-            document.getElementById(Action).setAttribute('class','act btn btn-primary active_button')
+
             // console.log('ACTION123',Action)
             var arr = Array.from(document.getElementsByClassName('act'))
             arr.map(el=>{
@@ -326,12 +348,11 @@ function Buttons(props){
                 }
             })
 
-            // document.getElementById(Action).style.backgroundColor = 'orange'
-            // document.getElementById(Action).style.borderColor ='orange'
-
+            document.getElementById(Action).setAttribute('class','act btn btn-primary active_button')
         }
 
     },[Action])
+
 
 
 
@@ -366,13 +387,21 @@ function Buttons(props){
 
         <div className="first_row_container">
 
-            <Button type='button' disabled={DisButtonLabels} size='sm' style={{'padding':'0','height':'35px','width':'85px'}} id='labels' className="act" onClick={(e)=>handleAction(e)} >Labels</Button>
+            <Button type='button' ref = {labels_but} disabled={DisButtonLabels} size='sm' style={{'padding':'0','height':'35px','width':'85px'}} id='labels' className="act" onClick={(e)=> {
+                handleAction(e);
+            }} >Labels</Button>
 
-            <Button type='button' disabled={DisButtonMention} size='sm' style={{'padding':'0','height':'35px','width':'85px'}} id='mentions' className="act" onClick={(e)=>handleAction(e)}  >Passages</Button>
+            <Button type='button' disabled={DisButtonMention} size='sm' style={{'padding':'0','height':'35px','width':'85px'}} id='mentions' className="act" onClick={(e)=> {
+                handleAction(e);
+            }}  >Passages</Button>
 
-            <Button type='button' disabled={DisButtonConceptMention} size='sm' style={{'padding':'0','height':'35px','width':'85px'}} id='concept-mention' className="act" onClick={(e)=>handleAction(e)} >Linking</Button>
+            <Button type='button' disabled={DisButtonConceptMention} size='sm' style={{'padding':'0','height':'35px','width':'85px'}} id='concept-mention' className="act" onClick={(e)=> {
+                handleAction(e);
+            }} >Linking</Button>
 
-           <Button type='button' disabled={DisButtonConcept} size='sm' style={{'padding':'0','height':'35px','width':'85px'}} id='concepts' className="act" onClick={(e)=>handleAction(e)} >Concepts</Button>
+           <Button type='button' disabled={DisButtonConcept} size='sm' style={{'padding':'0','height':'35px','width':'85px'}} id='concepts' className="act" onClick={(e)=> {
+               handleAction(e);
+           }} >Concepts</Button>
 
 
     </div>

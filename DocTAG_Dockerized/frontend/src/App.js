@@ -69,6 +69,8 @@ function App() {
     const [WordMention, SetWordMention] = useState([])
     const [Mention, SetMention] = useState('')
     const [Outcomes,SetOutcomes] = useState([])
+    const [UsersListAnnotations,SetUsersListAnnotations] = useState([])
+
     const [labels, setLabels] = useState(false)
     const [index, setIndex] = useState(0)
     const [TopicIndex, SetTopicIndex] = useState(0)
@@ -133,7 +135,7 @@ function App() {
     const [ShowLabelsOpts,SetShowLabelsOpts] = useState([])
     const [TokenToColor,SetTokenToColor] = useState(false)
     const [Top_K,SetTop_K] = useState(10)
-
+    const [TopicInfo,SetTopicInfo] = useState({})
     // const [ShowSnackReport,SetShowSnackReport] = useState(false);
 
 
@@ -142,7 +144,7 @@ function App() {
             SetShowBar(false)
         }
         SetLoadingMenu(true)
-        axios.get("http://0.0.0.0:8000/get_usecase_inst_lang").then(response => {
+        axios.get("http://127.0.0.1:8000/get_usecase_inst_lang").then(response => {
             console.log('usecaselist',response.data['usecase'])
             console.log('languagelist',response.data['language'])
             console.log('institutelist',response.data['institute'])
@@ -153,14 +155,14 @@ function App() {
         })
         //SetLoadingMenu(false)
 
-        axios.get("http://0.0.0.0:8000/get_admin").then(response => {
+        axios.get("http://127.0.0.1:8000/get_admin").then(response => {
             SetAdmin(response.data['admin'])
 
         })
-        // axios.get("http://0.0.0.0:8000/get_fields").then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
-        // axios.get("http://0.0.0.0:8000/get_semantic_area").then(response => SetSemanticArea(response.data['area']))
-        // axios.get("http://0.0.0.0:8000/conc_view").then(response => {SetConcepts(response.data['concepts'])})
-        // axios.get("http://0.0.0.0:8000/annotationlabel/all_labels").then(response => {
+        // axios.get("http://127.0.0.1:8000/get_fields").then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
+        // axios.get("http://127.0.0.1:8000/get_semantic_area").then(response => SetSemanticArea(response.data['area']))
+        // axios.get("http://127.0.0.1:8000/conc_view").then(response => {SetConcepts(response.data['concepts'])})
+        // axios.get("http://127.0.0.1:8000/annotationlabel/all_labels").then(response => {
         //     setLabels(response.data['labels'])
         // })
 
@@ -174,7 +176,7 @@ function App() {
         window.scrollTo(0,0)
 
 
-        axios.get("http://0.0.0.0:8000/get_users_list")
+        axios.get("http://127.0.0.1:8000/get_users_list")
             .then(response => {
                 if(response.data.length>0){
                     console.log(response.data)
@@ -196,7 +198,7 @@ function App() {
 
     useEffect(()=>{
         // console.log('prima entrata in parametri')
-        axios.get("http://0.0.0.0:8000/get_session_params").then(response => {
+        axios.get("http://127.0.0.1:8000/get_session_params").then(response => {
             SetInstitute(response.data['institute']);
             SetLanguage(response.data['language']);
             SetUseCase(response.data['usecase']);
@@ -221,15 +223,21 @@ function App() {
 
     },[])
 
+    useEffect(()=>{
+        if(useCase !== ''){
+            axios.get('http://127.0.0.1:8000/get_topic_info',{params:{topic:useCase}}).then(response=>{SetTopicInfo(response.data)}).catch(error=>console.log(error))
+        }
+    },[useCase])
+
 
     return (
         <div className="App">
             <AppContext.Provider value={{
                 // showSnackReport:[ShowSnackReport,SetShowSnackReport],
-                userslist:[UsersList,SetUsersList],topk:[Top_K,SetTop_K],
+                userslist:[UsersList,SetUsersList],topk:[Top_K,SetTop_K],usersListAnnotations:[UsersListAnnotations,SetUsersListAnnotations],
                 tokentocolor:[TokenToColor,SetTokenToColor],colorword:[ColorWords,SetColorWords],showlabels:[ShowLabelsOpts,SetShowLabelsOpts],topicindex:[TopicIndex,SetTopicIndex],makereq:[MakeReq,SetMakeReq],selectedLang:[SelectedLang,SetSelectedLang],loadingChangeGT:[LoadingChangeGT,SetLoadingChangeGT],updateSingle:[UpdateSingleReport,SetUpdateSingleReport],batchNumber:[BatchNumber,SetBatchNumber],usersList:[UsersList,SetUsersList],tablerows:[Rows,SetRows],report_type:[ReportType,SetReportType],showmajoritygt:[ShowMajorityGroundTruth,SetShowMajorityGroundTruth],
                 showmajoritymodal:[ShowMajorityModal,SetShowMajorityModal],userchosen:[UserChosen,SetUserChosen],showmember:[ShowMemberGt,SetShowMemberGt],showmajority:[ShowMajorityGt,SetShowMajorityGt],showautoannotation:[ShowAutoAnn,SetShowAutoAnn],showreporttext:[showReportText,SetshowReportText],showannotations:[ShowAnnotationsStats,SetShowAnnotationsStats],annotation:[Annotation,SetAnnotation],profile:[Profile,SetProfile],clickedCheck:[ClickedCheck, SetClickedCheck],loadingLabels:[LoadingLabels, SetLoadingLabels],loadingMentions:[LoadingMentions, SetLoadingMentions],loadingColors:[LoadingMentionsColor, SetLoadingMentionsColor],loadingAssociations:[LoadingAssociations, SetLoadingAssociations],loadingConcepts:[LoadingConcepts, SetLoadingConcepts],loadingReport:[LoadingReport, SetLoadingReport],loadingReportList:[LoadingReportList, SetLoadingReportList],
-                conceptOption:[selectedOption, setSelectedOption],removedConcept:[RemovedConcept,SetRemovedConcept],indexList:[AnnotatedIndexList,SetAnnotatedIndexList],reportArray:[SelectOptions,SetSelectOptions],orderVar:[OrderVar,SetOrderVar],fields:[Fields,SetFields],fieldsToAnn:[FieldsToAnn,SetFieldsToAnn],
+                conceptOption:[selectedOption, setSelectedOption],removedConcept:[RemovedConcept,SetRemovedConcept],indexList:[AnnotatedIndexList,SetAnnotatedIndexList],reportArray:[SelectOptions,SetSelectOptions],orderVar:[OrderVar,SetOrderVar],fields:[Fields,SetFields],fieldsToAnn:[FieldsToAnn,SetFieldsToAnn],topicinfo:[TopicInfo,SetTopicInfo],
                 admin:[Admin, SetAdmin],showSnackMessage:[SnackMessage,SetSnackMessage],showSnack:[ShowSnack, SetShowSnack], labelsToInsert:[LabToInsert,SetLabToInsert],start:[Start,SetStart],changeConceots:[change,setChange],username:[Username,SetUsername],showOptions:[ShowModal,SetShowModal],language:[Language,SetLanguage],institute:[Institute, SetInstitute], usecase:[useCase,SetUseCase],outcomes:[Outcomes,SetOutcomes],semanticArea:[SemanticArea,SetSemanticArea],concepts:[Concepts,SetConcepts],reportString:[reportsString,setReportsString],radio:[RadioChecked, SetRadioChecked],finalcount:[FinalCount,SetFinalCount],reached:[FinalCountReached,SetFinalCountReached],
                 index:[index,setIndex],showbar:[ShowBar,SetShowBar], tokens:[Children,SetChildren],report:[report,setReport],reports:[reports, setReports],insertionTimes:[ArrayInsertionTimes,SetArrayInsertionTimes],userLabels:[labels_to_show, setLabels_to_show],labelsList:[labels,setLabels],checks:[checks,setChecks],highlightMention:[HighlightMention, SetHighlightMention],updateMenu:[UpdateMenu,SetUpdateMenu],usecaseList: [UseCaseList,SetUseCaseList],languageList:[LanguageList,SetLanguageList],
                 instituteList: [InstituteList,SetInstituteList],save:[SavedGT,SetSavedGT],disButton:[Disabled_Buttons,SetDisable_Buttons],selectedconcepts:[selectedConcepts, setSelectedConcepts],conceptModal:[ShowConceptModal, SetShowConceptModal],linkingConcepts:[LinkingConcepts,SetLinkingConcepts],errorSnack:[ShowErrorSnack, SetShowErrorSnack],

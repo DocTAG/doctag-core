@@ -36,16 +36,7 @@ function LabelItem(props) {
     },[LabToInsert]);
 
 
-    function changeFunct(e){
-        e.preventDefault()
-        var arr = LabToInsert
-        // console.log('selected',e.target.value)
 
-        setChecked(checked => !checked);
-        SetClickedCheck(true);
-        SetDisable_Buttons(false)
-
-    }
     function updateLab(){
         console.log('sono qua')
         var arr = []
@@ -69,32 +60,7 @@ function LabelItem(props) {
         SetLabToInsert(arr)
     }
 
-    // useEffect(()=>{
-    //     console.log('entro',checked)
-    //     console.log('entro',props.label)
-    //     var arr = LabToInsert
-    //     var arr_lab = []
-    //     arr.map(lab=>{
-    //         arr_lab.push(lab.label)
-    //     })
-    //     if(checked === true){
-    //         console.log('entro 1')
-    //         if(arr_lab.indexOf(props.label) === -1){
-    //             arr.push({label:props.label,seq_number:props.seq_number})
-    //         }
-    //         console.log('entro tot', arr)
-    //
-    //         SetLabToInsert(arr)
-    //     }
-    //     else{
-    //         console.log('entro 2')
-    //         var new_arr = []
-    //         new_arr = arr.filter(item=>item !== {label:props.label,seq_number:props.seq_number})
-    //         console.log('entro tot', new_arr)
-    //         SetLabToInsert(new_arr)
-    //     }
-    // },[checked])
-    //
+
     useEffect(()=>{
         if(ShowMemberGt === true || ShowAutoAnn === true){
             console.log('isdis',ShowMemberGt === true || ShowAutoAnn === true)

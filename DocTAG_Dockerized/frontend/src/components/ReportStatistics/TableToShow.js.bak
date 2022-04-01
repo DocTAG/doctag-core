@@ -114,7 +114,7 @@ export default function TableToShow(props) {
 
     useEffect(()=>{
         if(IDToStats){
-            axios.get('http://127.0.0.1:8000/annotation_all_stats',{params:{report:IDToStats['id_report'],topic:IDToStats['topic'],language:IDToStats['language']}})
+            axios.get('http://0.0.0.0:8000/annotation_all_stats',{params:{report:IDToStats['id_report'],topic:IDToStats['topic'],language:IDToStats['language']}})
                 .then(response => {SetReportStats(response.data);})
         }
     },[IDToStats])
@@ -124,7 +124,7 @@ export default function TableToShow(props) {
 
     function handleDeleteSingle(e,row){
         setSelection([])
-        axios.post('http://127.0.0.1:8000/delete_reports',{report_list:[row]}).then(response => {
+        axios.post('http://0.0.0.0:8000/delete_reports',{report_list:[row]}).then(response => {
             var arr = filteredRows.filter(r=>r !== row)
             console.log('new_rows',arr)
             console.log('new_rows',selection)
@@ -227,7 +227,7 @@ export default function TableToShow(props) {
     const handleDelete = ()=>{
         var arr = filteredRows.filter(r=> selection.indexOf(r.id)<0)
         var selected_rows = filteredRows.filter(r=>selection.indexOf(r.id)>=0)
-        axios.post('http://127.0.0.1:8000/delete_reports',{report_list:selected_rows}).then(response=>{
+        axios.post('http://0.0.0.0:8000/delete_reports',{report_list:selected_rows}).then(response=>{
             console.log('new_rows',arr)
             console.log('new_rows',selection)
             setSelection([])

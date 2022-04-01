@@ -50,7 +50,7 @@ function MentionList(props){
     const [HighlightMention, SetHighlightMention] = highlightMention;
     //const [Highlight, SetHighlight] = useState('Highlight all');
     useEffect(()=>{
-        // console.log('MENTISHOW',ShowInfoMentions)
+        console.log('CHILDREN',Children)
         if(SelectedLang === Language && WordMention.length === 0) {
             // console.log('count1', FinalCount)
             // console.log('count1', Children.length)

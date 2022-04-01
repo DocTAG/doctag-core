@@ -56,7 +56,7 @@ function InfoAboutConfiguration() {
     }
     function onSaveExample(e,token){
         e.preventDefault()
-        axios.get('http://0.0.0.0:8000/download_examples', {params:{token:token}})
+        axios.get('http://127.0.0.1:8000/download_examples', {params:{token:token}})
             .then(function (response) {
                 if(token === 'reports'){
                     FileDownload((response.data), 'reports_example.csv');
@@ -80,7 +80,7 @@ function InfoAboutConfiguration() {
     }
     function onSaveTemplate(e,token){
         e.preventDefault()
-        axios.get('http://0.0.0.0:8000/download_templates', {params:{token:token}})
+        axios.get('http://127.0.0.1:8000/download_templates', {params:{token:token}})
             .then(function (response) {
                 if(token === 'reports'){
                     FileDownload((response.data), 'reports_template.csv');
@@ -106,7 +106,7 @@ function InfoAboutConfiguration() {
     }
     useEffect(()=>{
         console.log('ALL!!!')
-        axios.get('http://0.0.0.0:8000/get_gt_list',{params:{token:'all'}}).then(response => SetGroundTruthList(response.data['ground_truths'])).catch(error =>console.log(error))
+        axios.get('http://127.0.0.1:8000/get_gt_list',{params:{token:'all'}}).then(response => SetGroundTruthList(response.data['ground_truths'])).catch(error =>console.log(error))
     },[])
 
     function onSaveAll(token){
@@ -115,7 +115,7 @@ function InfoAboutConfiguration() {
         // console.log('gt_list',token)
         if(token === 'save' && GroundTruthList>0){
 
-            axios.get('http://0.0.0.0:8000/download_all_ground_truths')
+            axios.get('http://127.0.0.1:8000/download_all_ground_truths')
                 .then(function (response) {
                     FileDownload(JSON.stringify(response.data['ground_truth']), 'all_json_ground_truth.json');
                     SetShowModalSure(false)

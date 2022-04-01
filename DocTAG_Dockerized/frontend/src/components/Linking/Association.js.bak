@@ -181,7 +181,7 @@ function Association(props){
         ment.push(props.mention)
         var data_to_ret = {'mentions':mentions_to_keep.filter(x=>x.seq_number !== 0)}
 
-        axios.post('http://127.0.0.1:8000/mention_insertion/insert', {
+        axios.post('http://0.0.0.0:8000/mention_insertion/insert', {
             mentions: data_to_ret['mentions'],language:Language,
             report_id: Reports[Index].id_report
         })

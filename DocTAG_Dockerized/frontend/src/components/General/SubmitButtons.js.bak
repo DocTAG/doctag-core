@@ -55,7 +55,7 @@ function SubmitButtons(props){
 
 
     // useEffect(()=>{
-    //     axios.get('http://127.0.0.1:8000/get_post_fields_for_auto').then(function(response){
+    //     axios.get('http://0.0.0.0:8000/get_post_fields_for_auto').then(function(response){
     //         if(Object.keys(response.data['extract_fields']).indexOf(UseCase) >=0){
     //             if(response.data['extract_fields'][UseCase].length >0){
     //                 SetExaRobot(true)
@@ -75,7 +75,7 @@ function SubmitButtons(props){
 
     useEffect(()=>{
         if(ShowAutoAnn){
-            axios.get("http://127.0.0.1:8000/get_fields").then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
+            axios.get("http://0.0.0.0:8000/get_fields").then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
             SetShowAutoAnn(false)
         }
     },[Report])
@@ -90,7 +90,7 @@ function SubmitButtons(props){
                 }
             }
         })
-        console.log('radio',RadioChecked)
+        // console.log('radio',RadioChecked)
         // console.log('disabledbutt',Disable_Buttons)
 
         if(Action === 'labels' && RadioChecked){
@@ -127,7 +127,7 @@ function SubmitButtons(props){
             var data_to_ret = {'mentions': mentions_to_show.filter(x=>x.seq_number !== 0)}
             // console.log('mentions: ' ,mentions_to_show)
 
-            axios.post('http://127.0.0.1:8000/mention_insertion/insert', {
+            axios.post('http://0.0.0.0:8000/mention_insertion/insert', {
                 mentions: data_to_ret['mentions'],language:Language,
                 report_id: Reports[Index].id_report
             })
@@ -144,7 +144,7 @@ function SubmitButtons(props){
         }else if (token.startsWith('annotation')) {
             //const data = new FormData(document.getElementById("annotation-form"));
             // console.log('labtoinsert',LabToInsert)
-            axios.post('http://127.0.0.1:8000/annotationlabel/insert', {
+            axios.post('http://0.0.0.0:8000/annotationlabel/insert', {
                 //labels: data.getAll('labels'),
                 labels: LabToInsert,language:Language,
                 report_id: Reports[Index].id_report,
@@ -172,7 +172,7 @@ function SubmitButtons(props){
 
             data_to_ret = {'linked': associations_to_show}
             if (data_to_ret['linked'].length >= 0) {
-                axios.post('http://127.0.0.1:8000/insert_link/insert', {
+                axios.post('http://0.0.0.0:8000/insert_link/insert', {
                     linked: data_to_ret['linked'],language:Language,
                     report_id: Reports[Index].id_report
                 })
@@ -202,7 +202,7 @@ function SubmitButtons(props){
 
             // console.log(concepts_list);
 
-            axios.post('http://127.0.0.1:8000/contains/update', {
+            axios.post('http://0.0.0.0:8000/contains/update', {
                     concepts_list: concepts_list,language:Language,
                     report_id: Reports[Index].id_report,
                 },
@@ -225,7 +225,7 @@ function SubmitButtons(props){
 
 
     useEffect(()=>{
-        console.log('lab_to',LabToInsert)
+        // console.log('lab_to',LabToInsert)
         if(LabToInsert.length === 0){
             SetRadioChecked(false)
         }
@@ -239,7 +239,7 @@ function SubmitButtons(props){
         if(token === 'mentions'){
             // console.log('WORD',WordMention)
 
-            axios.post('http://127.0.0.1:8000/mention_insertion/delete', {language:Language,report_id: Reports[Index].id_report})
+            axios.post('http://0.0.0.0:8000/mention_insertion/delete', {language:Language,report_id: Reports[Index].id_report})
                 .then (function (response) {
                     // console.log(response);
                     //SetSavedGT(false)
@@ -262,7 +262,7 @@ function SubmitButtons(props){
             // console.log('delete')
         }
         else if(token === 'annotation') {
-            axios.post('http://127.0.0.1:8000/annotationlabel/delete', {language:Language,report_id: Reports[Index].id_report})
+            axios.post('http://0.0.0.0:8000/annotationlabel/delete', {language:Language,report_id: Reports[Index].id_report})
                 .then(function (response) {
                     // console.log(response);
                     //SetSavedGT(false)
@@ -280,7 +280,7 @@ function SubmitButtons(props){
 
         }
         else if(token === 'linked'){
-            axios.post('http://127.0.0.1:8000/insert_link/delete', {language:Language,report_id: Reports[Index].id_report})
+            axios.post('http://0.0.0.0:8000/insert_link/delete', {language:Language,report_id: Reports[Index].id_report})
                 .then (function (response) {
                     // console.log(response);
                     //SetSavedGT(false)
@@ -294,7 +294,7 @@ function SubmitButtons(props){
             // console.log('delete')
         }
         else if(token === 'concepts'){
-            axios.post('http://127.0.0.1:8000/contains/delete', {language:Language,report_id: Reports[Index].id_report})
+            axios.post('http://0.0.0.0:8000/contains/delete', {language:Language,report_id: Reports[Index].id_report})
                 .then (function (response) {
                     // console.log(response);
                     // SetSavedGT(false)

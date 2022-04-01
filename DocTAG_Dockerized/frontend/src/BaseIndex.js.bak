@@ -153,7 +153,7 @@ function BaseIndex() {
 
     useEffect(()=>{
         if(useCase !== '' && Language !== '' && BatchNumber !== ''){
-            axios.post('http://127.0.0.1:8000/new_credentials',{
+            axios.post('http://0.0.0.0:8000/new_credentials',{
                 usecase: useCase, language: Language, institute: Institute, annotation: Annotation,report_type: ReportType,batch:BatchNumber
             }).then(response=>{SetUpdateMenu(true)}).catch(error=>{
                 console.log('error', error)
@@ -198,28 +198,28 @@ function BaseIndex() {
 
         if((useCase !== '' && Language !== '' && Institute !== '' && Annotation !== '' && ReportType !== '' && BatchNumber !== '')) {
             console.log('QUA CI ENTRO_0', ReportType)
-            axios.get("http://127.0.0.1:8000/get_fields").then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
-            axios.get("http://127.0.0.1:8000/get_semantic_area").then(response => SetSemanticArea(response.data['area']))
-            axios.get("http://127.0.0.1:8000/conc_view").then(response => {SetConcepts(response.data['concepts'])})
-            axios.get("http://127.0.0.1:8000/annotationlabel/all_labels").then(response => {
+            axios.get("http://0.0.0.0:8000/get_fields").then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
+            axios.get("http://0.0.0.0:8000/get_semantic_area").then(response => SetSemanticArea(response.data['area']))
+            axios.get("http://0.0.0.0:8000/conc_view").then(response => {SetConcepts(response.data['concepts'])})
+            axios.get("http://0.0.0.0:8000/annotationlabel/all_labels").then(response => {
                 setLabels(response.data['labels'])
             })
 
-            // axios.get("http://127.0.0.1:8000/get_fields").then(response => {
+            // axios.get("http://0.0.0.0:8000/get_fields").then(response => {
             //     SetFields(response.data['fields']);
             //     SetFieldsToAnn(response.data['fields_to_ann']);
             // })
-            // axios.get("http://127.0.0.1:8000/annotationlabel/all_labels").then(response => {
+            // axios.get("http://0.0.0.0:8000/annotationlabel/all_labels").then(response => {
             //     setLabels(response.data['labels'])
             // })
-            // axios.get("http://127.0.0.1:8000/get_semantic_area").then(response => SetSemanticArea(response.data['area']))
-            // axios.get("http://127.0.0.1:8000/conc_view").then(response => {
+            // axios.get("http://0.0.0.0:8000/get_semantic_area").then(response => SetSemanticArea(response.data['area']))
+            // axios.get("http://0.0.0.0:8000/conc_view").then(response => {
             //     SetConcepts(response.data['concepts'])
             // })
 
             csrf_token = document.getElementById('csrf_token').value;
 
-            axios.get("http://127.0.0.1:8000/get_last_gt", {params: {configure: 'configure'}}
+            axios.get("http://0.0.0.0:8000/get_last_gt", {params: {configure: 'configure'}}
             ).then(response => {
 
                 SetGroundTruth(response.data['groundtruth']);
@@ -270,7 +270,7 @@ function BaseIndex() {
             SetGTreport(prev=>!prev)
             SetUpdateMenu(false)
 
-            axios.get("http://127.0.0.1:8000/get_last_gt",{params: {configure:'configure'}}).then(response => {SetGroundTruth(response.data['groundtruth']); SetupGroundTruth(prev => !prev)})
+            axios.get("http://0.0.0.0:8000/get_last_gt",{params: {configure:'configure'}}).then(response => {SetGroundTruth(response.data['groundtruth']); SetupGroundTruth(prev => !prev)})
         }
 
     },[UpdateMenu])
@@ -293,7 +293,7 @@ function BaseIndex() {
             }
             SetLoadingReportList(true)
             console.log('entro qua dentro!!!!')
-            axios.get("http://127.0.0.1:8000/get_reports", {params: {configure: 'configure'}}).then(response => {
+            axios.get("http://0.0.0.0:8000/get_reports", {params: {configure: 'configure'}}).then(response => {
                 setReports(response.data['report']);
                 setIndex(response.data['index'])
                 if(response.data['report'].length === 0){
@@ -323,20 +323,20 @@ function BaseIndex() {
             SetSavedGT(prevState => !prevState) //Carico lista per select report
             SetLoadingReport(true)
 
-            axios.get("http://127.0.0.1:8000/report_start_end", {params: {report_id: Reports[Index].id_report.toString()}}).then(response => {
+            axios.get("http://0.0.0.0:8000/report_start_end", {params: {report_id: Reports[Index].id_report.toString()}}).then(response => {
                 setReportsString(response.data['rep_string']); SetFinalCount(response.data['final_count']);SetFinalCountReached(false); SetLoadingReport(false);
 
             })
 
             if (Action === 'labels' && MakeReq) {
                 SetLoadingLabels(true)
-                axios.get("http://127.0.0.1:8000/annotationlabel/user_labels", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {
+                axios.get("http://0.0.0.0:8000/annotationlabel/user_labels", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {
                     setLabels_to_show(response.data[Action.toString()]);SetLoadingLabels(false);
 
                 })
             }else if (Action === 'mentions' && MakeReq) {
                 SetLoadingMentions(true)
-                axios.get("http://127.0.0.1:8000/mention_insertion", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {
+                axios.get("http://0.0.0.0:8000/mention_insertion", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {
                     var mentions = response.data[Action.toString()]
 
                     var ordered = order_array(mentions)
@@ -345,8 +345,8 @@ function BaseIndex() {
                 })
             } else if (Action === 'concept-mention' && MakeReq){
                 SetLoadingAssociations(true)
-                axios.get("http://127.0.0.1:8000/insert_link/linked", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {SetAssociations_to_show(response.data['associations']);})
-                axios.get("http://127.0.0.1:8000/insert_link/mentions", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {
+                axios.get("http://0.0.0.0:8000/insert_link/linked", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {SetAssociations_to_show(response.data['associations']);})
+                axios.get("http://0.0.0.0:8000/insert_link/mentions", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {
                     var mentions = (response.data['mentions1']);
                     var ordered = order_array(mentions);
 
@@ -354,7 +354,7 @@ function BaseIndex() {
                     SetLoadingAssociations(false)})
             } else if (Action === 'concepts' ){
                 SetLoadingConcepts(true)
-                axios.get("http://127.0.0.1:8000/contains", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {setSelectedConcepts(response.data);SetLoadingConcepts(false);})
+                axios.get("http://0.0.0.0:8000/contains", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {setSelectedConcepts(response.data);SetLoadingConcepts(false);})
 
             }
             SetMakeReq(false)
@@ -373,7 +373,7 @@ function BaseIndex() {
                 json_arr[val] = []
             })
             setSelectedConcepts(json_arr)
-            axios.get("http://127.0.0.1:8000/report_start_end", {params: {report_id: Reports[Index].id_report.toString()}}).then(response => {SetFinalCount(response.data['final_count']);
+            axios.get("http://0.0.0.0:8000/report_start_end", {params: {report_id: Reports[Index].id_report.toString()}}).then(response => {SetFinalCount(response.data['final_count']);
                 setReportsString(response.data['rep_string']); SetFinalCountReached(false);
                 // console.log('DATA',(response.data['final_count'])
                 // );
@@ -392,12 +392,12 @@ function BaseIndex() {
 
         if (Reports.length>0 && ShowMemberGt === false && Action === 'labels' && MakeReq) {
 
-            axios.get("http://127.0.0.1:8000/annotationlabel/user_labels", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {SetMakeReq(false);setLabels_to_show(response.data[Action.toString()]);
+            axios.get("http://0.0.0.0:8000/annotationlabel/user_labels", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {SetMakeReq(false);setLabels_to_show(response.data[Action.toString()]);
 
             })
         }
         else if (Reports.length >0 && ShowMemberGt === false && Action === 'concepts' && MakeReq ){
-            axios.get("http://127.0.0.1:8000/contains", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {setSelectedConcepts(response.data);SetMakeReq(false);})
+            axios.get("http://0.0.0.0:8000/contains", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {setSelectedConcepts(response.data);SetMakeReq(false);})
 
         }
     }, [reportsString,MakeReq]); //report, Index // C'era anche Action, se dà problemi mettiamo
@@ -409,7 +409,7 @@ function BaseIndex() {
             if (Action === 'labels' && MakeReq) {
                 SetLoadingLabels(true)
 
-                axios.get("http://127.0.0.1:8000/annotationlabel/user_labels", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {SetMakeReq(false);setLabels_to_show(response.data[Action.toString()]);
+                axios.get("http://0.0.0.0:8000/annotationlabel/user_labels", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {SetMakeReq(false);setLabels_to_show(response.data[Action.toString()]);
                     SetLoadingLabels(false);
 
 
@@ -419,7 +419,7 @@ function BaseIndex() {
             }
             else if (Action === 'concepts' && MakeReq){
                 SetLoadingConcepts(true)
-                axios.get("http://127.0.0.1:8000/contains", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {SetMakeReq(false);setSelectedConcepts(response.data);SetLoadingConcepts(false)})
+                axios.get("http://0.0.0.0:8000/contains", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {SetMakeReq(false);setSelectedConcepts(response.data);SetLoadingConcepts(false)})
 
             }
         }
@@ -440,7 +440,7 @@ function BaseIndex() {
             if (Action === 'mentions' && MakeReq ) {
 
                 SetLoadingMentions(true)
-                axios.get("http://127.0.0.1:8000/mention_insertion", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {
+                axios.get("http://0.0.0.0:8000/mention_insertion", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {
                     var mentions = (response.data[Action.toString()])
                     console.log('mm',mentions)
 
@@ -454,8 +454,8 @@ function BaseIndex() {
                 })
             } else if (Action === 'concept-mention' && MakeReq){
                 SetLoadingAssociations(true)
-                axios.get("http://127.0.0.1:8000/insert_link/linked", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {SetAssociations_to_show(response.data['associations']);SetMakeReq(false);})
-                axios.get("http://127.0.0.1:8000/insert_link/mentions", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {
+                axios.get("http://0.0.0.0:8000/insert_link/linked", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {SetAssociations_to_show(response.data['associations']);SetMakeReq(false);})
+                axios.get("http://0.0.0.0:8000/insert_link/mentions", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {
                     var mentions = (response.data['mentions1']);
                     var ordered = order_array(mentions)
                     SetMakeReq(false);
@@ -551,7 +551,7 @@ function BaseIndex() {
     },[Start,LoadingReport,LoadingReportList])
 
     function sendUser(val){
-        axios.post('http://127.0.0.1:8000/update_user_chosen',{user_chosen:val}).then(response=>{
+        axios.post('http://0.0.0.0:8000/update_user_chosen',{user_chosen:val}).then(response=>{
             console.log(response.data)
         }).catch(error=>console.log(error))
     }

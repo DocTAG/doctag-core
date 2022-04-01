@@ -13,6 +13,8 @@ import {
     faLanguage,
 
 } from '@fortawesome/free-solid-svg-icons';
+// import Tooltip from '@mui/material/Tooltip';
+
 import Badge from "react-bootstrap/Badge";
 import ReportSection from "./ReportSection";
 import ReportSelection from "./ReportSelection";
@@ -28,8 +30,10 @@ import Spinner from "react-bootstrap/Spinner";
 // axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 function ReportListUpdated(props) {
 
-    const { selectedLang,usecase,save,topk,tokentocolor,mentionToAdd,highlightMention,colorword,mentionSingleWord,showSnackReport,loadingReport,tokens,showautoannotation,finalcount,reached,userchosen,report_type,showmajoritymodal,showmajoritygt,annotation,action,language,showmember,username,showmajority,report,index,institute,showannotations,showreporttext,fields,fieldsToAnn,orderVar, errorSnack,reports, reportString, insertionTimes } = useContext(AppContext);
+    const { selectedLang,usecase,save,topk,tokentocolor,languageList,topicinfo,mentionToAdd,highlightMention,colorword,mentionSingleWord,showSnackReport,loadingReport,tokens,showautoannotation,finalcount,reached,userchosen,report_type,showmajoritymodal,showmajoritygt,annotation,action,language,showmember,username,showmajority,report,index,institute,showannotations,showreporttext,fields,fieldsToAnn,orderVar, errorSnack,reports, reportString, insertionTimes } = useContext(AppContext);
     const [Fields,SetFields] = fields;
+    const [LanguageList,SetLanguageList] = languageList;
+
     const [Username,SetUsername] = username
     const [ShowMajorityModal,SetshowMajorityModal] = showmajoritymodal
     const [ReportType, SetReportType] = report_type
@@ -82,15 +86,14 @@ function ReportListUpdated(props) {
     const info = useRef(null);
     const [ShowNarrModal,SetShowNarrModal] = useState(false)
     const [useCase,setUseCase] = usecase
-    const [TopicInfo,SetTopicInfo] = useState({})
+    const [TopicInfo,SetTopicInfo] = topicinfo
     const [ColorWords,SetColorWords] = colorword
     const [TokenToColor,SetTokenToColor] = tokentocolor
     const [Top_K,SetTop_K] = topk
 
 
-    useEffect(()=>{
-        console.log('tokentocolor',TokenToColor)
-    },[TokenToColor])
+
+
     useEffect(()=>{
         if(Translation === false && ReportString !== false && ReportString !== ''&& ReportString !== undefined){
             SetReportText(ReportString)
@@ -157,7 +160,9 @@ function ReportListUpdated(props) {
         if(ColorWords === true){
 
             var t = []
-            axios.get('http://0.0.0.0:8000/get_query_doc_words',{params:{id_report:Reports[Index].id_report}}).then(response=>{
+            axios.get('http://127.0.0.1:8000/get_query_doc_words',{params:{id_report:Reports[Index].id_report}}).then(response=>{
+                var words_to_highlight = response.data['top_k']
+                console.log('words',response.data['top_k'])
                 response.data['top_k'].map(k=>{
                     topic_spans.map(token=>{
                         if((token.textContent.toString().toLowerCase()).includes(k[0].toString().toLowerCase())){
@@ -175,6 +180,8 @@ function ReportListUpdated(props) {
                         }
 
                     })
+
+
                     tokens.map(token=>{
 
 
@@ -195,60 +202,70 @@ function ReportListUpdated(props) {
 
                         }
                     })
+
+
+
+
                 })
-                console.log('array',t)
                 SetTokenToColor(t)
+                // if (Action === 'labels' || Action === 'concepts' || Action === 'none'){
+                //     console.log('t',t)
+                //     var el = document.getElementsByClassName('testo_to_process')[0]
+                //     var testo = el.textContent.toString()
+                //     var split_testo = testo.split(" ")
+                //     var list = []
+                //
+                //     split_testo.map((word,i)=>{
+                //         var added_word = false
+                //         words_to_highlight.map((k,o)=>{
+                //             if((word.toString().toLowerCase()).includes(k[0].toString().toLowerCase())){
+                //                 // console.log('word',word.toString().toLowerCase())
+                //                 // console.log('word',k[0].toString().toLowerCase())
+                //                 // console.log('word',(word.toString().toLowerCase()).includes(k[0].toString().toLowerCase()))
+                //                 list.push("<Tooltip arrow disableFocusListener disableTouchListener  placement=\"top\" title={'TF-IDF: '+k[1].toString()}><span><b>")
+                //                 list.push(word)
+                //                 list.push("</b></span></Tooltip>")
+                //                 added_word = true
+                //             }
+                //
+                //         })
+                //         if(added_word === false){
+                //             list.push(word)
+                //         }
+                //
+                //     })
+                //     // console.log('stringa',list.join(' '))
+                //     el.innerHTML = list.join(' ').replace("<b> ","<b>").replace(" </b>","</b>")
+                //     // console.log('array',t)
+                //
+                // }
+
             })
         }
+        // else{
+        //     if(Action === 'labels' || Action === 'none' || Action === 'concepts'){
+        //         var el = document.getElementsByClassName('testo_to_process')
+        //         if(el.length > 0){
+        //             el = el[0]
+        //             var testo = el.textContent.toString()
+        //             var split_testo = testo.split(" ")
+        //             var list = []
+        //             split_testo.map((word,i)=>{
+        //                 if(word !== "<b>" && word !== "</b>")
+        //
+        //                 list.push(word)
+        //
+        //             })
+        //             el.innerHTML = list.join(' ')
+        //         }
+        //
+        //     }
+        // }
 
     },[ColorWords])
 
 
-    useEffect(()=>{
-        if(useCase !== ''){
-            axios.get('http://0.0.0.0:8000/get_topic_info',{params:{topic:useCase}}).then(response=>{SetTopicInfo(response.data)}).catch(error=>console.log(error))
-        }
-    },[useCase])
 
-
-    useEffect(()=>{
-        console.log('topicinfo1',TopicInfo)
-        if(Object.keys(TopicInfo).length > 0){
-            console.log('topicinfo entro')
-            console.log('topicinfo',TopicInfo)
-            console.log('topicinfo',TopicInfo['title'])
-            console.log('topicinfo',typeof TopicInfo['title'])
-        }
-    },[TopicInfo])
-
-    // useEffect(()=>{
-    //     if(TopicInfo !== {}){
-    //         var str = ''
-    //         str = TopicInfo['title'] + ' ' + TopicInfo['description']
-    //         SetTopicSplitted
-    //     }
-    // },[TopicInfo])
-
-
-    // useEffect(()=>{
-    //     var new_arr = []
-    //     if(ShowAnnotationsStats === true || ShowMajorityModal === true){
-    //         axios.get('http://0.0.0.0:8000/get_post_fields_for_auto').then(response=>{
-    //             Object.keys(response.data['extract_fields']).map(val=>{
-    //
-    //
-    //                 response.data['extract_fields'][val].map(el=>{
-    //                     new_arr.push(el)
-    //
-    //                 })
-    //             })
-    //             SetExtractFields(new_arr)
-    //         })
-    //
-    //     }
-    //
-    //
-    // },[ShowAnnotationsStats,ShowMajorityModal])
 
 
     function setOrder(e){
@@ -289,13 +306,13 @@ function ReportListUpdated(props) {
         if(Report !== undefined){
 
             if((ShowAutoAnn || ShowMemberGt)){
-                console.log('AXIOS')
-                axios.get('http://0.0.0.0:8000/get_insertion_time_record',
+                // console.log('AXIOS')
+                axios.get('http://127.0.0.1:8000/get_insertion_time_record',
                     {params:{ns_id:ns_id,username:username_to_call,rep:Reports[Index]['id_report'],language:SelectedLang,action:Action}})
                     .then(response=>{
                         if(response.data['date'] !== ''){
                             var data = response.data['date'].toString()
-                            console.log('salvo!')
+                            // console.log('salvo!')
 
                             var date = data.split('T')
                             var hour = date[1].toString().split('.')
@@ -320,7 +337,7 @@ function ReportListUpdated(props) {
 
 
     useEffect(()=>{
-        console.log('REPORT',ReportString)
+        // console.log('REPORT',ReportString)
 
         if(ShowAnnotationsStats === false && showReportText === false && ShowMajorityModal === false){
             if(OrderVar === 'lexic' && ReportString !== null){
@@ -340,11 +357,11 @@ function ReportListUpdated(props) {
     },[OrderVar,ReportString])
 
     useEffect(()=>{
-        console.log('trans')
-        if(ReportString !== undefined){
-            axios.get('http://0.0.0.0:8000/get_report_translations',{params:{id_report:Report.id_report}}).then(response=>{
+        // console.log('trans')
+        if(ReportString !== undefined && LanguageList.length > 1){
+            axios.get('http://127.0.0.1:8000/get_report_translations',{params:{id_report:Report.id_report}}).then(response=>{
                 SetReportTranslation(response.data['languages'])
-                console.log('respp',response.data['languages'])
+                // console.log('respp',response.data['languages'])
             })
         }
     },[ReportString])
@@ -354,7 +371,7 @@ function ReportListUpdated(props) {
         SetSelectedLang(rep)
         if(rep !== Language){
             // SetLoadingReport(true)
-            axios.get("http://0.0.0.0:8000/report_start_end", {params: {language:rep,report_id: Reports[Index].id_report.toString()}}).then(response => {
+            axios.get("http://127.0.0.1:8000/report_start_end", {params: {language:rep,report_id: Reports[Index].id_report.toString()}}).then(response => {
                 SetTranslation(response.data['rep_string']); SetFinalCount(response.data['final_count']);SetFinalCountReached(false);
                 // SetLoadingReport(false)
             })
@@ -364,13 +381,19 @@ function ReportListUpdated(props) {
         }
 
     }
+
+    useEffect(()=>{
+        console.log('children',Children.length)
+        console.log('children',FinalCount)
+    },[Children])
+
     useEffect(()=>{
         if(ShowAnnotationsStats === false  && ShowMajorityModal === false && showReportText === false && Object.keys(TopicInfo).length > 0){
             if(Expanded){
                 expand.current.className = 'first_container_expanded'
                 info.current.style.display = 'none'
                 doc_header.current.style.display = 'none'
-                doc_corpus.current.style.height = '63vh'
+                doc_corpus.current.style.height = '58vh'
                 topic.current.style.display = 'none'
                 topic_header.current.style.display = 'none'
             }
@@ -387,7 +410,7 @@ function ReportListUpdated(props) {
         else if(ShowAnnotationsStats === true  || ShowMajorityModal === true || showReportText === true){
             // info.current.style.display = 'none'
             // doc_header.current.style.display = 'none'
-            doc_corpus.current.style.height = '63vh'
+            doc_corpus.current.style.height = '58vh'
             doc_corpus.current.style.overflow = 'initial'
             // topic.current.style.display = 'none'
             // topic_header.current.style.display = 'none'
@@ -429,9 +452,9 @@ function ReportListUpdated(props) {
             <div>
                 {ReportString !== undefined && ShowAnnotationsStats === false  && ShowMajorityModal === false && showReportText === false && Object.keys(TopicInfo).length > 0 && <>
 
-                    {Reports.length >0 && <div ref={topic_header}  className='first_row_container'>
+                    {Reports.length >0 && <div><div ref={topic_header}  className='first_row_container'>
 
-                        <span className='reportListStyle'>TOPIC </span><span><TopicSelection /></span>&nbsp;&nbsp;<span ><TopicNextPrevButtons /></span></div>}
+                        <span className='reportListStyle'>TOPIC </span><span><TopicSelection /></span>&nbsp;&nbsp;<span ><TopicNextPrevButtons /></span></div>
 
                     <div  ref={topic} className='topic_container'>
                         <Row>
@@ -478,7 +501,7 @@ function ReportListUpdated(props) {
                         <hr style={{flex: '0 0 100%'}}/>
 
                     </div>
-
+                    </div>}
                 </>}
                 {Reports.length >0 && ReportString !== undefined && ShowAnnotationsStats === false  && ShowMajorityModal === false && showReportText === false && <div ref={doc_header}><span className='reportListStyle'>DOCUMENT </span><span><ReportSelection /></span>&nbsp;&nbsp;<span ><NextPrevButtons /></span></div>}
 
@@ -557,8 +580,10 @@ function ReportListUpdated(props) {
                             {FieldsToAnn.map((field,ind)=><div className='no_margin_top'>
                                     {ReportText[field] !== undefined && ReportText[field] !== null  && <Row>
                                         {/*{((props.action === 'mentions' || props.action === 'concept-mention') && (ShowAnnotationsStats === false && ShowMajorityModal === false && Translation === false)) ? <Col md={4} className="titles no-click"><div><FontAwesomeIcon style={{'width':'0.8rem'}} icon={faPencilAlt}/> {field}:</div></Col> : <Col md={4} className="titles no-click"><div>{field}:</div></Col>}*/}
-                                        {!((Fields.length === 0 && FieldsToAnn.length === 1) || (Fields.length === 1 && FieldsToAnn.length === 0)) && <>{((props.action === 'mentions' || props.action === 'concept-mention') && (ShowAnnotationsStats === false && ShowMajorityModal === false && Translation === false)) ? <Col md={4} className="titles no-click"><div><FontAwesomeIcon style={{'width':'0.8rem'}} icon={faPencilAlt}/> {field}:</div></Col> : <Col md={4} className="titles no-click"><div>{field}:</div></Col>}</>}
-                                        {ShowAnnotationsStats === false && ShowMajorityModal === false && Translation === false && <Col md={((Fields.length === 0 && FieldsToAnn.length === 1) || (Fields.length === 1 && FieldsToAnn.length === 0)) ? 12 : 8}><ReportSection action={props.action} stop={ReportText[field].stop} start={ReportText[field].start} text={ReportText[field].text}  report = {props.report}/></Col>}
+                                        {/*{!((Fields.length === 0 && FieldsToAnn.length === 1) || (Fields.length === 1 && FieldsToAnn.length === 0)) && <>{((props.action === 'mentions' || props.action === 'concept-mention') && (ShowAnnotationsStats === false && ShowMajorityModal === false && Translation === false)) ? <Col md={4} className="titles no-click"><div><FontAwesomeIcon style={{'width':'0.8rem'}} icon={faPencilAlt}/> {field}:</div></Col> : <Col md={4} className="titles no-click"><div>{field}:</div></Col>}</>}*/}
+                                        {/*{(Action === 'concepts' || Action === 'labels' || Action === 'none' || showReportText) && ShowAnnotationsStats === false && ShowMajorityModal === false && <Col md={((Fields.length === 0 && FieldsToAnn.length === 1) || (Fields.length === 1 && FieldsToAnn.length === 0)) ? 12 : 8}><div className='testo_to_process'>{ReportText[field].text}</div></Col>}*/}
+
+                                        { ShowAnnotationsStats === false && ShowMajorityModal === false && Translation === false && <Col md={((Fields.length === 0 && FieldsToAnn.length === 1) || (Fields.length === 1 && FieldsToAnn.length === 0)) ? 12 : 8}><ReportSection action={props.action} stop={ReportText[field].stop} start={ReportText[field].start} text={ReportText[field].text}  report = {props.report}/></Col>}
                                         {(ShowAnnotationsStats === true || ShowMajorityModal === true || Translation !== false) && <Col md={((Fields.length === 0 && FieldsToAnn.length === 1) || (Fields.length === 1 && FieldsToAnn.length === 0)) ? 12 : 8}><ReportSection action='noAction' stop={ReportText[field].stop} start={ReportText[field].start} text={ReportText[field].text}  report = {props.report}/></Col>}
                                     </Row>}
                                 </div>
@@ -566,8 +591,9 @@ function ReportListUpdated(props) {
                             {(ShowAnnotationsStats === true || ShowMajorityModal === true ) && ExtractFields.length > 0 && <div className='no_margin_top'>
                                 {ExtractFields.map((field,ind)=><div>
                                         {ReportText[field] !== undefined && FieldsToAnn.indexOf(field) === -1 && Fields.indexOf(field) === -1 &&  ReportText[field] !== null  && <Row>
-                                            {!((props.action === 'mentions' || props.action === 'concept-mention') && (ShowAnnotationsStats === false && ShowMajorityModal === false)) ? <Col md={4} className="titles no-click"><div><FontAwesomeIcon style={{'width':'0.8rem'}} icon={faPencilAlt}/> {field}:</div></Col> : <Col md={4} className="titles no-click"><div>{field}:</div></Col>}
+                                            {/*{!((props.action === 'mentions' || props.action === 'concept-mention') && (ShowAnnotationsStats === false && ShowMajorityModal === false)) ? <Col md={4} className="titles no-click"><div><FontAwesomeIcon style={{'width':'0.8rem'}} icon={faPencilAlt}/> {field}:</div></Col> : <Col md={4} className="titles no-click"><div>{field}:</div></Col>}*/}
                                             {ShowAnnotationsStats === false && ShowMajorityModal === false && <Col md={((Fields.length === 0 && FieldsToAnn.length === 1) || (Fields.length === 1 && FieldsToAnn.length === 0)) ? 12 : 8}><ReportSection action={props.action} stop={ReportText[field].stop} start={ReportText[field].start} text={ReportText[field].text}  report = {props.report}/></Col>}
+                                            {/*{(Action === 'concepts' || Action === 'labels' || Action === 'none') && ShowAnnotationsStats === false && ShowMajorityModal === false && <Col md={((Fields.length === 0 && FieldsToAnn.length === 1) || (Fields.length === 1 && FieldsToAnn.length === 0)) ? 12 : 8}><div className='testo_to_process'>{ReportText[field].text}</div></Col>}*/}
                                             {(ShowAnnotationsStats === true || ShowMajorityModal === true ) && <Col md={((Fields.length === 0 && FieldsToAnn.length === 1) || (Fields.length === 1 && FieldsToAnn.length === 0)) ? 12 : 8}><ReportSection action='noAction' stop={ReportText[field].stop} start={ReportText[field].start} text={ReportText[field].text}  report = {props.report}/></Col>}
                                         </Row>}
                                     </div>

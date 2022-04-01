@@ -147,7 +147,7 @@ function Mention(props){
     function fromMentionToArray(text,start1){
         var array = []
         var words = []
-        console.log('mention',text)
+        // console.log('mention',text)
 
         var stringa = text.toString() //The age is considered an integer!!
         if(stringa.indexOf(' ')){

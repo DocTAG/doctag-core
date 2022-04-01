@@ -45,7 +45,7 @@ export const ConceptContext = createContext('')
 function Prova_aseIndex() {
 
 
-    const { makereq,selectedLang,topicindex,fieldsToAnn,report_type,loadingChangeGT,showannotations,batchNumber,usersList,updateSingle,userchosen,showautoannotation,showmember,loadingLabels,annotation,loadingConcepts,loadingMentions,loadingAssociations,loadingReport,loadingReportList,loadingColors,clickedCheck,conceptOption,removedConcept,fields,checks,start,showbar,index,linkingConcepts,showSnackMention,mentionSingleWord,color,allMentions,mentionsList,mentionToAdd,associations,conceptModal,disButton,save,highlightMention,selectedconcepts,usecaseList,userLabels,labelsList,insertionTimes,tokens,report,reports,concepts,reached,finalcount,semanticArea,radio,changeConceots,labelsToInsert,showSnack,showSnackMessage,showOptions,username,action,reportString,outcomes,institute,language,usecase,updateMenu,languageList,instituteList } = useContext(AppContext);
+    const { makereq,selectedLang,topicindex,topicinfo,fieldsToAnn,report_type,usersListAnnotations,loadingChangeGT,showannotations,batchNumber,usersList,updateSingle,userchosen,showautoannotation,showmember,loadingLabels,annotation,loadingConcepts,loadingMentions,loadingAssociations,loadingReport,loadingReportList,loadingColors,clickedCheck,conceptOption,removedConcept,fields,checks,start,showbar,index,linkingConcepts,showSnackMention,mentionSingleWord,color,allMentions,mentionsList,mentionToAdd,associations,conceptModal,disButton,save,highlightMention,selectedconcepts,usecaseList,userLabels,labelsList,insertionTimes,tokens,report,reports,concepts,reached,finalcount,semanticArea,radio,changeConceots,labelsToInsert,showSnack,showSnackMessage,showOptions,username,action,reportString,outcomes,institute,language,usecase,updateMenu,languageList,instituteList } = useContext(AppContext);
     const [RemovedConcept,SetRemovedConcept] = removedConcept;
     const [SelectedLang,SetSelectedLang] = selectedLang
     const [LoadingChangeGT,SetLoadingChangeGT] = loadingChangeGT
@@ -103,6 +103,8 @@ function Prova_aseIndex() {
     const us = useRef(null)
     const [UsersList,SetUsersList] = usersList
     const [Show, SetShow] = useState(false)
+    const [UsersListAnnotations,SetUsersListAnnotations] = usersListAnnotations
+
     const [FinalCount, SetFinalCount] = finalcount;
     const [FinalCountReached, SetFinalCountReached] = reached;
     const [RadioChecked, SetRadioChecked] = radio;
@@ -121,7 +123,7 @@ function Prova_aseIndex() {
     const [RefPage,SetRefPage] = useState(false);
     const [ShowConceptModal, SetShowConceptModal] = conceptModal;
     const [selectedConcepts, setSelectedConcepts] = selectedconcepts;
-
+    const [TopicInfo,SetTopicInfo] = topicinfo
     const [BatchNumber,SetBatchNumber] = batchNumber
     const [upGroundTruth,SetupGroundTruth] = useState(false)
     const [MakeReq,SetMakeReq] = makereq
@@ -150,17 +152,32 @@ function Prova_aseIndex() {
         }
     },[Language,Index])
 
-
     useEffect(()=>{
-        if(useCase !== '' && Language !== '' && BatchNumber !== ''){
-            axios.post('http://127.0.0.1:8000/new_credentials',{
-                usecase: useCase, language: Language, institute: Institute, annotation: Annotation,report_type: ReportType,batch:BatchNumber
-            }).then(response=>{SetUpdateMenu(true)}).catch(error=>{
-                console.log('error', error)
-            })
+        if(UseCaseList.length > 0){
+            var arr_to_opt = []
+            if(ReportType==='pubmed'){
+
+
+                axios.get("http://0.0.0.0:8000/pubmed_reports").then(response => {
+                    SetUseCaseList(response.data['usecase'])
+
+
+                }).catch(function (error){console.log(error)})
+            }
+            else if(ReportType==='reports'){
+
+                axios.get("http://0.0.0.0:8000/doctag_reports").then(response => {
+                    SetUseCaseList(response.data['usecase'])
+
+
+                }).catch(function (error){console.log(error)})
+            }
+
         }
 
-    },[useCase])
+    },[ReportType])
+
+
 
     function order_array(mentions){
         var ordered = []
@@ -182,6 +199,21 @@ function Prova_aseIndex() {
         return ordered
     }
 
+    useEffect(()=>{
+        if(Institute !== '' && Language !== '' && useCase !== '' && Annotation !== '' && Reports.length > 0 && Index !== false && Action !== 'none'){
+            // console.log('r',Reports)
+            // console.log('r',Index)
+            axios.get("http://0.0.0.0:8000/get_annotators_users_list",{params:{action:Action,id_report:Reports[Index].id_report.toString(),language:Reports[Index].language}})
+                .then(response => {
+                    // if(response.data.length>0){
+                    // console.log(response.data)
+                    SetUsersListAnnotations(response.data)
+                })
+                .catch(error=>{
+                    console.log(error)
+                })
+        }
+    },[Index,Action])
 
     useEffect(()=>{
         // console.log('setto colori')
@@ -191,24 +223,25 @@ function Prova_aseIndex() {
 
     },[Action,Index,Report,reportsString])
 
-
-
-
     useEffect(()=>{
 
         if((useCase !== '' && Language !== '' && Institute !== '' && Annotation !== '' && ReportType !== '' && BatchNumber !== '')) {
-            console.log('QUA CI ENTRO_0', ReportType)
-            axios.get("http://127.0.0.1:8000/get_fields").then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
-            axios.get("http://127.0.0.1:8000/get_semantic_area").then(response => SetSemanticArea(response.data['area']))
-            axios.get("http://127.0.0.1:8000/conc_view").then(response => {SetConcepts(response.data['concepts'])})
-            axios.get("http://127.0.0.1:8000/annotationlabel/all_labels").then(response => {
+
+            axios.get("http://0.0.0.0:8000/get_fields").then(response => {
+                SetFields(response.data['fields']);
+                SetFieldsToAnn(response.data['fields_to_ann']);
+            })
+            axios.get("http://0.0.0.0:8000/annotationlabel/all_labels").then(response => {
                 setLabels(response.data['labels'])
             })
-
+            axios.get("http://0.0.0.0:8000/get_semantic_area").then(response => SetSemanticArea(response.data['area']))
+            axios.get("http://0.0.0.0:8000/conc_view").then(response => {
+                SetConcepts(response.data['concepts'])
+            })
 
             csrf_token = document.getElementById('csrf_token').value;
 
-            axios.get("http://127.0.0.1:8000/get_last_gt", {params: {configure: 'configure'}}
+            axios.get("http://0.0.0.0:8000/get_last_gt", {params: {configure: 'configure'}}
             ).then(response => {
 
                 SetGroundTruth(response.data['groundtruth']);
@@ -218,7 +251,8 @@ function Prova_aseIndex() {
 
         }
 
-    },[Institute, useCase,Language,Annotation,ReportType,BatchNumber]) // c'era upgroundtruth
+
+    },[Institute,useCase,Language,ReportType,BatchNumber,upGroundTruth])
 
     useEffect(()=>{
         // console.log('labels',labels)
@@ -232,62 +266,97 @@ function Prova_aseIndex() {
     },[Concepts,labels,FieldsToAnn])
 
     useEffect(()=>{
+        SetLoadingReport(true)
+    },[])
+
+
+
+    useEffect(()=>{
+        if(LabToInsert.length > 0){
+            axios.get('http://0.0.0.0:8000/check_gt_existence',{params:{id_report:Reports[Index].id_report,language: Reports[Index].language,action:Action}}).then(response=>{
+                if(response.data['count'] === 0){
+                    SetClickedCheck(true)
+                }
+            })
+        }
+
+    },[ClickedCheck,LabToInsert])
+
+    useEffect(()=>{
         SetDisable_Buttons(true)
         setChange(false)
         SetClickedCheck(false)
-        setSelectedConcepts(false)
         SetRemovedConcept(false)
+        // SetLoadingReport(true)
+        SetMentions_to_show(false)
+        SetAllMentions(false)
+        SetAssociations_to_show(false)
+        SetHighlightMention(false)
+        setSelectedConcepts(false)
+        SetLabToInsert([])
+
     },[Index,Action])
 
 
     useEffect(()=>{
 
         if(UpdateMenu === true){
-            setReportsString(false)
-            SetChildren([])
-            SetFinalCount(0)
-            setIndex(0)
-            setReports([])
-            setReport('')
-            SetAction(false)
+
             SetGTreport(prev=>!prev)
             SetUpdateMenu(false)
             SetMakeReq(false)
-            axios.get("http://127.0.0.1:8000/get_last_gt",{params: {configure:'configure'}}).then(response => {SetGroundTruth(response.data['groundtruth']); SetupGroundTruth(prev => !prev)})
+            setSelectedConcepts(false)
+            SetLabToInsert([])
+            SetAllMentions([])
+            SetMentions_to_show([])
+            axios.get("http://0.0.0.0:8000/get_last_gt",{params: {configure:'configure'}}).then(response => {SetGroundTruth(response.data['groundtruth']); SetupGroundTruth(prev => !prev)})
         }
 
     },[UpdateMenu])
 
-
+    // useEffect(()=>{
+    //     SetLoadingReport(true)
+    // },[GTReport])
 
     useEffect(() => {
 
         if(useCase !== '' && Institute !== '' && Language !== '' ) {
+            // console.log('reports!')
+            SetLoadingReportList(true)
             if (GroundTruth !== '') {
 
                 var action = GroundTruth['gt_type']
                 SetAction(action)
+                //document.getElementById(Action).focus()
+
+
+
+
+
+
 
 
             } else {//DEFAULT
                 SetAction('none')
 
 
+
             }
-            SetLoadingReport(true)
-            SetLoadingReportList(true)
-            console.log('entro qua dentro!!!!')
-            axios.get("http://127.0.0.1:8000/get_reports", {params: {configure: 'configure'}}).then(response => {
+
+
+            axios.get("http://0.0.0.0:8000/get_reports", {params: {configure: 'configure'}}).then(response => {
                 setReports(response.data['report']);
                 setIndex(response.data['index'])
                 if(response.data['report'].length === 0){
+                    setIndex(false)
                     SetNoReports(true)
                 }
                 else{
                     SetNoReports(false)
+                    // SetLoadingReport(false)
                 }
 
-                setReport(response.data['report'][0]);
+                setReport(response.data['report'][response.data['index']]);
                 SetGTreport(true);
                 SetMakeReq(false)
                 SetLoadingReportList(false)
@@ -296,142 +365,95 @@ function Prova_aseIndex() {
 
         }
 
-        }, [GroundTruth,upGroundTruth]);
-    // }, [GroundTruth,upGroundTruth]);
+    }, [GroundTruth,upGroundTruth]);
 
-    // useEffect(()=>{
-    //     console.log('QUESTA è LA REPORT STRING',reportsString)
-    // },[reportsString])
 
-    // useEffect(()=>{
-        // console.log('entro in gt')
-        // if(Reports.length > 0 && Action){
-        //     SetSavedGT(prevState => !prevState) //Carico lista per select report
-        //     SetLoadingReport(true)
-        //
-        //     axios.get("http://127.0.0.1:8000/report_start_end", {params: {report_id: Reports[Index].id_report.toString()}}).then(response => {
-        //         setReportsString(response.data['rep_string']); SetFinalCount(response.data['final_count']);SetFinalCountReached(false); SetLoadingReport(false);
-        //
-        //     })
-        //
-        //     if (Action === 'labels') {
-        //         SetLoadingLabels(true)
-        //         axios.get("http://127.0.0.1:8000/annotationlabel/user_labels", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {
-        //             setLabels_to_show(response.data[Action.toString()]);SetLoadingLabels(false);
-        //
-        //         })
-        //     }else if (Action === 'mentions') {
-        //         SetLoadingMentions(true)
-        //         axios.get("http://127.0.0.1:8000/mention_insertion", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {
-        //             var mentions = response.data[Action.toString()]
-        //
-        //             var ordered = order_array(mentions)
-        //             SetMentions_to_show(ordered);
-        //             SetLoadingMentions(false);
-        //         })
-        //     } else if (Action === 'concept-mention'){
-        //         SetLoadingAssociations(true)
-        //         axios.get("http://127.0.0.1:8000/insert_link/linked", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {SetAssociations_to_show(response.data['associations']);})
-        //         axios.get("http://127.0.0.1:8000/insert_link/mentions", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {
-        //             var mentions = (response.data['mentions1']);
-        //             var ordered = order_array(mentions);
-        //
-        //             SetAllMentions(ordered);
-        //             SetLoadingAssociations(false)})
-        //     } else if (Action === 'concepts' ){
-        //         SetLoadingConcepts(true)
-        //         axios.get("http://127.0.0.1:8000/contains", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {setSelectedConcepts(response.data);SetLoadingConcepts(false);})
-        //
-        //     }
-        //     SetMakeReq(false)
-        //
-        //
-        // }
-    // },[GTReport])
     useEffect(()=>{
-
         SetMakeReq(false)
     },[])
 
 
+
+    // useEffect(()=>{
+    //     var el = document.getElementById(action)
+    //     if (el !== null){
+    //         el.setAttribute('class','act btn btn-primary active_button')
+    //         // console.log('ACTION123',Action)
+    //         var arr = Array.from(document.getElementsByClassName('act'))
+    //         arr.map(el=>{
+    //             if(el.id !== action) {
+    //                 el.setAttribute('class', 'act btn btn-primary')
+    //             }
+    //         })
+    //     }
+    // },[Action])
+
+
     useEffect(()=>{
-
-        SetSavedGT(prevState => !prevState) //Carico lista per select report
-        console.log('makereq',MakeReq)
-
-        if(Reports.length>0 &&  MakeReq === false) {
+        // SetLoadingReport(true)
+        // SetSavedGT(prevState => !prevState) //Carico lista per select report
+        // console.log('makereq',MakeReq)
+        SetLoadingReport(false)
+        if(Reports.length>0 && Report !== undefined && MakeReq === false && Index !== false) {
+            // console.log('entro aggiorno indice',Reports)
             // console.log('entro aggiorno indice',Index)
             // console.log('entro aggiorno azione',Action)
             // console.log('entro aggiorno reports',Reports.length)
-            SetLoadingReport(true)
+            // console.log('prova')
+
 
             var json_arr = {}
             SemanticArea.map(val=>{
                 json_arr[val] = []
             })
+            SetLoadingReport(true)
             setSelectedConcepts(json_arr)
-            axios.get("http://127.0.0.1:8000/report_start_end", {params: {report_id: Reports[Index].id_report.toString()}}).then(response => {SetFinalCount(response.data['final_count']);
+            axios.get("http://0.0.0.0:8000/report_start_end", {params: {report_id: Report.id_report.toString()}}).then(response => {SetFinalCount(response.data['final_count']);
                 setReportsString(response.data['rep_string']); SetFinalCountReached(false);SetLoadingReport(false);
                 // );
             })
 
         }
-    },[Index,Reports])
+        else if(Reports.length === 0){
+            SetLoadingReport(false)
+        }
+    },[Report])
 
     useEffect(()=>{
         if(reportsString !== false && Action !== 'none' && Action !== false){
             SetMakeReq(true);
         }
     },[reportsString,Action])
-    //
-    // useEffect(() => {
-    //     var json_arr = {}
-    //     SemanticArea.map(val=>{
-    //         json_arr[val] = []
-    //     })
-    //     setSelectedConcepts(json_arr)
-    //
-    //     if (Reports.length>0 && ShowMemberGt === false && Action === 'labels' && MakeReq) {
-    //
-    //         axios.get("http://127.0.0.1:8000/annotationlabel/user_labels", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {SetMakeReq(false);setLabels_to_show(response.data[Action.toString()]);
-    //
-    //         })
-    //     }
-    //     else if (Reports.length >0 && ShowMemberGt === false && Action === 'concepts' && MakeReq ){
-    //         axios.get("http://127.0.0.1:8000/contains", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {setSelectedConcepts(response.data);SetMakeReq(false);})
-    //
-    //     }
-    // }, [reportsString,MakeReq]); //report, Index // C'era anche Action, se dà problemi mettiamo
 
 
     useEffect(() => {
-        console.log('makereq 1',MakeReq)
-        if(Reports.length>0 && ShowMemberGt === false && reportsString !== false && MakeReq) {
-            console.log('rep_string1',reportsString)
+        // console.log('makereq 1',MakeReq)
+        if(Reports.length>0 && LoadingReport === false && ShowMemberGt === false && ShowAutoAnn === false && reportsString !== false && MakeReq && Index !== false) {
+            // console.log('rep_string1',reportsString)
 
-            SetSavedGT(prevState => !prevState)
+            // SetSavedGT(prevState => !prevState)
 
             if (Action === 'labels') {
-                SetLoadingLabels(true)
+                // SetLoadingLabels(true)
 
-                axios.get("http://127.0.0.1:8000/annotationlabel/user_labels", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {SetMakeReq(false);setLabels_to_show(response.data[Action.toString()]);
-                    SetLoadingLabels(false);
+                axios.get("http://0.0.0.0:8000/annotationlabel/user_labels", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {SetMakeReq(false);setLabels_to_show(response.data[Action.toString()]);
+                    // SetLoadingLabels(false);
                 })
 
             }
             else if (Action === 'concepts'){
                 SetLoadingConcepts(true)
-                axios.get("http://127.0.0.1:8000/contains", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {SetMakeReq(false);setSelectedConcepts(response.data);SetLoadingConcepts(false)})
+                axios.get("http://0.0.0.0:8000/contains", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {SetMakeReq(false);setSelectedConcepts(response.data);SetLoadingConcepts(false)})
 
             }
             else if (Action === 'mentions'){
                 SetHighlightMention(false)
                 SetLoadingMentions(true)
-                axios.get("http://127.0.0.1:8000/mention_insertion", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {
+                axios.get("http://0.0.0.0:8000/mention_insertion", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {
                     var mentions = (response.data[Action.toString()])
                     SetMakeReq(false);
                     var ordered = order_array(mentions)
-                    console.log('mm',ordered)
+                    // console.log('mm',ordered)
 
                     SetMentions_to_show(ordered);
                     SetLoadingMentions(false);
@@ -441,8 +463,8 @@ function Prova_aseIndex() {
             else if (Action === 'concept-mention' ){
                 SetHighlightMention(false)
                 SetLoadingAssociations(true)
-                axios.get("http://127.0.0.1:8000/insert_link/linked", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {SetAssociations_to_show(response.data['associations']);SetMakeReq(false);})
-                axios.get("http://127.0.0.1:8000/insert_link/mentions", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {
+                axios.get("http://0.0.0.0:8000/insert_link/linked", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {SetAssociations_to_show(response.data['associations']);SetMakeReq(false);})
+                axios.get("http://0.0.0.0:8000/insert_link/mentions", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {
                     var mentions = (response.data['mentions1']);
                     var ordered = order_array(mentions)
                     SetMakeReq(false);
@@ -451,51 +473,7 @@ function Prova_aseIndex() {
                     SetLoadingAssociations(false)})
             }
         }
-    }, [MakeReq]);
-
-    // useEffect(() => {
-    //     // SetMentions_to_show(false)
-    //     // SetAllMentions(false)
-    //     // SetAssociations_to_show(false)
-    //     SetHighlightMention(false)
-    //     // SetColor(colori)
-    //     console.log('provo highlight')
-    //
-    //     if (Reports.length>0 && reportsString !== false) {
-    //         // console.log('reportString',reportsString)
-    //
-    //
-    //         if (Action === 'mentions' && MakeReq ) {
-    //
-    //             SetLoadingMentions(true)
-    //             axios.get("http://127.0.0.1:8000/mention_insertion", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {
-    //                 var mentions = (response.data[Action.toString()])
-    //                 console.log('mm',mentions)
-    //
-    //                 SetMakeReq(false);
-    //                 var ordered = order_array(mentions)
-    //                 console.log('mm',ordered)
-    //
-    //                 SetMentions_to_show(ordered);
-    //                 SetLoadingMentions(false);
-    //
-    //             })
-    //         } else if (Action === 'concept-mention' && MakeReq){
-    //             SetLoadingAssociations(true)
-    //             axios.get("http://127.0.0.1:8000/insert_link/linked", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {SetAssociations_to_show(response.data['associations']);SetMakeReq(false);})
-    //             axios.get("http://127.0.0.1:8000/insert_link/mentions", {params: {language:Language,report_id: Reports[Index].id_report.toString()}}).then(response => {
-    //                 var mentions = (response.data['mentions1']);
-    //                 var ordered = order_array(mentions)
-    //                 SetMakeReq(false);
-    //                 SetAllMentions(ordered);
-    //                 // console.log('allmentionsup',response.data['mentions1'])
-    //                 SetLoadingAssociations(false)})
-    //         }
-    //     }
-    //
-    //
-    // }, [Action,reportsString,Index,MakeReq]);
-
+    }, [MakeReq,LoadingReport]);
 
 
     useEffect(()=>{
@@ -551,9 +529,9 @@ function Prova_aseIndex() {
                     // console.log('indice',ind)
                     user_checks[ind] = true
                     // console.log('checks:',user_checks)
-                    })
+                })
 
-                }
+            }
             else{
                 SetRadioChecked(false)
 
@@ -575,12 +553,15 @@ function Prova_aseIndex() {
 
         }
     },[Start,LoadingReport,LoadingReportList])
-
+    
     function sendUser(val){
-        axios.post('http://127.0.0.1:8000/update_user_chosen',{user_chosen:val}).then(response=>{
+        axios.post('http://0.0.0.0:8000/update_user_chosen',{user_chosen:val}).then(response=>{
             console.log(response.data)
         }).catch(error=>console.log(error))
     }
+
+
+
 
     return (
         <div className="App">
@@ -653,7 +634,7 @@ function Prova_aseIndex() {
                                     </Modal>
 
                                     {Action === 'labels' && <div className='first_container_right'>
-                                        {(LoadingLabels || LoadingReport  || LoadingChangeGT) ? <Spinner animation="border" role="status"/> : <div>
+                                        {(LoadingLabels ||  LoadingChangeGT) ? <Spinner animation="border" role="status"/> : <div>
                                             {Reports.length >0  &&
 
                                             <LabelList labels={labels} report_id = {Reports[Index].id_report} />
@@ -666,7 +647,7 @@ function Prova_aseIndex() {
                                     </div>}
                                     {Action === 'mentions' && <div className='first_container_right'>
 
-                                        {(LoadingMentions || LoadingReport  || LoadingChangeGT) ? <Spinner animation="border" role="status"/> :
+                                        {(LoadingMentions   || LoadingChangeGT) ? <Spinner animation="border" role="status"/> :
                                             <>
                                                 {/*{Reports.length > 0 && mentions_to_show !== false && <MentionList />}*/}
                                                 {/*<PassageContext.Provider value={{showlabels:[ShowLabelsOpts,SetShowLabelsOpts]}}>*/}

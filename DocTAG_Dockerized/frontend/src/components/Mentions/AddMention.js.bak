@@ -107,7 +107,7 @@ function AddMention(props){
             array_to_ret.push(MentionToAdd)
             //array_to_ret.push(JSON.stringify(mention))
             //SetAllMentions([...AllMentions, mention])
-            axios.post("http://127.0.0.1:8000/insert_link/insert_mention", {
+            axios.post("http://0.0.0.0:8000/insert_link/insert_mention", {
 
                 mentions: array_to_ret,language:Language,
                 report_id: Reports[Index].id_report.toString()

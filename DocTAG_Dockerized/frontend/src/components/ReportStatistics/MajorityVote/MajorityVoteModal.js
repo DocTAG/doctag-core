@@ -54,10 +54,10 @@ function MajorityVoteModal(props) {
     useEffect(()=>{
         setReportsString('')
         SetMentions_to_show([])
-        axios.get("http://0.0.0.0:8000/get_reports", {params: {all: 'all'}}).then(response => {
+        axios.get("http://127.0.0.1:8000/get_reports", {params: {all: 'all'}}).then(response => {
             SetReports(response.data['report']);})
 
-        axios.get("http://0.0.0.0:8000/check_presence_exa_conc_lab", {params: {id_report:props.id_report,language:props.language}})
+        axios.get("http://127.0.0.1:8000/check_presence_exa_conc_lab", {params: {id_report:props.id_report,language:props.language}})
             .then(response => {
                 if(response.data['labels'] === true){
                     SetEXAPresenceLabels(true)
@@ -77,7 +77,7 @@ function MajorityVoteModal(props) {
                 console.log(error)
             })
 
-        axios.get("http://0.0.0.0:8000/get_users_list", {params: {id_report:props.id_report,language:props.language}})
+        axios.get("http://127.0.0.1:8000/get_users_list", {params: {id_report:props.id_report,language:props.language}})
             .then(response => {
                 if(response.data.length>0){
                     SetUsersList(response.data)
@@ -85,7 +85,7 @@ function MajorityVoteModal(props) {
             .catch(error=>{
                 console.log(error)
             })
-        axios.get("http://0.0.0.0:8000/get_presence_robot_user", {params: {id_report:props.id_report,language:props.language}})
+        axios.get("http://127.0.0.1:8000/get_presence_robot_user", {params: {id_report:props.id_report,language:props.language}})
             .then(response => {
                 if(response.data['auto_annotation_count'] > 0){
                     SetAutoPresence(true)
@@ -124,10 +124,10 @@ function MajorityVoteModal(props) {
         if(Reports.length > 0){
 
             if(newInd >= 0){
-                axios.get("http://0.0.0.0:8000/report_start_end", {params: {report_id: Reports[newInd].id_report.toString()}}).then(response => {SetFinalCount(response.data['final_count']);
+                axios.get("http://127.0.0.1:8000/report_start_end", {params: {report_id: Reports[newInd].id_report.toString()}}).then(response => {SetFinalCount(response.data['final_count']);
                     setReportsString(response.data['rep_string']); SetFinalCountReached(false);
                 })
-                axios.get("http://0.0.0.0:8000/get_fields",{params:{report:props.id_report}}).then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
+                axios.get("http://127.0.0.1:8000/get_fields",{params:{report:props.id_report}}).then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
 
             }
         }
@@ -168,7 +168,7 @@ function MajorityVoteModal(props) {
 
     function createGT(e){
         e.preventDefault()
-        axios.post('http://0.0.0.0:8000/create_majority_vote_groundtruth',{action:selectedAct,topic:props.topic, mode:selectedMode,users:ChosenUsers,id_report:props.id_report,language:props.language})
+        axios.post('http://127.0.0.1:8000/create_majority_vote_groundtruth',{action:selectedAct,topic:props.topic, mode:selectedMode,users:ChosenUsers,id_report:props.id_report,language:props.language})
             .then(response=>{
                 if(Object.keys(response.data).indexOf('error') === -1){
                     console.log('result',response.data)
@@ -180,7 +180,7 @@ function MajorityVoteModal(props) {
     function download_majority_report(){
         if(SelectedFormat !== ''){
             console.log('OPTION',SelectedFormat)
-            axios.post('http://0.0.0.0:8000/download_majority_reports',
+            axios.post('http://127.0.0.1:8000/download_majority_reports',
                 {
                     reports: [props.report],
                     action: selectedAct,

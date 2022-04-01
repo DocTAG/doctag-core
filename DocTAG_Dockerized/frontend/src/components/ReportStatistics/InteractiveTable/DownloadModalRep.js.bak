@@ -51,10 +51,10 @@ function DownloadModalRep(props) {
     useEffect(()=>{
         setReportsString('')
         SetMentions_to_show([])
-        axios.get("http://127.0.0.1:8000/get_reports", {params: {all: 'all'}}).then(response => {
+        axios.get("http://0.0.0.0:8000/get_reports", {params: {all: 'all'}}).then(response => {
             SetReports(response.data['report']);})
 
-        axios.get("http://127.0.0.1:8000/get_users_list")
+        axios.get("http://0.0.0.0:8000/get_users_list")
             .then(response => {
                 if(response.data.length>0){
                     SetUsersList(response.data)
@@ -66,37 +66,37 @@ function DownloadModalRep(props) {
 
     },[])
 
-    useEffect(()=>{
-        if(RowsToDownload.length > 0){
-            axios.post("http://127.0.0.1:8000/get_presence_robot_user", {reports:JSON.stringify(RowsToDownload)})
-                .then(response => {
-                    if(response.data['auto_annotation_count'] > 0){
-                        SetAutoPresence(true)
-                    }})
-                .catch(error=>{
-                    console.log(error)
-                })
-            axios.post("http://127.0.0.1:8000/check_presence_exa_conc_lab", {reports:JSON.stringify(RowsToDownload)})
-                .then(response => {
-                    if(response.data['labels'] === true){
-                        SetEXAPresenceLabels(true)
-                    }
-                    else{
-                        SetEXAPresenceLabels(false)
-
-                    }
-                    if(response.data['concepts'] === true){
-                        SetEXAPresenceConcepts(true)
-                    }
-                    else{
-                        SetEXAPresenceConcepts(false)
-
-                    }})
-                .catch(error=>{
-                    console.log(error)
-                })
-        }
-    },[RowsToDownload])
+    // useEffect(()=>{
+    //     if(RowsToDownload.length > 0){
+    //         axios.post("http://0.0.0.0:8000/get_presence_robot_user", {reports:JSON.stringify(RowsToDownload)})
+    //             .then(response => {
+    //                 if(response.data['auto_annotation_count'] > 0){
+    //                     SetAutoPresence(true)
+    //                 }})
+    //             .catch(error=>{
+    //                 console.log(error)
+    //             })
+    //         axios.post("http://0.0.0.0:8000/check_presence_exa_conc_lab", {reports:JSON.stringify(RowsToDownload)})
+    //             .then(response => {
+    //                 if(response.data['labels'] === true){
+    //                     SetEXAPresenceLabels(true)
+    //                 }
+    //                 else{
+    //                     SetEXAPresenceLabels(false)
+    //
+    //                 }
+    //                 if(response.data['concepts'] === true){
+    //                     SetEXAPresenceConcepts(true)
+    //                 }
+    //                 else{
+    //                     SetEXAPresenceConcepts(false)
+    //
+    //                 }})
+    //             .catch(error=>{
+    //                 console.log(error)
+    //             })
+    //     }
+    // },[RowsToDownload])
 
     function changeChosenList(e){
         var user = e.target.value
@@ -128,7 +128,7 @@ function DownloadModalRep(props) {
     }
     function downloadAllReports(){
         if(selectedActAll !== 'none'  && selectedFormatAll !== '') {
-            axios.post('http://127.0.0.1:8000/download_all_reports',
+            axios.post('http://0.0.0.0:8000/download_all_reports',
                 {
                     report_list:RowsToDownload,
                     action: selectedActAll,
@@ -190,7 +190,7 @@ function DownloadModalRep(props) {
     }
     function downloadMajorityReports(){
         if(selectedActMajor !== 'none' && ChosenUsers.length > 1 && selectedFormatMajor !== '') {
-            axios.post('http://127.0.0.1:8000/download_majority_reports',
+            axios.post('http://0.0.0.0:8000/download_majority_reports',
                 {
                     reports:RowsToDownload,
                     action: selectedActMajor,
@@ -297,7 +297,7 @@ function DownloadModalRep(props) {
                 </Col>
                 <Col  md={6}>
                     <div className='modalContainer'>
-                        <h4>Download the ground-truths based on majority vote for the selected reports</h4>
+                        <h4>Download the ground-truths based on majority vote for the selected documents</h4>
                         {MissingParamsMajor === true && <div>
                             <h6>Please, select a file format, an annotation type, an annotation mode and at least two team mates.</h6>
                         </div>}

@@ -76,7 +76,7 @@ function UploadFile() {
                 formData.append(name, input.files[ind]);
             }
 
-            axios.post('http://127.0.0.1:8000/handle_upload_files',formData)
+            axios.post('http://0.0.0.0:8000/handle_upload_files',formData)
                 .then(response => {
                     SetCompleteUpload(false);
                     if (response.data['message'] === 'Ok'){
@@ -100,7 +100,7 @@ function UploadFile() {
         }
         else{
             if(ref_user !== ''){
-                 axios.post('http://127.0.0.1:8000/handle_copy_rows',{username:ref_user.current,overwrite:Overwrite})
+                 axios.post('http://0.0.0.0:8000/handle_copy_rows',{username:ref_user.current,overwrite:Overwrite})
                     .then(response => {SetLoadingTransfer(false);
                         if (response.data['message'] === 'Ok'){
 
@@ -133,7 +133,7 @@ function UploadFile() {
                 var name = 'files_' + ind.toString()
                 formData.append(name, input.files[ind]);
             }
-            axios.post('http://127.0.0.1:8000/handle_check_upload_files',formData)
+            axios.post('http://0.0.0.0:8000/handle_check_upload_files',formData)
                 .then(response => {SetLoadingTransfer(false);
                 if (response.data['message'] === 'Ok'){
                     SetChecked(true)

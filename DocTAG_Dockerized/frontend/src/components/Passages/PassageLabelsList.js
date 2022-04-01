@@ -350,8 +350,7 @@ function PassageLabelsList(props){
     function handleSelectAll(){
         var count_bold = 0
         var count_normal = 0
-        // SetColorWords(false)
-        // Children.map(child=>child.setAttribute('font-weight','normal'))
+
         var mentions = Array.from(document.getElementsByClassName('butt_mention'))
         mentions.map(but=>{
             but.style.fontWeight === 'bold' ? count_bold = count_bold +1 : count_normal = count_normal +1

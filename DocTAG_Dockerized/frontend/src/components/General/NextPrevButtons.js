@@ -103,13 +103,14 @@ function NextPrevButtons(props){
                     var data_to_ret = {'mentions': mentions_to_show.filter(x=>x.seq_number !== 0)}
                     // console.log('mentions: ' ,mentions_to_show)
 
-                    axios.post('http://0.0.0.0:8000/mention_insertion/insert', {
+                    axios.post('http://127.0.0.1:8000/mention_insertion/insert', {
                         mentions: data_to_ret['mentions'],language:Language,
                         report_id: Reports[Index].id_report
                     })
                         .then(function (response) {
 
-                            SetSavedGT(prevState => !prevState)
+                            // SetSavedGT(prevState => !prevState)
+                            SetSavedGT(true)
                             // console.log('RISPOSTA',response);
                         })
                         .catch(function (error) {
@@ -118,7 +119,7 @@ function NextPrevButtons(props){
                         });
 
                 }else if (token.startsWith('annotation') && LoadingLabels === false && ((Annotation === 'Manual' && ClickedCheck === true) || (Annotation === 'Automatic'))) {
-                    axios.post('http://0.0.0.0:8000/annotationlabel/insert', {
+                    axios.post('http://127.0.0.1:8000/annotationlabel/insert', {
                         //labels: data.getAll('labels'),
                         // labels: LabToInsert,
                         labels: LabToInsert,language:Language,
@@ -133,7 +134,8 @@ function NextPrevButtons(props){
 
                             }
                             // SetLabToInsert([]) added 30082021
-                            SetSavedGT(prevState => !prevState)
+                            // SetSavedGT(prevState => !prevState)
+                            SetSavedGT(true)
                         })
                         .catch(function (error) {
 
@@ -147,7 +149,7 @@ function NextPrevButtons(props){
 
                     data_to_ret = {'linked': associations_to_show}
                     if (data_to_ret['linked'].length >= 0) {
-                        axios.post('http://0.0.0.0:8000/insert_link/insert', {
+                        axios.post('http://127.0.0.1:8000/insert_link/insert', {
                             linked: data_to_ret['linked'],language:Language,
                             report_id: Reports[Index].id_report
                         })
@@ -157,7 +159,8 @@ function NextPrevButtons(props){
                                 SetWordMention('')
                                 // console.log('aggiornato concepts');
 
-                                SetSavedGT(prevState => !prevState)
+                                // SetSavedGT(prevState => !prevState)
+                                SetSavedGT(true)
                             })
                             .catch(function (error) {
 
@@ -177,7 +180,7 @@ function NextPrevButtons(props){
 
                     // console.log(concepts_list);
 
-                    axios.post('http://0.0.0.0:8000/contains/update', {
+                    axios.post('http://127.0.0.1:8000/contains/update', {
                             concepts_list: concepts_list,language:Language,
                             report_id: Reports[Index].id_report,
                         },
@@ -185,7 +188,8 @@ function NextPrevButtons(props){
                         .then(function (response) {
                             // console.log(response);
                             // {concepts_list.length > 0 ? SetSavedGT(true) : SetSavedGT(false)}
-                            SetSavedGT(prevState => !prevState)
+                            // SetSavedGT(prevState => !prevState)
+                            SetSavedGT(true)
 
                         })
                         .catch(function (error) {

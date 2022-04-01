@@ -275,7 +275,7 @@ function Configure() {
 
         axios({
             method: "post",
-            url: "http://0.0.0.0:8000/check_input_files",
+            url: "http://127.0.0.1:8000/check_input_files",
             data: formData,
             headers: { "Content-Type": "multipart/form-data" },
         })
@@ -734,7 +734,7 @@ function Configure() {
 
             axios({
                 method: "post",
-                url: "http://0.0.0.0:8000/configure_db",
+                url: "http://127.0.0.1:8000/configure_db",
                 data: FormToSend,
                 headers: { "Content-Type": "multipart/form-data" },
             })
@@ -743,7 +743,7 @@ function Configure() {
                     if(response.data['message'] !== undefined){
                         SetLoadingResponse(false)
                         SetMessage('DocTAG has been correctly configured.')
-                        axios.get("http://0.0.0.0:8000/get_usecase_inst_lang").then(response => {
+                        axios.get("http://127.0.0.1:8000/get_usecase_inst_lang").then(response => {
                             var arr = []
                             response.data['usecase'].map(use=>{
                                 if(use.toLowerCase() === 'colon' || use.toLowerCase() === 'lung' || use.toLowerCase().includes('uterine') || use.toLowerCase().includes('cervix')){
@@ -785,7 +785,7 @@ function Configure() {
 
     function onSaveExample(e,token){
         e.preventDefault()
-        axios.get('http://0.0.0.0:8000/download_examples', {params:{token:token}})
+        axios.get('http://127.0.0.1:8000/download_examples', {params:{token:token}})
                 .then(function (response) {
 
                     if(token === 'reports'){
@@ -939,7 +939,7 @@ function Configure() {
         }
         axios({
             method: "post",
-            url: "http://0.0.0.0:8000/get_keys_and_uses_from_csv",
+            url: "http://127.0.0.1:8000/get_keys_and_uses_from_csv",
             data: formData,
             headers: { "Content-Type": "multipart/form-data" },
         })
@@ -966,7 +966,7 @@ function Configure() {
     //     }
     //     axios({
     //         method: "post",
-    //         url: "http://0.0.0.0:8000/get_keys_and_uses_from_csv",
+    //         url: "http://127.0.0.1:8000/get_keys_and_uses_from_csv",
     //         data: formData,
     //         headers: { "Content-Type": "multipart/form-data" },
     //     })
@@ -1258,7 +1258,7 @@ function Configure() {
 
 
                                 <Form.Group style={{'margin-top':'20px','margin-bottom':'20px'}}>
-                                    <div><span>Insert here the .CSV file with the annotation labels.</span>
+                                    <div><span>Insert here the file(s) with the annotation labels.</span>
                                         {/*<div className='conf-div'><Button onClick={()=>SetShowLabelExample(prev=>!prev)} variant="info" size='sm'>Example</Button></div>*/}
                                     </div>
                                     <Form.File id="labels_form" onClick={(e) => {SetShowDeleteLabels(false);SetWarningLabels(0);(e.target.value = null);SetGeneralMessage('');SetGeneralMessage('');SetFinalMessage(''); SetCheckLabels(0)}} onChange={(e)=>{showDelete(e,'labels');}} multiple/>
@@ -1291,7 +1291,7 @@ function Configure() {
                                 <div><h3>Concepts <i style={{'font-size':'1rem'}}>(Optional)</i></h3>If you want to perform concepts identification and linking you must provide the concepts.</div>
 
                                 <Form.Group style={{'margin-top':'20px','margin-bottom':'20px'}}>
-                                    <div><span>Insert here the .CSV file with the concepts.</span>
+                                    <div><span>Insert here the file(s) with the concepts.</span>
                                         {/*<div className='conf-div'>*/}
                                         {/*<Button onClick={()=>SetShowConceptExample(prev=>!prev)} variant="info" size='sm'>Example</Button></div>*/}
                                     </div>

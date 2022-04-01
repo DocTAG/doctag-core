@@ -29,7 +29,7 @@ function ReportToText(props) {
 
     useEffect(()=>{
         setReportsString('')
-        axios.get("http://0.0.0.0:8000/get_reports", {params: {all: 'all'}}).then(response => {
+        axios.get("http://127.0.0.1:8000/get_reports", {params: {all: 'all'}}).then(response => {
             SetReports(response.data['report']);})
 
     },[])
@@ -40,10 +40,10 @@ function ReportToText(props) {
         if(Reports.length > 0){
 
             if(newInd >= 0){
-                axios.get("http://0.0.0.0:8000/report_start_end", {params: {report_id: Reports[newInd].id_report.toString()}}).then(response => {SetFinalCount(response.data['final_count']);
+                axios.get("http://127.0.0.1:8000/report_start_end", {params: {report_id: Reports[newInd].id_report.toString()}}).then(response => {SetFinalCount(response.data['final_count']);
                     setReportsString(response.data['rep_string']); SetFinalCountReached(false);
                 })
-                axios.get("http://0.0.0.0:8000/get_fields",{params:{report:props.id_report}}).then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
+                axios.get("http://127.0.0.1:8000/get_fields",{params:{report:props.id_report}}).then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
 
             }
         }

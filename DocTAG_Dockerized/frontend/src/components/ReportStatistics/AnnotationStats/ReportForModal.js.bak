@@ -63,10 +63,10 @@ function ReportForModal(props) {
     useEffect(()=>{
         setReportsString('')
         SetMentions_to_show([])
-        axios.get("http://127.0.0.1:8000/get_reports", {params: {all: 'all'}}).then(response => {
+        axios.get("http://0.0.0.0:8000/get_reports", {params: {all: 'all'}}).then(response => {
             SetReports(response.data['report']);})
 
-        // axios.get("http://127.0.0.1:8000/check_presence_exa_conc_lab", {params: {id_report:props.id_report,language:props.language}})
+        // axios.get("http://0.0.0.0:8000/check_presence_exa_conc_lab", {params: {id_report:props.id_report,language:props.language}})
         //     .then(response => {
         //     if(response.data['labels'] === true){
         //         SetEXAPresenceLabels(true)
@@ -97,10 +97,10 @@ function ReportForModal(props) {
             console.log(Reports[newInd].id_report)
             console.log(newInd)
             if(newInd >= 0){
-                axios.get("http://127.0.0.1:8000/report_start_end", {params: {report_id: Reports[newInd].id_report.toString()}}).then(response => {SetFinalCount(response.data['final_count']);
+                axios.get("http://0.0.0.0:8000/report_start_end", {params: {report_id: Reports[newInd].id_report.toString()}}).then(response => {SetFinalCount(response.data['final_count']);
                     setReportsString(response.data['rep_string']); SetFinalCountReached(false);
                 })
-                axios.get("http://127.0.0.1:8000/get_fields",{params:{report:props.id_report}}).then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
+                axios.get("http://0.0.0.0:8000/get_fields",{params:{report:props.id_report}}).then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
 
             }
         }
@@ -197,13 +197,18 @@ function ReportForModal(props) {
                             {props.stats['Human']['mentions']['count'] > 0 && <>
                             <div>Users who annotated the passage for this document: <b>{props.stats['Human']['mentions']['count']}  {props.stats['Human']['mentions']['count']> 0 && <i>({props.stats['Human']['mentions']['users_list'].join(', ')})</i>}</b></div>
                             <ul>{props.stats['Human']['mentions']['mentions_list'].map((mention,index)=>
-                                <>{mention.count > 0 && <li className='annotations_li'>
-                                    <div><Mention id = {index} index = {index} text={mention['mention']} start={mention['start']}
-                                                         stop={mention['stop']} mention_obj = {mention}/><br/></div><br/><br/>
-                                    {mention.labels.map(lab=><div >
+                                <div>{mention.count > 0 && <li className='annotations_li'>
+                                        <div style={{'display':'block'}}><Mention id = {index} index = {index} text={mention['mention']} start={mention['start']}
+                                                         stop={mention['stop']} mention_obj = {mention}/><br/>
+                                        </div>
+                                    <div style={{'clear':'both'}}>
+                                    {mention.labels.map(lab=><div>
                                         <div>label: <b>{lab.label}</b></div>
-                                        <div style={{'font-size':'0.9rem'}}><b>{lab.count} </b>{lab.count === 1 ? <>user</> : <>users</>} annotated this label : <i>{lab.users_list.join(', ')}</i></div></div>)}
-                                    </li>}</>)}</ul>
+                                        <div style={{'font-size':'0.9rem'}}><b>{lab.count} </b>{lab.count === 1 ? <>user</> : <>users</>} annotated this label : <i>{lab.users_list.join(', ')}</i>
+                                        </div>
+                                    </div>)}</div>
+                                    </li>}<br/></div>)}
+                            </ul>
                                 </>}
                             <hr/>
 
@@ -245,14 +250,15 @@ function ReportForModal(props) {
                                 <div>Users performed linking for this document: <b>{props.stats['Human']['linking']['count']} {props.stats['Human']['linking']['count'] > 0 && <i>({props.stats['Human']['linking']['users_list'].join(', ')})</i>}</b> </div>
                                 <ul>{props.stats['Human']['linking']['linking_list'].map((val,ind)=>
                                     <>{val.count > 0 && <li className='annotations_li'>
-                                        <div><div><Mention id = {index} index = {index} text={val['mention']} start={val['start']}
-                                                                  stop={val['stop']} mention_obj = {val}/></div>
-                                            <br/><div><br/><br/>
+                                        <div><Mention id = {index} index = {index} text={val['mention']} start={val['start']}
+                                                      stop={val['stop']} mention_obj = {val}/><br/></div>
+
+                                            <div style={{'clear':'both'}}>
                                                 <Badge pill variant="dark" >
                                                     {val.concept_name}
                                                 </Badge> - <span style={{color:'black',fontSize:'0.9rem'}}><i><b>URL</b> {val.concept_url}</i></span>
                                             </div>
-                                        </div>
+
                                         <div style={{'font-size':'0.9rem'}}><b>{val.count} </b>{val.count === 1 ? <>user</> : <>users</>} annotated this association : <i>{val.users_list.join(', ')}</i></div><br/>
                                     </li>}</>)}
 

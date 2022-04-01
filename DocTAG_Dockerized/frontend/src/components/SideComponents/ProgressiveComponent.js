@@ -8,9 +8,9 @@ function ProgressiveComponent(props){
     const [Colors,SetColors] = useState(['#039be5','#00c853','#f57f17','#d84315'])
     const [Actions,SetActions] = useState(['Labels','Passages','Concepts','Linking'])
     const random = getRandomInt(100)
-    useEffect(()=>{
-        console.log('STATS_ARR: ',props.stats_array)
-    },[props.stats_array])
+    // useEffect(()=>{
+    //     console.log('STATS_ARR: ',props.stats_array)
+    // },[props.stats_array])
 
     function getRandomInt(max) {
         return Math.floor(Math.random() * max);
