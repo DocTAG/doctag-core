@@ -5,6 +5,7 @@ from DocTAG_App.models import *
 import os
 import numpy
 import zipfile
+import unlzw3
 import hashlib
 from django.db import connection
 import pandas as pd
@@ -759,19 +760,24 @@ def get_last_groundtruth(username,use_case = None,language = None, institute = N
 
     """This method returns the last made by a specific user according to a use case,language,institute and mode."""
 
+
+    if use_case is None and language is not None and institute is not None and batch is not None:
+        cursor = connection.cursor()
+        cursor.execute("SELECT gt_json FROM ground_truth_log_file as g inner join report AS r ON g.id_report = r.id_report and r.language = g.language INNER JOIN topic_has_document as t on t.id_report = r.id_report and r.language = t.language WHERE r.institute = %s and r.language = %s and g.username = %s and r.batch = %s order by insertion_time desc",[institute,language,username,batch])
+        gt = cursor.fetchall()
+        if len(gt) > 0:
+            g = gt[0]
+            return g
+        else:
+            return None
+
     user = User.objects.get(username = username,ns_id=mode)
     usecase = UseCase.objects.get(name=use_case)
     r = TopicHasDocument.objects.filter(language=language, name = usecase).values('id_report')
     ids = []
     for el in r:
         ids.append(el['id_report'])
-    # cursor = connection.cursor()
-    # cursor.execute("SELECT r.id_report, report_json FROM report AS r INNER JOIN topic_has_document AS t ON t.id_report = r.id_report AND r.language = t.language WHERE r.language = %s AND r.institute = %s AND t.name = %s",
-    #                [str(language),str(institute),str(usecase)])
-    # rep = cursor.fetchall()
-    # ids = []
-    # for el in rep:
-    #     ids.append(el[0])
+
     reports = Report.objects.filter(id_report__in = ids,language = language)
     if use_case is not None and language is not None and institute is not None and mode is not None and batch is not None:
         if GroundTruthLogFile.objects.filter(name = usecase,username=user,ns_id=mode).exists():
@@ -784,14 +790,7 @@ def get_last_groundtruth(username,use_case = None,language = None, institute = N
                         json_response = gt_json
                         #print(gt_json)
                         return json_response
-            # elif mode.ns_id == 'Robot':
-            #     for groundtruth in gt:
-            #         user_rob = User.objects.get(username='Robot_user')
-            #         g_rob = GroundTruthLogFile.objects.get(id_report = groundtruth.id_report_id,language = groundtruth.language,ns_id=mode,username=user_rob,gt_type=groundtruth.gt_type)
-            #         gt_json = groundtruth.gt_json
-            #         if(gt_json['institute']==institute and gt_json['use_case'] == use_case and gt_json['language'] == language and groundtruth.insertion_time != g_rob.insertion_time):
-            #             json_response = gt_json
-            #             return json_response
+
                 return None
         else: return None
 
@@ -828,7 +827,7 @@ def get_distinct():
     return jsonDict
 
 
-def get_array_per_usecase(user,mode1):
+def get_array_per_usecase(user,mode1,language,institute,batch):
 
     """This method returns the stats for each use case related to a specific user"""
 
@@ -847,15 +846,17 @@ def get_array_per_usecase(user,mode1):
         for usecase in usecases:
             array_stats = {}
             array_stats_percent = {}
-            use_obj = UseCase.objects.get(name=usecase)
             cursor = connection.cursor()
-            cursor.execute(
-                "SELECT r.id_report, report_json FROM report AS r INNER JOIN topic_has_document AS t ON t.id_report = r.id_report AND r.language = t.language WHERE r.institute != %s AND t.name = %s",
-                [str('PUBMED'), str(usecase)])
-            rep = cursor.fetchall()
+            array_stats['all_reports'] = 0
+            rep = []
+            if institute != 'PUBMED':
+                cursor.execute(
+                    "SELECT r.id_report, report_json FROM report AS r INNER JOIN topic_has_document AS t ON t.id_report = r.id_report AND r.language = t.language WHERE r.institute = %s AND t.name = %s and r.language = %s and r.batch = %s",
+                    [str(institute), str(usecase), str(language), int(batch)])
+                rep = cursor.fetchall()
 
             #count_per_usecase = Report.objects.filter(name=use_obj).exclude(institute = 'PUBMED')
-            array_stats['all_reports'] = len(rep)
+                array_stats['all_reports'] = len(rep)
             array_stats_percent['all_reports'] = 100
 
             count_tot = 0
@@ -863,8 +864,8 @@ def get_array_per_usecase(user,mode1):
                 with connection.cursor() as cursor:
                     for type in types:
                         cursor.execute(
-                            "SELECT COUNT(*) FROM report AS r INNER JOIN ground_truth_log_file AS g ON r.id_report = g.id_report AND r.language = g.language WHERE g.name = %s AND username = %s AND gt_type = %s AND ns_id = %s AND institute != %s;",
-                            [str(usecase), str(user.username), type, mode1,'PUBMED'])
+                            "SELECT COUNT(*) FROM report AS r INNER JOIN ground_truth_log_file AS g ON r.id_report = g.id_report AND r.language = g.language WHERE g.name = %s AND username = %s AND gt_type = %s AND ns_id = %s AND institute = %s and r.language = %s and r.batch = %s;",
+                            [str(usecase), str(user.username), type, mode1,institute, str(language),str(batch)])
                         count = cursor.fetchone()
                         count_gt = count[0]
                         count_tot += count_gt
@@ -874,40 +875,6 @@ def get_array_per_usecase(user,mode1):
             array_tot[usecase] = array_stats
             array_tot_percent[usecase] = array_stats_percent
 
-    elif mode1 == 'Robot':
-        with connection.cursor() as cursor:
-            """all_rep are all the reports such that have an automatic gt created."""
-
-            usecases = []
-            for uc in usecase:
-                usecases.append(uc.name_id)
-
-            for usecase in usecases:
-                # print(usecase)
-                array_stats = {}
-                array_stats_percent = {}
-
-                count_tot = 0
-                cursor.execute(
-                    "SELECT COUNT(DISTINCT(r.id_report,r.language)) FROM report AS r INNER JOIN ground_truth_log_file AS g ON r.id_report = g.id_report AND r.language = g.language WHERE r.name = %s AND username = %s AND ns_id = %s AND institute != %s;",
-                    [str(usecase), 'Robot_user', mode1,'PUBMED'])
-                count = cursor.fetchone()
-                count_rep = count[0]
-                array_stats['all_reports'] = count_rep  # all reports auto annotated for a usecase
-                array_stats_percent['all_reports'] = 100  # all reports auto annotated for a usecase
-                if count_rep > 0:
-                    for type in types:
-                        cursor.execute(
-                            "SELECT COUNT(*) FROM report AS r INNER JOIN ground_truth_log_file AS gt ON r.id_report = gt.id_report AND r.language = gt.language INNER JOIN ground_truth_log_file AS gtt ON gtt.id_report = gt.id_report AND gtt.language = gt.language AND gtt.gt_type = gt.gt_type WHERE gtt.username=%s AND gt.username=%s AND r.name = %s AND gt.ns_id=%s AND gt.gt_type = %s AND gtt.insertion_time != gt.insertion_time AND institute != %s;",
-                            ['Robot_user', str(user.username), usecase, mode1, type,'PUBMED'])
-                        gt_count = cursor.fetchone()[0]
-                        count_tot += gt_count
-                        array_stats[type] = gt_count
-                        array_stats_percent[type] = int((gt_count * 100) / count_rep)
-
-                array_tot[usecase] = array_stats
-                array_tot_percent[usecase] = array_stats_percent
-
 
     to_ret = {}
     to_ret['original'] = array_tot
@@ -915,7 +882,7 @@ def get_array_per_usecase(user,mode1):
     return to_ret
 
 
-def get_array_per_usecase_PUBMED(user,mode1):
+def get_array_per_usecase_PUBMED(user,mode1,language,institute,batch):
 
     """This method returns the stats for each use case related to a specific user"""
 
@@ -932,59 +899,34 @@ def get_array_per_usecase_PUBMED(user,mode1):
             # print(usecase)
             array_stats = {}
             array_stats_percent = {}
-            us = UseCase.objects.get(name=usecase)
             cursor = connection.cursor()
-            cursor.execute(
-                "SELECT * FROM report AS r INNER JOIN topic_has_document AS t ON t.id_report = r.id_report AND r.language = t.language WHERE r.institute = %s AND t.name = %s",
-                [str('PUBMED'), str(usecase)])
-            all_rep = cursor.fetchall()
+            array_stats['all_reports'] = 0
+            all_rep = []
+            if institute == 'PUBMED':
+
+                cursor.execute(
+                    "SELECT * FROM report AS r INNER JOIN topic_has_document AS t ON t.id_report = r.id_report AND r.language = t.language WHERE r.institute = %s AND t.name = %s and t.language = %s and  r.batch = %s",
+                    [str('PUBMED'), str(usecase), str(language), int(batch)])
+                all_rep = cursor.fetchall()
             # all_rep = Report.objects.filter(name=us,institute = 'PUBMED')
-            array_stats['all_reports'] = len(all_rep)
+                array_stats['all_reports'] = len(all_rep)
             array_stats_percent['all_reports'] = 100
             if len(all_rep) > 0:
                 count_tot = 0
                 with connection.cursor() as cursor:
                     for type in types:
                         cursor.execute(
-                            "SELECT COUNT(*) FROM report AS r INNER JOIN ground_truth_log_file AS g ON r.id_report = g.id_report AND r.language = g.language and g.name = t.name WHERE t.name = %s AND username = %s AND gt_type = %s AND ns_id = %s AND institute = %s;",
-                            [str(usecase), str(user.username), type, mode1,'PUBMED'])
+                            "SELECT COUNT(*) FROM report AS r INNER JOIN ground_truth_log_file AS g ON r.id_report = g.id_report AND r.language = g.language INNER JOIN topic_has_document AS t ON t.id_report = r.id_report and r.language = t.language WHERE t.name = %s AND username = %s AND gt_type = %s AND ns_id = %s AND institute = %s  and t.language = %s and  r.batch = %s;",
+                            [str(usecase), str(user.username), type, mode1,'PUBMED',str(language),int(batch)])
                         count = cursor.fetchone()
                         count_gt = count[0]
                         count_tot += count_gt
                         array_stats[type] = count_gt
-                        array_stats_percent[type] = int((count_gt * 100) / all_rep.count())
+                        array_stats_percent[type] = int((count_gt * 100) / len(all_rep))
 
             array_tot[usecase] = array_stats
             array_tot_percent[usecase] = array_stats_percent
 
-    elif mode1 == 'Robot':
-        with connection.cursor() as cursor:
-            usecases = []
-            for uc in usecase:
-                usecases.append(uc.name_id)
-            for usecase in usecases:
-                array_stats = {}
-                array_stats_percent = {}
-                count_tot = 0
-                cursor.execute(
-                    "SELECT COUNT(DISTINCT(r.id_report,r.language)) FROM report AS r INNER JOIN ground_truth_log_file AS g ON r.id_report = g.id_report AND r.language = g.language WHERE r.name = %s AND username = %s AND ns_id = %s AND institute = %s;",
-                    [str(usecase), 'Robot_user', mode1,'PUBMED'])
-                count = cursor.fetchone()
-                count_rep = count[0]
-                array_stats['all_reports'] = count_rep  # all reports auto annotated for a usecase
-                array_stats_percent['all_reports'] = 100  # all reports auto annotated for a usecase
-                if count_rep > 0 :
-                    for type in types:
-                        cursor.execute(
-                            "SELECT COUNT(*) FROM report AS r INNER JOIN ground_truth_log_file AS gt ON r.id_report = gt.id_report AND r.language = gt.language INNER JOIN ground_truth_log_file AS gtt ON gtt.id_report = gt.id_report AND gtt.language = gt.language AND gtt.gt_type = gt.gt_type WHERE gtt.username=%s AND gt.username=%s AND r.name = %s AND gt.ns_id=%s AND gt.gt_type = %s AND gtt.insertion_time < gt.insertion_time AND institute = %s;",
-                            ['Robot_user', str(user.username), usecase, mode1, type,'PUBMED'])
-                        gt_count = cursor.fetchone()[0]
-                        count_tot += gt_count
-                        array_stats[type] = gt_count
-                        array_stats_percent[type] = int((gt_count * 100) / count_rep)
-
-                array_tot[usecase] = array_stats
-                array_tot_percent[usecase] = array_stats_percent
 
     to_ret = {}
     to_ret['original'] = array_tot

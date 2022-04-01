@@ -260,6 +260,7 @@ def find_docs_in_json_collection(arr_tuples,file,batch=None):
     arr_found = []
     cursor = connection.cursor()
     tup_topic_batch_list = []
+    b = 1
     for t in arr_tops:
         if batch == 'batch':
 
@@ -330,7 +331,7 @@ def find_docs_in_json_pubmed_collection(arr_tuples,file,batch = None):
     languages = []
     if file.name.endswith('json'):
         d = json.load(file)
-        pubmed_ids = d['pubmed_ids']
+        pubmed_ids = [str(id) for id in d['pubmed_ids']]
     elif file.name.endswith('csv'):
         df = pd.read_csv(file)
         pubmed_ids = [str(id) for id in df.document_id.unique()]
@@ -339,7 +340,7 @@ def find_docs_in_json_pubmed_collection(arr_tuples,file,batch = None):
     elif file.name.endseith('txt'):
         pubmed_lines = file.readlines()
         for line in pubmed_lines:
-            pubmed_ids.append(line.split()[0])
+            pubmed_ids.append(str(line.split()[0]))
             # if len(line.split()) > 1:
             #     languages.append(line.split()[1])
 
@@ -368,12 +369,12 @@ def find_docs_in_json_pubmed_collection(arr_tuples,file,batch = None):
                 if len(ans) == 0:
                     cursor.execute(
                         "INSERT INTO report (id_report,report_json,institute,language,batch,insertion_date) VALUES (%s,%s,%s,%s,%s,%s);",
-                        (str(id_report), report_json, 'PUBMED', language, b, today))
+                        (str(id_report), report_json, 'PUBMED', 'english', b, today))
 
-                i = i + 1
-                if len(pubmed_ids) == i:
-                    var = False
-                    break
+            i = i + 1
+            if len(pubmed_ids) == i:
+                var = False
+                break
 
             try:
                 time.sleep(1 - (time.time() - st))
@@ -412,7 +413,7 @@ def find_docs_in_csv_collection(arr_tuples,file,batch = None):
             df = pd.read_csv(file)
             df = df.where(pd.notnull(df), None)
             df = df.reset_index(drop=True)
-    
+
             institute = 'default'
             insertion_time = str(date.today())
             ids = [str(i) for i in list(df.document_id.unique())]
@@ -423,12 +424,12 @@ def find_docs_in_csv_collection(arr_tuples,file,batch = None):
                 count_rows = df.shape[0]
                 for i in range(count_rows):
                     id_report = str(df.loc[i, 'document_id'])
-    
+
                     if 'language' in df:
                         language = str(df.loc[i, 'language'])
                     else:
                         language = 'english'
-    
+
                     if id_report in arr_ids:
                         arr_found.append(id_report)
                         json_rep = {}
@@ -441,9 +442,9 @@ def find_docs_in_csv_collection(arr_tuples,file,batch = None):
                                 json_rep[col1] = testo
                         if not Report.objects.filter(id_report = id_report,language = language).exists():
                             Report.objects.create(id_report = id_report,language = language,institute = institute,report_json = json_rep,batch = b,insertion_date = insertion_time)
-        #     if len(arr_ids) == len(arr_found):
-        #         return True
-        # return list(set(arr_ids) - set(arr_found))
+    #     if len(arr_ids) == len(arr_found):
+    #         return True
+    # return list(set(arr_ids) - set(arr_found))
 
 
 def process_TREC_and_txt_runs(run):
@@ -529,12 +530,100 @@ def process_json_runs(file):
 from DocTAG_App.matcher.matcher import *
 
 
-def get_bag_of_words(text, stopwords_removal=True, stemming=True, lemmatization=False, verbose=False):
+# def get_bag_of_words(text, stopwords_removal=True, stemming=True, lemmatization=False, verbose=False):
+#     """Return the bag of words for the given text according to the parameters specified (stopwords_removal, stemming and lemmatization).
+#     Parameters
+#     ----------
+#     text : string
+#         The text string from which we extract the bag of words
+#     stopwords_removal : boolean
+#         This parameter specify whether to filter the stopwords
+#     stemming : boolean
+#         This parameter specify whether to stem each word
+#     lemmatization : boolean
+#         This parameter specify whether to apply the lemmatization process (only for English language)
+#     Returns
+#     -------
+#     bows : list
+#         List of bag of words to return.
+#     """
+#
+#     CUSTOM_FILTERS = [lambda x: x.lower(), strip_tags, strip_punctuation, strip_multiple_whitespaces, strip_numeric,
+#                       strip_short]
+#
+#     language = 'english'
+#
+#     preprocessed_text = preprocess_string(text, CUSTOM_FILTERS)
+#
+#     # ic_logger = IcLogger(print_status=False)
+#     #
+#     # if verbose:
+#     #     ic_logger.set_status(True)
+#     #
+#     # ic_logger.log(preprocessed_text)
+#
+#     # init stopwords removal and stemmer toolkits
+#     stopwords_nltk = stopwords.words(language)
+#     snow_stemmer = SnowballStemmer(language=language)
+#     # init WordNet lemmatizer (only for language="english")
+#     lemmatizer = WordNetLemmatizer()
+#     bows = []
+#     stem_bows = None
+#     lemm_bows = None
+#
+#     if stopwords_removal:
+#         # remove (filter) every stop word contained in stopwords_nltk for the specified language (default: "english")
+#         bows = [word for word in preprocessed_text if word.lower() not in stopwords_nltk]
+#
+#     if stemming:
+#         # stem's of each word
+#         stem_bows = [snow_stemmer.stem(word) for word in bows]
+#
+#         bows = [stem_bow for stem_bow in stem_bows]
+#
+#     if language == "english" and lemmatization:
+#         # get the corresponding lemma of each word
+#         lemm_bows = [lemmatizer.lemmatize(word) for word in bows]
+#         # merge "bows" list with "lemm_bows"
+#         bows = bows + lemm_bows
+#
+#     # ic_logger.log(bows)
+#
+#     return bows
+#
+#
+# def custom_tokenizer(text):
+#     bow = get_bag_of_words(text)
+#
+#     return bow
+# def gen_tfidf_map(corpus):
+#     """Return the tf-idf matrix containing the tf-idf score of each word for each document in the given corpus.
+#     Returns
+#     -------
+#     df_tfidfvect : Pandas DataFrame
+#         Pandas DataFrame containing the tf-idf score of each word for each document in the given corpus.
+#     """
+#
+#     # init sklearn TfidfVectorizer
+#     tfidfvectorizer = TfidfVectorizer(analyzer='word', tokenizer=custom_tokenizer, stop_words='english')
+#
+#     tfidf_wm = tfidfvectorizer.fit_transform([doc['text'] for doc in corpus])
+#     tfidf_tokens = tfidfvectorizer.get_feature_names_out()
+#     # create pandas DataFrame from tfidf matrix
+#     df_tfidfvect = pd.DataFrame(data=tfidf_wm.toarray(), index=[doc['document_id'] for doc in corpus],
+#                                 columns=tfidf_tokens)
+#
+#
+#     return df_tfidfvect
+
+def get_bag_of_words(text, text_type, stopwords_removal=True, stemming=True, lemmatization=False, verbose=False):
     """Return the bag of words for the given text according to the parameters specified (stopwords_removal, stemming and lemmatization).
     Parameters
     ----------
     text : string
         The text string from which we extract the bag of words
+    text_type: string
+        The type of the text provided (i.e., 'document', 'topic')
     stopwords_removal : boolean
         This parameter specify whether to filter the stopwords
     stemming : boolean
@@ -550,16 +639,14 @@ def get_bag_of_words(text, stopwords_removal=True, stemming=True, lemmatization=
     CUSTOM_FILTERS = [lambda x: x.lower(), strip_tags, strip_punctuation, strip_multiple_whitespaces, strip_numeric,
                       strip_short]
 
-    language = 'english'
-
     preprocessed_text = preprocess_string(text, CUSTOM_FILTERS)
-
-    ic_logger = IcLogger(print_status=False)
-
-    if verbose:
-        ic_logger.set_status(True)
-
-    ic_logger.log(preprocessed_text)
+    language = 'english'
+    # ic_logger = IcLogger(print_status=False)
+    #
+    # if verbose:
+    #     ic_logger.set_status(True)
+    #
+    # ic_logger.log(preprocessed_text)
 
     # init stopwords removal and stemmer toolkits
     stopwords_nltk = stopwords.words(language)
@@ -576,8 +663,24 @@ def get_bag_of_words(text, stopwords_removal=True, stemming=True, lemmatization=
 
     if stemming:
         # stem's of each word
-        stem_bows = [snow_stemmer.stem(word) for word in bows]
-
+        stem_bows = []
+        # if text_type == 'topic':
+        #     map_stemmed_bow_topic_to_not_stemmed = {}
+        # elif text_type == 'document':
+        #     map_stemmed_bow_doc_to_not_stemmed = {}
+        for word in bows:
+            stemmed_term = snow_stemmer.stem(word)
+            stem_bows.append(stemmed_term)
+            # if text_type == 'topic':
+            #     if stemmed_term in map_stemmed_bow_topic_to_not_stemmed:
+            #         map_stemmed_bow_topic_to_not_stemmed[stemmed_term].append(word)
+            #     else:
+            #         map_stemmed_bow_topic_to_not_stemmed[stemmed_term] = [word]
+            # elif text_type == 'document':
+            #     if stemmed_term in map_stemmed_bow_doc_to_not_stemmed:
+            #         map_stemmed_bow_doc_to_not_stemmed[stemmed_term].append(word)
+            #     else:
+            #         map_stemmed_bow_doc_to_not_stemmed[stemmed_term] = [word]
         bows = [stem_bow for stem_bow in stem_bows]
 
     if language == "english" and lemmatization:
@@ -586,16 +689,15 @@ def get_bag_of_words(text, stopwords_removal=True, stemming=True, lemmatization=
         # merge "bows" list with "lemm_bows"
         bows = bows + lemm_bows
 
-    ic_logger.log(bows)
+    # ic_logger.log(bows)
 
     return bows
 
-
-def custom_tokenizer(text):
-    bow = get_bag_of_words(text)
-
+def custom_tokenizer(text,language):
+    bow = get_bag_of_words(text= text,language = language, text_type="other")  # SE METTO OTHER NON HO PIù DEFINITO UN map_stemmed_bow_doc_to_not_stemmed
     return bow
-def gen_tfidf_map(corpus):
+
+def gen_tfidf_map(corpus, language,verbose=False):
     """Return the tf-idf matrix containing the tf-idf score of each word for each document in the given corpus.
     Returns
     -------
@@ -603,15 +705,24 @@ def gen_tfidf_map(corpus):
         Pandas DataFrame containing the tf-idf score of each word for each document in the given corpus.
     """
 
-    # init sklearn TfidfVectorizer
-    tfidfvectorizer = TfidfVectorizer(analyzer='word', tokenizer=custom_tokenizer, stop_words='english')
-    # tfidfvectorizer = TfidfVectorizer(analyzer='word', stop_words=self.language)
+    # ic_logger = IcLogger(print_status=False)
+    #
+    # if verbose:
+    #     ic_logger.set_status(True)
 
-    tfidf_wm = tfidfvectorizer.fit_transform([doc['text'] for doc in corpus])
+    # init sklearn TfidfVectorizer
+    tfidfvectorizer = TfidfVectorizer(analyzer='word', tokenizer=custom_tokenizer)
+
+    corpus_text = [doc['text'] for doc in corpus]
+    tfidf_wm = tfidfvectorizer.fit_transform(corpus_text)
+    # ic_logger.log(tfidf_wm)
     tfidf_tokens = tfidfvectorizer.get_feature_names_out()
     # create pandas DataFrame from tfidf matrix
-    df_tfidfvect = pd.DataFrame(data=tfidf_wm.toarray(), index=[doc['document_id'] for doc in corpus],
+    df_tfidfvect = pd.DataFrame(data=tfidf_wm.toarray(), index=[doc['docno'] for doc in corpus],
                                 columns=tfidf_tokens)
+
+    # ic_logger.log(tfidf_tokens)
+    # ic_logger.log(df_tfidfvect)
 
 
     return df_tfidfvect
