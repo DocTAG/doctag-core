@@ -1,0 +1,59 @@
+{
+  "topics": [
+    {
+      "topic_id": 351,
+      "title": "Falkland petroleum exploration",
+      "description": "What information is available on petroleum exploration in the South Atlantic near the Falkland Islands?",
+      "narrative": "Any document discussing petroleum exploration in the South Atlantic near the Falkland Islands is considered relevant.  Documents discussing petroleum exploration in continental South America are not relevant."
+    },
+    {
+      "topic_id": 353,
+      "title": "Antarctica exploration",
+      "description": "Identify systematic explorations and scientific investigations of Antarctica, current or planned.",
+      "narrative": "Documents discussing the following issues are relevant: - systematic explorations and scientific investigations of Antarctica (e.g., seismology, ionospheric physics, possible economic development) - other research currently conducted or planned for the future - banning of mineral mining. Documents discussing tourism are non-relevant.  Documents discussing \"disrupting scientific experiments\" are non-relevant unless a specific experiment is identified."
+    },
+    {
+      "topic_id": 355,
+      "title": "Ocean remote sensing",
+      "description": "Identify documents discussing the development and application of spaceborne ocean remote sensing.",
+      "narrative": "Documents discussing the development and application of spaceborne ocean remote sensing in oceanography, seabed prospecting and mining, or any marine-science activity are relevant. Documents that discuss the application of satellite remote sensing in geography, agriculture, forestry, mining and mineral prospecting or any land-bound science are not relevant, nor are references to international marketing or promotional advertizing of any remote-sensing technology.  Synthetic aperture radar (SAR) employed in ocean remote sensing is relevant."
+    },
+    {
+      "topic_id": 374,
+      "title": "Nobel prize winners",
+      "description": "Identify and provide background information on Nobel prize winners.",
+      "narrative": "At a minimum, relevant documents must contain the following information: year of Nobel prize award, field of study, and recipients name. When the document announces what is obviously a current award, no year is required."
+    },
+    {
+      "topic_id": 375,
+      "title": "Hydrogen energy",
+      "description": "What is the status of research on hydrogen as a feasible energy source?",
+      "narrative": "A relevant document will describe progress in research on controlled hydrogen fusion or the use of hydrogen as fuel to power engines."
+    },
+    {
+      "topic_id": 382,
+      "title": "Hydrogen fuel automobiles",
+      "description": "Identify documents that discuss the use of hydrogen as a fuel for piston driven automobiles (safe storage a concern) or the use of hydrogen in fuel cells to generate electricity to drive the car.",
+      "narrative": "A relevant document may discuss either hydrogen using fuel cells to electrically power automobiles or it may discuss the safe storage of hydrogen gas in a fuel tank through the use of metal hydrides for use in piston engines."
+    },
+    {
+      "topic_id": 384,
+      "title": "Space station moon",
+      "description": "Identify documents that discuss the building of a space station with the intent of colonizing the moon.",
+      "narrative": "A relevant document will discuss the purpose of a space station, initiatives towards colonizing the moon, impediments which thus far have thwarted such a project, plans currently underway or in the planning stages for such a venture; cost, countries prepared to make a commitment of men, resources, facilities and money to accomplish such a feat."
+    },
+    {
+      "topic_id": 385,
+      "title": "Hybrid fuel cars",
+      "description": "Identify documents that discuss the current status of hybrid automobile engines, (i.e., cars fueled by something other than gasoline only).",
+      "narrative": "A relevant document may include research on non-gasoline powered engines or prototypes that may be fueled by natural gas, methanol, alcohol; cost to the consumer; health benefits derived; and shortcomings in horsepower and passenger comfort."
+    },
+    {
+      "topic_id": 392,
+      "title": "Robotics",
+      "description": "What are the applications of robotics in the world today?",
+      "narrative": "Documents concerning R&D or testing of robotic equipment are not relevant, nor are documents discussing future applications of robotics.  If the task completed seems to be merely another computer function rather than a task usually done by people, then it is not relevant."
+    }
+
+  ]
+}

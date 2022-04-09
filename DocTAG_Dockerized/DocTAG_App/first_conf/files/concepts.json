@@ -1,0 +1,85 @@
+{
+  "concepts_list": [
+    {
+      "concept_url": "http://dbpedia.org/resource/Category:Falkland_Islands",
+      "concept_name": "Falkland Islands"
+    },
+    {
+      "concept_url": "http://dbpedia.org/resource/Category:Petroleum",
+      "concept_name": "Petroleum"
+    },
+        {
+      "concept_url": "http://dbpedia.org/resource/Category:Exploration_of_Antarctica",
+      "concept_name": "Exploration of Antarctica"
+    },
+        {
+      "concept_url": "http://dbpedia.org/resource/Exploration",
+      "concept_name": "Exploration"
+    },
+        {
+      "concept_url": "http://dbpedia.org/resource/Antarctica",
+      "concept_name": "Antarctica"
+    },
+        {
+      "concept_url": "http://dbpedia.org/resource/Remote_sensing_(oceanography)",
+      "concept_name": "Remote sensing (oceanography)"
+    },
+        {
+      "concept_url": "http://dbpedia.org/resource/Category:Oceanography",
+      "concept_name": "Oceanography"
+    },
+        {
+      "concept_url": "http://dbpedia.org/resource/Nobel_prize_winners",
+      "concept_name": "Nobel prize winners"
+    },
+        {
+      "concept_url": "http://dbpedia.org/resource/Renewable_energy",
+      "concept_name": "Renewable energy"
+    },
+        {
+      "concept_url": "http://dbpedia.org/resource/Hydrogen_technologies",
+      "concept_name": "Hydrogen technologies"
+    },
+        {
+      "concept_url": "http://dbpedia.org/resource/Hydrogen_vehicle",
+      "concept_name": "Hydrogen vehicle"
+    },    {
+      "concept_url": "http://dbpedia.org/resource/Fuel_cell",
+      "concept_name": "Fuel cell"
+    },
+        {
+      "concept_url": "http://dbpedia.org/resource/Colonizing_the_moon",
+      "concept_name": "Colonizing the moon"
+    },
+            {
+      "concept_url": "http://dbpedia.org/ontology/SpaceStation",
+      "concept_name": "Space station"
+    },
+                {
+      "concept_url": "http://dbpedia.org/resource/Hybrid_car",
+      "concept_name": "Hybrid car"
+    },
+
+                {
+      "concept_url": "http://dbpedia.org/ontology/SpaceStation",
+      "concept_name": "Space station"
+    },
+
+                {
+      "concept_url": "http://dbpedia.org/resource/Category:Robotics",
+      "concept_name": "Robotics"
+    },
+
+                {
+      "concept_url": "http://dbpedia.org/ontology/SpaceStation",
+      "concept_name": "Space station"
+    },
+
+                {
+      "concept_url": "http://dbpedia.org/resource/Homeschooling",
+      "concept_name": "Homeschooling"
+    }
+
+
+  ]
+}

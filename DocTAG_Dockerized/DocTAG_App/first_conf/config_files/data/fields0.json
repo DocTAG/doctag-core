@@ -1,0 +1,5 @@
+{
+  "fields": ["internalid","age","gender","raw_diagnoses"],
+  "fields_to_ann": ["materials","target_diagnosis"],
+  "all_fields": ["internalid","age","gender","raw_diagnoses","materials","target_diagnosis","codint","report_id","report_id_hashed"]
+}

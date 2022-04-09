@@ -1629,19 +1629,19 @@ def get_gt_list(request):
     if token == 'all':
         ns_robot = NameSpace.objects.get(ns_id='Robot')
         ns_human = NameSpace.objects.get(ns_id='Human')
-        rob_user = User.objects.get(username='Robot_user',ns_id=ns_robot)
-        list_gt = GroundTruthLogFile.objects.filter(username = rob_user).count() + GroundTruthLogFile.objects.filter(ns_id=ns_human).count()
+        # rob_user = User.objects.get(username='Robot_user',ns_id=ns_robot)
+        list_gt = GroundTruthLogFile.objects.filter(ns_id=ns_human).count()
         groundTruths = list_gt
-        gt_rob = GroundTruthLogFile.objects.filter(ns_id=ns_robot,username = rob_user)
+        # gt_rob = GroundTruthLogFile.objects.filter(ns_id=ns_robot,username = rob_user)
 
         i = 0
         # print(groundTruths)
-        for el in gt_rob:
-            gts = GroundTruthLogFile.objects.filter(ns_id=ns_robot,gt_type = el.gt_type,id_report = el.id_report_id,language = el.language).exclude(insertion_time = el.insertion_time)
-            gts_count = gts.count()
-            # print('count: '+str(i)+' '+str(gts.count()))
-            i = i+1
-            groundTruths = groundTruths + gts_count
+        # for el in gt_rob:
+        #     gts = GroundTruthLogFile.objects.filter(ns_id=ns_robot,gt_type = el.gt_type,id_report = el.id_report_id,language = el.language).exclude(insertion_time = el.insertion_time)
+        #     gts_count = gts.count()
+        #     # print('count: '+str(i)+' '+str(gts.count()))
+        #     i = i+1
+        #     groundTruths = groundTruths + gts_count
 
     else:
         with connection.cursor() as cursor:
@@ -1927,25 +1927,26 @@ def download_all_ground_truths(request):
         human = NameSpace.objects.get(ns_id = 'Human')
         robot = NameSpace.objects.get(ns_id = 'Robot')
         gt_human = GroundTruthLogFile.objects.filter(ns_id = human)
-        agent = User.objects.get(ns_id = robot,username = 'Robot_user')
-        gt_robot = GroundTruthLogFile.objects.filter(ns_id = robot,username = agent)
+        # agent = User.objects.get(ns_id = robot,username = 'Robot_user')
+        # gt_robot = GroundTruthLogFile.objects.filter(ns_id = robot,username = agent)
         for el in gt_human:
             gt_json = el.gt_json
             if gt_json['gt_type'] == 'concept-mention':
                 gt_json['gt_type'] = 'linking'
             json_resp['ground_truth'].append(gt_json)
-        for el in gt_robot:
-            gt_json = el.gt_json
-            if gt_json['gt_type'] == 'concept-mention':
-                gt_json['gt_type'] = 'linking'
-            json_resp['ground_truth'].append(gt_json)
-        cursor.execute("SELECT g.gt_json FROM ground_truth_log_file AS g INNER JOIN ground_truth_log_file AS gg ON g.id_report = gg.id_report AND g.language = gg.language AND g.gt_type = gg.gt_type AND g.id_report = gg.id_report AND g.ns_id = gg.ns_id WHERE g.ns_id = %s AND g.username != %s AND gg.username = %s AND g.insertion_time != gg.insertion_time",['Robot','Robot_user','Robot_user'])
-        ans = cursor.fetchall()
-        for el in ans:
-            gt_json = json.loads(el[0])
-            if gt_json['gt_type'] == 'concept-mention':
-                gt_json['gt_type'] = 'linking'
-            json_resp['ground_truth'].append(gt_json)
+        # for el in gt_robot:
+        #     gt_json = el.gt_json
+        #     if gt_json['gt_type'] == 'concept-mention':
+        #         gt_json['gt_type'] = 'linking'
+        #     json_resp['ground_truth'].append(gt_json)
+
+        # cursor.execute("SELECT g.gt_json FROM ground_truth_log_file AS g INNER JOIN ground_truth_log_file AS gg ON g.id_report = gg.id_report AND g.language = gg.language AND g.gt_type = gg.gt_type AND g.id_report = gg.id_report AND g.ns_id = gg.ns_id WHERE g.ns_id = %s AND g.username != %s AND gg.username = %s AND g.insertion_time != gg.insertion_time",['Robot','Robot_user','Robot_user'])
+        # ans = cursor.fetchall()
+        # for el in ans:
+        #     gt_json = json.loads(el[0])
+        #     if gt_json['gt_type'] == 'concept-mention':
+        #         gt_json['gt_type'] = 'linking'
+        #     json_resp['ground_truth'].append(gt_json)
 
     # elif mode.lower() == 'automatic':
     #     cursor.execute(
@@ -2423,7 +2424,7 @@ def get_data(request):
         report = Report.objects.get(id_report=el.id_report, language=el.language)
         language = el.language
         ns_human = NameSpace.objects.get(ns_id='Human')
-        ns_robot = NameSpace.objects.get(ns_id='Robot')
+        # ns_robot = NameSpace.objects.get(ns_id='Robot')
 
         # gt_human = GroundTruthLogFile.objects.filter(id_report = report, language = language, ns_id = ns_human).count()
         # cursor = connection.cursor()
@@ -2735,8 +2736,8 @@ def get_gt_action_based(request):
 
     if ns == 'Manual':
         ns = 'Human'
-    elif ns == 'Automatic':
-        ns = 'Robot'
+    # elif ns == 'Automatic':
+    #     ns = 'Robot'
     gts = GroundTruthLogFile.objects.filter(gt_type=action)
 
     if ns is not None:

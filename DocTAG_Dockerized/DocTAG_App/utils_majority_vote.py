@@ -21,8 +21,8 @@ def create_majority_vote_gt(action,users,mode,report,topic):
     """This method creates the majority vote ground truth."""
 
     ns_human = NameSpace.objects.get(ns_id='Human')
-    ns_robot = NameSpace.objects.get(ns_id='Robot')
-    agent = User.objects.get(username='Robot_user',ns_id=ns_robot)
+    # ns_robot = NameSpace.objects.get(ns_id='Robot')
+    # agent = User.objects.get(username='Robot_user',ns_id=ns_robot)
     topic_obj = topic
     if isinstance(topic,str):
         topic_obj = UseCase.objects.get(name=topic)

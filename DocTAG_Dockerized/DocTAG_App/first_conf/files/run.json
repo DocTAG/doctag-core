@@ -1,0 +1,409 @@
+{
+    "run": [
+        {
+            "topic_id": "351",
+            "documents": [
+                {
+                    "document_id": "FBIS3-19947",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-33035",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-33505",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-50570",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-59016",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS4-10762",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS4-11114",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS4-34579",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS4-34996",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS4-35048",
+                    "language": "english"
+                }
+            ]
+        },
+        {
+            "topic_id": "353",
+            "documents": [
+                {
+                    "document_id": "FBIS3-11379",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-21000",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-22135",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-22159",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-22212",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-22312",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-22404",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-22452",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-26694",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-41571",
+                    "language": "english"
+                }
+            ]
+        },
+        {
+            "topic_id": "355",
+            "documents": [
+                {
+                    "document_id": "FBIS3-21019",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-21238",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-21242",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-23687",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-23688",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-23689",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-23691",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-24511",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-26589",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-40210",
+                    "language": "english"
+                }
+            ]
+        },
+        {
+            "topic_id": "374",
+            "documents": [
+                {
+                    "document_id": "FBIS3-20902",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-21073",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-21515",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-31939",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-33281",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-35597",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-43299",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-48060",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-50595",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-50776",
+                    "language": "english"
+                }
+            ]
+        },
+        {
+            "topic_id": "375",
+            "documents": [
+                {
+                    "document_id": "FBIS3-20985",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-22869",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-24648",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-40388",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-41656",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-41950",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-42459",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-42854",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS4-47307",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-43108",
+                    "language": "english"
+                }
+            ]
+        },
+        {
+            "topic_id": "382",
+            "documents": [
+                {
+                    "document_id": "FBIS3-59723",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS4-20567",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS4-44635",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS4-44698",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS4-44701",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS4-44852",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS4-44872",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS4-44893",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FR941219-1-00026",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FR941219-1-00027",
+                    "language": "english"
+                }
+            ]
+        },
+        {
+            "topic_id": "384",
+            "documents": [
+                {
+                    "document_id": "FBIS3-20913",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-21021",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-21022",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-21231",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-21237",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-21239",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-21244",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-23696",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-29781",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-39094",
+                    "language": "english"
+                }
+            ]
+        },
+        {
+            "topic_id": "385",
+            "documents": [
+                {
+                    "document_id": "FBIS3-21153",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-24654",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-40371",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-40372",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-40471",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-40529",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-47041",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-52",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-59552",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FT924-4725",
+                    "language": "english"
+                }
+            ]
+        },
+        {
+            "topic_id": "392",
+            "documents": [
+                {
+                    "document_id": "FBIS3-1764",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-1902",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-1903",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-20469",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-35",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-38381",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-38782",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-3923",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-40223",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS3-40420",
+                    "language": "english"
+                }
+            ]
+        }
+    ]
+}

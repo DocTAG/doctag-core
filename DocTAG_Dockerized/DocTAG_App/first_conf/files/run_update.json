@@ -1,0 +1,49 @@
+{
+    "run": [
+        {
+            "topic_id": "394",
+            "documents": [
+                {
+                    "document_id": "FBIS3-27752",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS4-25855",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FBIS4-48308",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FR940513-1-00109",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FT932-14380",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FT942-9445",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FT943-4873",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FT943-5308",
+                    "language": "english"
+                },
+                {
+                    "document_id": "FT944-18631",
+                    "language": "english"
+                },
+                {
+                    "document_id": "LA012590-0062",
+                    "language": "english"
+                }
+            ]
+        }
+    ]
+}

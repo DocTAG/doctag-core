@@ -266,7 +266,11 @@ def delete_all_mentions(user,report1,language,type,mode,topic):
     # if len(to_del) > 0:
     ass = Annotate.objects.filter(username=user,ns_id=mode, id_report=report1,language = language,name = topic).values('start','stop','label')
     # print(len(ass))
-    # topic = UseCase.objects.get(name = topic)
+    if isinstance(topic,str):
+        topic_obj = UseCase.objects.get(name = topic)
+    else:
+        topic_obj = topic
+
     rem_contains = False
 
     for el in ass:
@@ -306,11 +310,11 @@ def delete_all_mentions(user,report1,language,type,mode,topic):
             if Contains.objects.filter(topic_name = topic,username = user,ns_id=mode, id_report = report1,language = language).exists():
                 jsonDict = serialize_gt('concepts', user.username, report1.id_report, language,mode,topic)
                 GroundTruthLogFile.objects.create(username=user, id_report=report1, language=language,
-                                                                gt_json=jsonDict,ns_id=mode,name = topic,
+                                                                gt_json=jsonDict,ns_id=mode,name = topic_obj,
                                                                 gt_type='concepts', insertion_time=Now())
 
-    obj = GroundTruthLogFile.objects.filter(username=user,name = topic, id_report=report1,ns_id=mode,language = language, gt_type=type)
-    obj1 = GroundTruthLogFile.objects.filter(username=user,name= topic, id_report=report1,ns_id=mode,language = language, gt_type='concept-mention')
+    obj = GroundTruthLogFile.objects.filter(username=user,name = topic_obj, id_report=report1,ns_id=mode,language = language, gt_type=type)
+    obj1 = GroundTruthLogFile.objects.filter(username=user,name= topic_obj, id_report=report1,ns_id=mode,language = language, gt_type='concept-mention')
     if obj.exists() or obj1.exists():
         if obj.exists():
             obj.delete()
@@ -332,7 +336,7 @@ def update_mentions(mentions,report1,language,user,mode,topic):
     json_response = {'message':'Mentions and Ground truth saved'}
     var_link = False
     var_conc = False
-    print(mentions)
+    # print(mentions)
     topic = UseCase.objects.get(name = topic)
     user_annot = Annotate.objects.filter(username = user,ns_id=mode, language = language, id_report=report1,name = topic)
     for single_ann in user_annot:
@@ -341,7 +345,7 @@ def update_mentions(mentions,report1,language,user,mode,topic):
         #La mention c'era nella lista precedente ma non nella nuova, è stata rimossa la singola mention
         ment_deleted = True
         for mention in mentions:
-            if single_ann.start_id == int(mention['start']) and single_ann.stop == int(mention['stop'] and str(mention['label']) == single_ann.label_id):
+            if single_ann.start_id == int(mention['start']) and single_ann.stop == int(mention['stop']) and str(mention['label']) == single_ann.label_id:
                 Annotate.objects.filter(username=user, ns_id=mode, start=mention_cur,name = topic,label = ann_cur,seq_number = ann_cur.seq_number,
                                                      stop=mention_cur.stop, language=language, id_report=report1).delete()
                 Annotate.objects.create(username=user, ns_id=mode, start=mention_cur,name = topic,label = ann_cur,seq_number = ann_cur.seq_number,
@@ -352,7 +356,7 @@ def update_mentions(mentions,report1,language,user,mode,topic):
 
             if annotation.exists():
                 annotation.delete()
-            link = Linked.objects.filter(username = user,topic_name = topic,ns_id=mode,start = mention_cur,stop = mention_cur.stop, language = language, id_report = report1)
+            link = Linked.objects.filter(username = user,topic_name = topic.name,ns_id=mode,start = mention_cur,stop = mention_cur.stop, language = language, id_report = report1)
             for elem in link:
                 conc = Concept.objects.get(concept_url = elem.concept_url_id)
                 area = SemanticArea.objects.get(name = elem.name_id)
@@ -715,7 +719,7 @@ def serialize_gt(gt_type,username,id_report,language,mode,topic):
             #         break
             jsonVal['start'] = el['start']
             jsonVal['stop'] = el['stop']
-            jsonVal['label'] = el['stop']
+            jsonVal['label'] = el['label']
             mention_textual = mention_text.mention_text
             mention_textual = re.sub('[^a-zA-Z0-9n\-_/\' ]+', '', mention_textual)
             if language == 'Italian':
@@ -1571,8 +1575,8 @@ def get_annotations_count(id_report,language,topic):
     report = Report.objects.get(id_report=id_report, language=language)
     json_dict = {}
     mode_human = NameSpace.objects.get(ns_id='Human')
-    mode_robot = NameSpace.objects.get(ns_id='Robot')
-    user_robot = User.objects.get(username = 'Robot_user', ns_id=mode_robot)
+    # mode_robot = NameSpace.objects.get(ns_id='Robot')
+    # user_robot = User.objects.get(username = 'Robot_user', ns_id=mode_robot)
     topic = UseCase.objects.get(name = topic)
     # HUMAN
     json_dict['Human'] = {}

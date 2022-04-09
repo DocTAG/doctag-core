@@ -437,10 +437,10 @@ def create_json_to_download(report_type,action,username,use,annotation_mode = No
             cursor.execute(
                 "SELECT DISTINCT r.id_report,r.language,r.institute FROM report AS r INNER JOIN ground_truth_log_file AS g ON r.id_report = g.id_report AND g.language = r.language INNER JOIN topic_has_document AS t ON t.language = r.language AND r.id_report = t.id_report AND t.name = g.name WHERE gt_type = %s AND t.name = %s AND g.ns_id = %s AND r.language = COALESCE(%s, r.language) AND r.institute = COALESCE(%s,r.institute) AND institute != %s AND r.batch = COALESCE(%s,r.batch)",
                 [str(action), str(use), str(annotation_mode),lang, inst, 'PUBMED',batch])
-            if annotation_mode == 'Robot':
-                cursor.execute(
-                    "SELECT DISTINCT r.id_report,r.language,r.institute FROM report AS r INNER JOIN ground_truth_log_file AS g ON r.id_report = g.id_report AND g.language = r.language inner join ground_truth_log_file as gg on gg.id_report = g.id_report and gg.language = g.language and gg.gt_type = g.gt_type and gg.ns_id = g.ns_id INNER JOIN topic_has_document AS t ON t.language = r.language AND r.id_report = t.id_report AND t.name = g.name WHERE gg.insertion_time != g.insertion_time and g.gt_type = %s AND t.name = %s AND g.ns_id = %s AND r.language = COALESCE(%s, r.language) AND r.institute = COALESCE(%s,r.institute) AND institute != %s and g.username != %s and gg.username = %s AND r.batch = COALESCE(%s,r.batch)",
-                    [str(action), str(use), str(annotation_mode),lang,inst, 'PUBMED', 'Robot_user', 'Robot_user',batch])
+            # if annotation_mode == 'Robot':
+            #     cursor.execute(
+            #         "SELECT DISTINCT r.id_report,r.language,r.institute FROM report AS r INNER JOIN ground_truth_log_file AS g ON r.id_report = g.id_report AND g.language = r.language inner join ground_truth_log_file as gg on gg.id_report = g.id_report and gg.language = g.language and gg.gt_type = g.gt_type and gg.ns_id = g.ns_id INNER JOIN topic_has_document AS t ON t.language = r.language AND r.id_report = t.id_report AND t.name = g.name WHERE gg.insertion_time != g.insertion_time and g.gt_type = %s AND t.name = %s AND g.ns_id = %s AND r.language = COALESCE(%s, r.language) AND r.institute = COALESCE(%s,r.institute) AND institute != %s and g.username != %s and gg.username = %s AND r.batch = COALESCE(%s,r.batch)",
+            #         [str(action), str(use), str(annotation_mode),lang,inst, 'PUBMED', 'Robot_user', 'Robot_user',batch])
 
         ids = cursor.fetchall()
         id_rep = []
@@ -517,10 +517,10 @@ def create_json_to_download(report_type,action,username,use,annotation_mode = No
         cursor.execute(
             "SELECT DISTINCT r.id_report,r.language,r.institute FROM report AS r INNER JOIN ground_truth_log_file AS g ON r.id_report = g.id_report AND g.language = r.language INNER JOIN topic_has_document AS t ON t.language = r.language AND r.id_report = t.id_report AND t.name = g.name WHERE gt_type = %s AND t.name = %s AND g.ns_id = %s AND institute = %s and r.language = %s AND r.batch = COALESCE(%s,r.batch)",
             [str(action), str(use), str(annotation_mode), str(lang), str(inst),batch])
-        if annotation_mode == 'Robot':
-            cursor.execute(
-                "SELECT DISTINCT r.id_report,r.language,r.institute FROM report AS r INNER JOIN ground_truth_log_file AS g ON r.id_report = g.id_report AND g.language = r.language inner join ground_truth_log_file as gg on gg.id_report = g.id_report and gg.language = g.language and gg.gt_type = g.gt_type and gg.ns_id = g.ns_id INNER JOIN topic_has_document AS t ON t.language = r.language AND r.id_report = t.id_report AND t.name = g.name WHERE gg.insertion_time != g.insertion_time and g.gt_type = %s AND t.name = %s AND g.ns_id = %s AND institute = %s and r.language = %s and g.username != %s and gg.username = %s AND r.batch = COALESCE(%s,r.batch)",
-                [str(action), str(use), str(annotation_mode), str(lang), str(inst), 'Robot_user', 'Robot_user',batch])
+        # if annotation_mode == 'Robot':
+        #     cursor.execute(
+        #         "SELECT DISTINCT r.id_report,r.language,r.institute FROM report AS r INNER JOIN ground_truth_log_file AS g ON r.id_report = g.id_report AND g.language = r.language inner join ground_truth_log_file as gg on gg.id_report = g.id_report and gg.language = g.language and gg.gt_type = g.gt_type and gg.ns_id = g.ns_id INNER JOIN topic_has_document AS t ON t.language = r.language AND r.id_report = t.id_report AND t.name = g.name WHERE gg.insertion_time != g.insertion_time and g.gt_type = %s AND t.name = %s AND g.ns_id = %s AND institute = %s and r.language = %s and g.username != %s and gg.username = %s AND r.batch = COALESCE(%s,r.batch)",
+        #         [str(action), str(use), str(annotation_mode), str(lang), str(inst), 'Robot_user', 'Robot_user',batch])
         ids = cursor.fetchall()
         id_rep = []
         for el in ids:
@@ -947,100 +947,100 @@ def download_report_gt(report_list,action,mode=None,format = None,response = Non
                         [str(report['id_report']), str(report['language']), 'Human'])
                     reports_human_labels = cursor.fetchall()
 
-                    agent_ns = NameSpace.objects.get(ns_id = 'Robot')
-                    agent = User.objects.get(username = 'Robot_user',ns_id = agent_ns)
-                    ass = Associate.objects.filter(name = topic,username = agent,ns_id = agent_ns,id_report = rep,language = rep.language)
-                    ins_arr = []
-                    reports_robot_labels = []
-                    for el in ass:
-                        ins_arr.append(el.insertion_time)
-                    if len(ins_arr) > 0:
-                        cursor.execute(
-                            "SELECT a.username,a.ns_id,r.id_report,r.language,r.institute,t.name, a.label FROM report AS r INNER JOIN associate AS a ON r.id_report = a.id_report AND r.language = a.language INNER JOIN topic_has_document AS t ON t.id_report = r.id_report AND t.language = r.language AND t.name = a.name WHERE a.id_report = %s AND r.language = %s  AND ns_id = %s AND a.insertion_time not in %s",
-                            [str(report['id_report']), str(report['language']), 'Robot',tuple(ins_arr)])
-                        reports_robot_labels = cursor.fetchall()
+                    # agent_ns = NameSpace.objects.get(ns_id = 'Robot')
+                    # agent = User.objects.get(username = 'Robot_user',ns_id = agent_ns)
+                    # ass = Associate.objects.filter(name = topic,username = agent,ns_id = agent_ns,id_report = rep,language = rep.language)
+                    # ins_arr = []
+                    # reports_robot_labels = []
+                    # for el in ass:
+                    #     ins_arr.append(el.insertion_time)
+                    # if len(ins_arr) > 0:
+                    #     cursor.execute(
+                    #         "SELECT a.username,a.ns_id,r.id_report,r.language,r.institute,t.name, a.label FROM report AS r INNER JOIN associate AS a ON r.id_report = a.id_report AND r.language = a.language INNER JOIN topic_has_document AS t ON t.id_report = r.id_report AND t.language = r.language AND t.name = a.name WHERE a.id_report = %s AND r.language = %s  AND ns_id = %s AND a.insertion_time not in %s",
+                    #         [str(report['id_report']), str(report['language']), 'Robot',tuple(ins_arr)])
+                    #     reports_robot_labels = cursor.fetchall()
                     if mode == 'both':
-                        reports = chain(reports_human_labels, reports_robot_labels)
+                        reports = reports_human_labels
                     elif mode == 'Human':
                         reports = reports_human_labels
-                    elif mode == 'Robot':
-                        reports = reports_robot_labels
+                    # elif mode == 'Robot':
+                    #     reports = reports_robot_labels
 
                 if action == 'mentions':
                    cursor.execute(
                        "SELECT a.username,a.ns_id,r.id_report,r.language,r.institute,t.name,a.start,a.stop,m.mention_text,a.label FROM report AS r INNER JOIN annotate AS a ON r.id_report = a.id_report AND r.language = a.language INNER JOIN topic_has_document AS t ON t.id_report = r.id_report AND t.language = r.language AND t.name = a.name INNER JOIN mention AS m ON m.id_report = a.id_report AND m.language = a.language AND a.start = m.start AND a.stop = m.stop WHERE r.id_report = %s AND r.language = %s  AND ns_id = %s",
                        [str(report['id_report']), str(report['language']), 'Human'])
                    reports_human_mentions = cursor.fetchall()
-                   agent_ns = NameSpace.objects.get(ns_id='Robot')
-                   agent = User.objects.get(username='Robot_user', ns_id=agent_ns)
-                   ass = Annotate.objects.filter(username=agent, ns_id=agent_ns, id_report=rep,
-                                                  language=rep.language)
-                   ins_arr = []
-                   reports_robot_mentions = []
-                   for el in ass:
-                       ins_arr.append(el.insertion_time)
-                   if len(ins_arr) > 0:
-                       cursor.execute(
-                           "SELECT a.username,a.ns_id,r.id_report,r.language,r.institute,t.name,a.start,a.stop,m.mention_text FROM report AS r INNER JOIN annotate AS a ON r.id_report = a.id_report AND r.language = a.language INNER JOIN topic_has_document AS t ON t.id_report = r.id_report AND t.language = r.language AND t.name = a.name INNER JOIN mention AS m ON m.id_report = a.id_report AND m.language = a.language AND a.start = m.start AND a.stop = m.stop WHERE r.id_report = %s AND r.language = %s  AND ns_id = %s and a.insertion_time not in %s",
-                           [str(report['id_report']), str(report['language']), 'Robot',tuple(ins_arr)])
-                       reports_robot_mentions = cursor.fetchall()
+                   # agent_ns = NameSpace.objects.get(ns_id='Robot')
+                   # agent = User.objects.get(username='Robot_user', ns_id=agent_ns)
+                   # ass = Annotate.objects.filter(username=agent, ns_id=agent_ns, id_report=rep,
+                   #                                language=rep.language)
+                   # ins_arr = []
+                   # reports_robot_mentions = []
+                   # for el in ass:
+                   #     ins_arr.append(el.insertion_time)
+                   # if len(ins_arr) > 0:
+                   #     cursor.execute(
+                   #         "SELECT a.username,a.ns_id,r.id_report,r.language,r.institute,t.name,a.start,a.stop,m.mention_text FROM report AS r INNER JOIN annotate AS a ON r.id_report = a.id_report AND r.language = a.language INNER JOIN topic_has_document AS t ON t.id_report = r.id_report AND t.language = r.language AND t.name = a.name INNER JOIN mention AS m ON m.id_report = a.id_report AND m.language = a.language AND a.start = m.start AND a.stop = m.stop WHERE r.id_report = %s AND r.language = %s  AND ns_id = %s and a.insertion_time not in %s",
+                   #         [str(report['id_report']), str(report['language']), 'Robot',tuple(ins_arr)])
+                   #     reports_robot_mentions = cursor.fetchall()
 
                    if mode == 'both':
-                       reports = chain(reports_human_mentions, reports_robot_mentions)
+                       reports = reports_human_mentions
                    elif mode == 'Human':
                        reports = reports_human_mentions
-                   elif mode == 'Robot':
-                       reports = reports_robot_mentions
+                   # elif mode == 'Robot':
+                   #     reports = reports_robot_mentions
                 elif action == 'concepts':
                    cursor.execute(
                        "SELECT a.username,a.ns_id,r.id_report,r.language,r.institute,t.name,c.concept_url, c.name, a.name FROM report AS r INNER JOIN contains AS a ON r.id_report = a.id_report  AND r.language = a.language INNER JOIN topic_has_document AS t ON t.id_report = r.id_report AND t.language = r.language AND t.name = a.topic_name INNER JOIN concept AS c ON c.concept_url = a.concept_url WHERE r.id_report = %s AND r.language = %s  AND ns_id = %s",
                        [str(report['id_report']), str(report['language']), 'Human'])
                    reports_human_concepts = cursor.fetchall()
-                   agent_ns = NameSpace.objects.get(ns_id='Robot')
-                   agent = User.objects.get(username='Robot_user', ns_id=agent_ns)
-                   ass = Contains.objects.filter(username=agent, ns_id=agent_ns, id_report=rep,
-                                                 language=rep.language)
-                   ins_arr = []
-                   reports_robot_concepts =[]
-                   for el in ass:
-                       ins_arr.append(el.insertion_time)
-                   if len(ins_arr) > 0:
-                       cursor.execute(
-                           "SELECT a.username,a.ns_id,r.id_report,r.language,r.institute,t.name,c.concept_url, c.name, a.name FROM report AS r INNER JOIN contains AS a ON r.id_report = a.id_report  AND r.language = a.language INNER JOIN topic_has_document AS t ON t.id_report = r.id_report AND t.language = r.language AND t.name = a.name INNER JOIN concept AS c ON c.concept_url = a.concept_url WHERE r.id_report = %s AND r.language = %s  AND ns_id = %s and a.insertion_time not in %s",
-                           [str(report['id_report']), str(report['language']), 'Robot',tuple(ins_arr)])
-                       reports_robot_concepts = cursor.fetchall()
+                   # agent_ns = NameSpace.objects.get(ns_id='Robot')
+                   # agent = User.objects.get(username='Robot_user', ns_id=agent_ns)
+                   # ass = Contains.objects.filter(username=agent, ns_id=agent_ns, id_report=rep,
+                   #                               language=rep.language)
+                   # ins_arr = []
+                   # reports_robot_concepts =[]
+                   # for el in ass:
+                   #     ins_arr.append(el.insertion_time)
+                   # if len(ins_arr) > 0:
+                   #     cursor.execute(
+                   #         "SELECT a.username,a.ns_id,r.id_report,r.language,r.institute,t.name,c.concept_url, c.name, a.name FROM report AS r INNER JOIN contains AS a ON r.id_report = a.id_report  AND r.language = a.language INNER JOIN topic_has_document AS t ON t.id_report = r.id_report AND t.language = r.language AND t.name = a.name INNER JOIN concept AS c ON c.concept_url = a.concept_url WHERE r.id_report = %s AND r.language = %s  AND ns_id = %s and a.insertion_time not in %s",
+                   #         [str(report['id_report']), str(report['language']), 'Robot',tuple(ins_arr)])
+                   #     reports_robot_concepts = cursor.fetchall()
 
                    if mode == 'both':
-                       reports = chain(reports_human_concepts, reports_robot_concepts)
+                       reports = reports_human_concepts
                    elif mode == 'Human':
                        reports = reports_human_concepts
-                   elif mode == 'Robot':
-                       reports = reports_robot_concepts
+                   # elif mode == 'Robot':
+                   #     reports = reports_robot_concepts
 
                 elif action == 'concept-mention':
                     cursor.execute(
                         "SELECT a.username,a.ns_id,r.id_report,r.language,r.institute,t.name,a.start,a.stop,m.mention_text,c.name,c.concept_url,a.name FROM report AS r INNER JOIN linked AS a ON r.id_report = a.id_report AND r.language = a.language INNER JOIN topic_has_document AS t ON t.id_report = r.id_report AND t.language = r.language AND t.name = a.topic_name INNER JOIN concept as c ON a.concept_url = c.concept_url INNER JOIN mention AS m ON m.id_report = a.id_report AND m.language = a.language AND a.start = m.start AND a.stop = m.stop WHERE r.id_report = %s AND r.language = %s AND ns_id = %s",
                         [str(report['id_report']), str(report['language']), 'Human'])
                     reports_human_linking = cursor.fetchall()
-                    agent_ns = NameSpace.objects.get(ns_id='Robot')
-                    agent = User.objects.get(username='Robot_user', ns_id=agent_ns)
-                    ass = Linked.objects.filter(username=agent, ns_id=agent_ns, id_report=rep,
-                                                  language=rep.language)
-                    ins_arr = []
-                    reports_robot_linking = []
-                    for el in ass:
-                        ins_arr.append(el.insertion_time)
-                    if len(ins_arr) >0:
-                        cursor.execute(
-                            "SELECT a.username,a.ns_id,r.id_report,r.language,r.institute,t.name,a.start,a.stop,m.mention_text,c.name,c.concept_url,a.name FROM report AS r INNER JOIN linked AS a ON r.id_report = a.id_report AND r.language = a.language INNER JOIN topic_has_document AS t ON t.id_report = r.id_report AND t.language = r.language AND t.name = a.topic_name INNER JOIN concept as c ON a.concept_url = c.concept_url INNER JOIN mention AS m ON m.id_report = a.id_report AND m.language = a.language AND a.start = m.start AND a.stop = m.stop WHERE r.id_report = %s AND r.language = %s AND ns_id = %s and a.insertion_time not in %s",
-                            [str(report['id_report']), str(report['language']), 'Robot',tuple(ins_arr)])
-                        reports_robot_linking = cursor.fetchall()
+                    # agent_ns = NameSpace.objects.get(ns_id='Robot')
+                    # agent = User.objects.get(username='Robot_user', ns_id=agent_ns)
+                    # ass = Linked.objects.filter(username=agent, ns_id=agent_ns, id_report=rep,
+                    #                               language=rep.language)
+                    # ins_arr = []
+                    # reports_robot_linking = []
+                    # for el in ass:
+                    #     ins_arr.append(el.insertion_time)
+                    # if len(ins_arr) >0:
+                    #     cursor.execute(
+                    #         "SELECT a.username,a.ns_id,r.id_report,r.language,r.institute,t.name,a.start,a.stop,m.mention_text,c.name,c.concept_url,a.name FROM report AS r INNER JOIN linked AS a ON r.id_report = a.id_report AND r.language = a.language INNER JOIN topic_has_document AS t ON t.id_report = r.id_report AND t.language = r.language AND t.name = a.topic_name INNER JOIN concept as c ON a.concept_url = c.concept_url INNER JOIN mention AS m ON m.id_report = a.id_report AND m.language = a.language AND a.start = m.start AND a.stop = m.stop WHERE r.id_report = %s AND r.language = %s AND ns_id = %s and a.insertion_time not in %s",
+                    #         [str(report['id_report']), str(report['language']), 'Robot',tuple(ins_arr)])
+                    #     reports_robot_linking = cursor.fetchall()
                     if mode == 'both':
-                        reports = chain(reports_human_linking,reports_robot_linking)
+                        reports = reports_human_linking
                     elif mode == 'Human':
                         reports = reports_human_linking
-                    elif mode == 'Robot':
-                        reports = reports_robot_linking
+                    # elif mode == 'Robot':
+                        # reports = reports_robot_linking
 
                 for el in reports:
                     row = list(el)
