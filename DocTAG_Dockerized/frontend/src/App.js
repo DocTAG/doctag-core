@@ -70,7 +70,7 @@ function App() {
     const [Mention, SetMention] = useState('')
     const [Outcomes,SetOutcomes] = useState([])
     const [UsersListAnnotations,SetUsersListAnnotations] = useState([])
-
+    const [ReloadMentions,SetReloadMentions] = useState(false)
     const [labels, setLabels] = useState(false)
     const [index, setIndex] = useState(0)
     const [TopicIndex, SetTopicIndex] = useState(0)
@@ -78,8 +78,7 @@ function App() {
     const [reports, setReports] = useState(false)
     const [reportsString, setReportsString] = useState(false)
     const [Children, SetChildren] = useState([])
-    const colori = ['green','red','orange','blue','#3be02c', '#B71C1C','#4db6ac','#FF6D00','#0091EA','#fbc02d','#b80073','#64dd17','#880E4F','#0094cc','#4A148C','#7E57C2','#3F51B5','#2196F3','#c75b39','#0097A7','#00695C','#ec407a','#2196f3','#00695c','#F50057','#00E5FF','#c600c7','#00d4db',
-        '#388E3C','#aa00ff','#558b2f','#76FF03','#69F0AE','#e259aa','#CDDC39','#EEFF41','#ea7be6','#d05ce3','#1DE9B6','#F06292','#F57F17','#BF360C','#7781f4','#795548','#607D8B','#651fff','#8d6e63','royalblue'];
+    const colori = ['green','red','orange','royalblue'];
     const [Color,SetColor] = useState(colori)
     const [Rows,SetRows] = useState([])
     //const [Color,SetColor] = useState(['red','green'])
@@ -144,7 +143,7 @@ function App() {
             SetShowBar(false)
         }
         SetLoadingMenu(true)
-        axios.get("http://127.0.0.1:8000/get_usecase_inst_lang").then(response => {
+        axios.get("http://0.0.0.0:8000/get_usecase_inst_lang").then(response => {
             console.log('usecaselist',response.data['usecase'])
             console.log('languagelist',response.data['language'])
             console.log('institutelist',response.data['institute'])
@@ -155,14 +154,14 @@ function App() {
         })
         //SetLoadingMenu(false)
 
-        axios.get("http://127.0.0.1:8000/get_admin").then(response => {
+        axios.get("http://0.0.0.0:8000/get_admin").then(response => {
             SetAdmin(response.data['admin'])
 
         })
-        // axios.get("http://127.0.0.1:8000/get_fields").then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
-        // axios.get("http://127.0.0.1:8000/get_semantic_area").then(response => SetSemanticArea(response.data['area']))
-        // axios.get("http://127.0.0.1:8000/conc_view").then(response => {SetConcepts(response.data['concepts'])})
-        // axios.get("http://127.0.0.1:8000/annotationlabel/all_labels").then(response => {
+        // axios.get("http://0.0.0.0:8000/get_fields").then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
+        // axios.get("http://0.0.0.0:8000/get_semantic_area").then(response => SetSemanticArea(response.data['area']))
+        // axios.get("http://0.0.0.0:8000/conc_view").then(response => {SetConcepts(response.data['concepts'])})
+        // axios.get("http://0.0.0.0:8000/annotationlabel/all_labels").then(response => {
         //     setLabels(response.data['labels'])
         // })
 
@@ -176,7 +175,7 @@ function App() {
         window.scrollTo(0,0)
 
 
-        axios.get("http://127.0.0.1:8000/get_users_list")
+        axios.get("http://0.0.0.0:8000/get_users_list")
             .then(response => {
                 if(response.data.length>0){
                     console.log(response.data)
@@ -198,7 +197,7 @@ function App() {
 
     useEffect(()=>{
         // console.log('prima entrata in parametri')
-        axios.get("http://127.0.0.1:8000/get_session_params").then(response => {
+        axios.get("http://0.0.0.0:8000/get_session_params").then(response => {
             SetInstitute(response.data['institute']);
             SetLanguage(response.data['language']);
             SetUseCase(response.data['usecase']);
@@ -225,7 +224,7 @@ function App() {
 
     useEffect(()=>{
         if(useCase !== ''){
-            axios.get('http://127.0.0.1:8000/get_topic_info',{params:{topic:useCase}}).then(response=>{SetTopicInfo(response.data)}).catch(error=>console.log(error))
+            axios.get('http://0.0.0.0:8000/get_topic_info',{params:{topic:useCase}}).then(response=>{SetTopicInfo(response.data)}).catch(error=>console.log(error))
         }
     },[useCase])
 
@@ -240,7 +239,7 @@ function App() {
                 conceptOption:[selectedOption, setSelectedOption],removedConcept:[RemovedConcept,SetRemovedConcept],indexList:[AnnotatedIndexList,SetAnnotatedIndexList],reportArray:[SelectOptions,SetSelectOptions],orderVar:[OrderVar,SetOrderVar],fields:[Fields,SetFields],fieldsToAnn:[FieldsToAnn,SetFieldsToAnn],topicinfo:[TopicInfo,SetTopicInfo],
                 admin:[Admin, SetAdmin],showSnackMessage:[SnackMessage,SetSnackMessage],showSnack:[ShowSnack, SetShowSnack], labelsToInsert:[LabToInsert,SetLabToInsert],start:[Start,SetStart],changeConceots:[change,setChange],username:[Username,SetUsername],showOptions:[ShowModal,SetShowModal],language:[Language,SetLanguage],institute:[Institute, SetInstitute], usecase:[useCase,SetUseCase],outcomes:[Outcomes,SetOutcomes],semanticArea:[SemanticArea,SetSemanticArea],concepts:[Concepts,SetConcepts],reportString:[reportsString,setReportsString],radio:[RadioChecked, SetRadioChecked],finalcount:[FinalCount,SetFinalCount],reached:[FinalCountReached,SetFinalCountReached],
                 index:[index,setIndex],showbar:[ShowBar,SetShowBar], tokens:[Children,SetChildren],report:[report,setReport],reports:[reports, setReports],insertionTimes:[ArrayInsertionTimes,SetArrayInsertionTimes],userLabels:[labels_to_show, setLabels_to_show],labelsList:[labels,setLabels],checks:[checks,setChecks],highlightMention:[HighlightMention, SetHighlightMention],updateMenu:[UpdateMenu,SetUpdateMenu],usecaseList: [UseCaseList,SetUseCaseList],languageList:[LanguageList,SetLanguageList],
-                instituteList: [InstituteList,SetInstituteList],save:[SavedGT,SetSavedGT],disButton:[Disabled_Buttons,SetDisable_Buttons],selectedconcepts:[selectedConcepts, setSelectedConcepts],conceptModal:[ShowConceptModal, SetShowConceptModal],linkingConcepts:[LinkingConcepts,SetLinkingConcepts],errorSnack:[ShowErrorSnack, SetShowErrorSnack],
+                instituteList: [InstituteList,SetInstituteList],save:[SavedGT,SetSavedGT],disButton:[Disabled_Buttons,SetDisable_Buttons],selectedconcepts:[selectedConcepts, setSelectedConcepts],conceptModal:[ShowConceptModal, SetShowConceptModal],linkingConcepts:[LinkingConcepts,SetLinkingConcepts],errorSnack:[ShowErrorSnack, SetShowErrorSnack],reload:[ReloadMentions,SetReloadMentions],
                 mentionToAdd:[Mention,SetMention],showDownload:[ShowModalDownload,SetShowModalDownload],showSnackMessageMention:[SnackMessageMention, SetSnackMessageMention],showSnackMention:[ShowSnackMention,SetShowSnackMention],associations:[associations_to_show,SetAssociations_to_show], mentionsList:[mentions_to_show,SetMentions_to_show], allMentions:[AllMentions, SetAllMentions],action:[Action,SetAction], mentionSingleWord:[WordMention, SetWordMention],color:[Color,SetColor]}}
             >
                 <Router>

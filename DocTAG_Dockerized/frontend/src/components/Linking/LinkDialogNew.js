@@ -277,6 +277,62 @@ function LinkDialogNew(props){
         }
     },[ConceptChosen])
 
+    useEffect(() => {
+
+        window.addEventListener('keydown', keyPress);
+        // Remove event listeners on cleanup
+        return () => {
+            window.removeEventListener('keydown', keyPress);
+        };
+    }, [ConceptChosen])
+
+    function keyPress(e){
+        // if(token === 'left'){
+        if(e.keyCode === 27){
+            console.log('close')
+            // console.log('destra',TokenNextPrev[0])
+            handleClose()
+            // onSubDx(e)
+        }
+
+        // }
+        // else if(token === 'right'){
+        if(e.keyCode === 13){
+            console.log('save')
+
+            // console.log('destra2',TokenNextPrev[1])
+            // onSubSx(e)
+            if(ConceptChosen !== ''){
+                onAddAssociation()
+                SetShow(false)
+            }
+
+        }
+        // }
+
+    }
+
+    useEffect(() => {
+        window.addEventListener('keydown', keyPressClose);
+        // Remove event listeners on cleanup
+        return () => {
+            window.removeEventListener('keydown', keyPress);
+        };
+    }, [])
+
+    function keyPressClose(e){
+        // if(token === 'left'){
+        if(e.keyCode === 27){
+            // console.log('destra',TokenNextPrev[0])
+            handleClose()
+            // onSubDx(e)
+        }
+
+
+
+    }
+
+
     return(
 
         <div>

@@ -201,25 +201,32 @@ function Token_DocTag(props) {
                 if (array_selected.length === 0) {
                     if (Number(child.id) === Number(id)) {
                         array_words.map((word, ind) => {
+                            if(stop === false){
+                                if (Number(id) >= Number(word.id)) {
 
-                            if (Number(id) >= Number(word.id)) {
+                                    if (word.getAttribute('class') !== 'notSelected' && word.getAttribute('class') !== 'notSelectedMention') {
+                                        tokens_prev.push(word)
+                                    } else {
+                                        tokens_prev = []
+                                    }
+                                }
+                                if (Number(id) < Number(word.id)) {
 
-                                if (word.getAttribute('class') !== 'notSelected' && word.getAttribute('class') !== 'notSelectedMention') {
-                                    tokens_prev.push(word)
-                                } else {
-                                    tokens_prev = []
+                                    if (word.getAttribute('class') !== 'notSelected' && stop === false && word.getAttribute('class') !== 'notSelectedMention') {
+                                        tokens_next.push(word)
+                                    } else {
+                                        stop = true
+                                    }
+
                                 }
                             }
-                            if (Number(id) < Number(word.id)) {
 
-                                if (word.getAttribute('class') !== 'notSelected' && stop === false && word.getAttribute('class') !== 'notSelectedMention') {
-                                    tokens_next.push(word)
-                                } else {
-                                    stop = true
-                                }
 
+                        })
+                        array_words.map((word,ind)=>{
+                            if (!(tokens_prev.includes(word) || tokens_next.includes(word))){
+                                word.setAttribute('class','notSelected')
                             }
-
                         })
 
 
@@ -227,14 +234,14 @@ function Token_DocTag(props) {
                         child.style.cursor = 'default'
 
                         if ((props.words[props.index + 1] !== undefined) && (array_words[index + 1] !== undefined)) {
-                            if (array_words[index + 1].getAttribute('class') !== 'token-selected' && array_words[index + 1].getAttribute('class') !== 'notSelectedMention') {
+                            if (array_words[index + 1].getAttribute('class') !== 'token-selected' && array_words[index + 1].getAttribute('class') !== 'notSelected' && array_words[index + 1].getAttribute('class') !== 'notSelectedMention') {
                                 // console.log('class_attr_next',array_words[index + 1])
                                 // console.log('class_attr_next',array_words[index + 1].getAttribute('class'))
                                 array_words[index + 1].setAttribute('class', 'token-adj-dx')
                             }
                         }
                         if ((props.words[props.index - 1] !== undefined) && (array_words[index - 1] !== undefined)) {
-                            if (array_words[index - 1].getAttribute('class') !== 'token-selected' && array_words[index - 1].getAttribute('class') !== 'notSelectedMention') {
+                            if (array_words[index - 1].getAttribute('class') !== 'token-selected' && array_words[index - 1].getAttribute('class') !== 'notSelected' && array_words[index - 1].getAttribute('class') !== 'notSelectedMention') {
                                 // console.log('class_attr_prev',array_words[index - 1])
                                 // console.log('class_attr_prev',array_words[index - 1].getAttribute('class'))
                                 array_words[index - 1].setAttribute('class', 'token-adj-sx')
@@ -258,11 +265,10 @@ function Token_DocTag(props) {
                             // if(child.getAttribute('class') !== 'token-selected'){
                             //     SetMentionWordsList(prevState => [...prevState,props.words[props.index]])
                             // }
-                            console.log('entro qua 1')
                             child.setAttribute('class', 'token-selected')
                             child.style.cursor = 'default'
                             if ((props.words[props.index + 1] !== undefined) && (array_words[index + 1] !== undefined)) {
-                                if (array_words[index + 1].getAttribute('class') !== 'token-selected' && array_words[index + 1].getAttribute('class') !== 'notSelectedMention') {
+                                if (array_words[index + 1].getAttribute('class') !== 'token-selected' && array_words[index + 1].getAttribute('class') !== 'notSelected' && array_words[index + 1].getAttribute('class') !== 'notSelectedMention') {
                                     // console.log('class_attr_next',array_words[index + 1])
                                     // console.log('class_attr_next',array_words[index + 1].getAttribute('class'))
                                     array_words[index + 1].setAttribute('class', 'token-adj-dx')
@@ -270,7 +276,7 @@ function Token_DocTag(props) {
                             }
                             // DEL PRIMO
                             if ((Number(props.words[0].startToken) < start_already_sel) && (array_words[index - 1] !== undefined)) {
-                                if (array_words[index - 1].getAttribute('class') !== 'token-selected' && array_words[index - 1].getAttribute('class') !== 'notSelectedMention') {
+                                if (array_words[index - 1].getAttribute('class') !== 'token-selected' && array_words[index - 1].getAttribute('class') !== 'notSelected' && array_words[index - 1].getAttribute('class') !== 'notSelectedMention') {
                                     // console.log('class_attr_prev',array_words[index - 1])
                                     // console.log('class_attr_prev',array_words[index - 1].getAttribute('class'))
                                     array_words[index - 1].setAttribute('class', 'token-adj-sx')
@@ -311,13 +317,7 @@ function Token_DocTag(props) {
 
 
             })
-            // if(array_selected.length === 0) {
-            //     array_words.map(child=>{
-            //         if((tokens_next.indexOf(child) === -1 && tokens_prev.indexOf(child) === -1)){
-            //             child.setAttribute('class','notSelectedMention')
-            //         }
-            //     })
-            // }
+
 
             var array_selected = Array.from(document.getElementsByClassName("token-selected"))
             var ids = []
@@ -498,7 +498,7 @@ function Token_DocTag(props) {
                     {(TokenWords && TokenWords.indexOf(props.word.toLowerCase()) !== -1) ?
 
                         <Tooltip disableFocusListener disableTouchListener
-                                 title={TokenScores[Number(TokenWords.indexOf(props.word.toLowerCase()))].toString()}>
+                                 title={'TF-IDF: ' + TokenScores[Number(TokenWords.indexOf(props.word.toLowerCase()))].toString()}>
                             <span className='span_to_highlight'
                                   id={props.start_token}><b>{props.word}</b></span></Tooltip> :
                         <span className='span_to_highlight' id={props.start_token}>{props.word}</span>
@@ -515,7 +515,7 @@ function Token_DocTag(props) {
 
 
                     <Tooltip disableFocusListener disableTouchListener
-                             title={TokenScores[Number(TokenWords.indexOf(props.word.toLowerCase()))].toString()}>
+                             title={'TF-IDF: ' + TokenScores[Number(TokenWords.indexOf(props.word.toLowerCase()))].toString()}>
                         <span className='span_to_highlight'
                               id={props.start_token}><b>{props.word}</b></span></Tooltip> :
                     <span className='span_to_highlight' id={props.start_token}>{props.word}</span>}</>

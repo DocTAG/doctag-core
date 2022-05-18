@@ -66,7 +66,7 @@ function ConfigureResult() {
 
     // useEffect(()=>{
     //     if(Message !== ''){
-    //         axios.get('http://0.0.0.0:8000/get_post_fields_for_auto').then(function(response){
+    //         axios.get('http://127.0.0.1:8000/get_post_fields_for_auto').then(function(response){
     //             SetFieldsUseCasesToExtract(response.data['total_fields'])
     //
     //             var empty = true
@@ -85,7 +85,7 @@ function ConfigureResult() {
     //         }).catch(function(error){
     //             console.log('error: ',error)
     //         })
-    //         axios.get("http://0.0.0.0:8000/pubmed_missing_auto").then(response => {
+    //         axios.get("http://127.0.0.1:8000/pubmed_missing_auto").then(response => {
     //             SetPubMedMissingAuto(response.data);
     //
     //         }).catch(function (error){console.log(error)})
@@ -140,7 +140,7 @@ function ConfigureResult() {
     //             selected_obj[el].push('abstract')
     //             selected_obj[el].push('title')
     //         })
-    //         axios.post('http://0.0.0.0:8000/create_auto_annotations',{
+    //         axios.post('http://127.0.0.1:8000/create_auto_annotations',{
     //                 usecase:PubMedUsesInserted,
     //                 selected:selected_obj,
     //                 batch:1,
@@ -176,7 +176,7 @@ function ConfigureResult() {
     //                 }
     //             })
     //         })
-    //         axios.post('http://0.0.0.0:8000/create_auto_annotations',{
+    //         axios.post('http://127.0.0.1:8000/create_auto_annotations',{
     //                 usecase:UsesInserted,
     //                 selected:selected_obj,
     //                 batch:1,
@@ -226,7 +226,7 @@ function ConfigureResult() {
 
 
                                 <div style={{'text-align':'center','margin-top':'2%'}}>
-                                    <div><a href="http://0.0.0.0:8000/logout"><Button variant = 'primary'>Login</Button></a></div>
+                                    <div><a href="http://127.0.0.1:8000/logout"><Button variant = 'primary'>Login</Button></a></div>
                                 </div>
 
 
@@ -264,7 +264,7 @@ function ConfigureResult() {
 
                         </div>
                         <div style={{'text-align':'center'}}>
-                            <span><a href="http://0.0.0.0:8000/logout"><Button variant = 'primary'>Login</Button></a></span>
+                            <span><a href="http://127.0.0.1:8000/logout"><Button variant = 'primary'>Login</Button></a></span>
                         </div>
                     </Container>
                     }

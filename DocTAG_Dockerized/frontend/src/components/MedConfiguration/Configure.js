@@ -275,7 +275,7 @@ function Configure() {
 
         axios({
             method: "post",
-            url: "http://127.0.0.1:8000/check_input_files",
+            url: "http://0.0.0.0:8000/check_input_files",
             data: formData,
             headers: { "Content-Type": "multipart/form-data" },
         })
@@ -734,7 +734,7 @@ function Configure() {
 
             axios({
                 method: "post",
-                url: "http://127.0.0.1:8000/configure_db",
+                url: "http://0.0.0.0:8000/configure_db",
                 data: FormToSend,
                 headers: { "Content-Type": "multipart/form-data" },
             })
@@ -743,7 +743,7 @@ function Configure() {
                     if(response.data['message'] !== undefined){
                         SetLoadingResponse(false)
                         SetMessage('DocTAG has been correctly configured.')
-                        axios.get("http://127.0.0.1:8000/get_usecase_inst_lang").then(response => {
+                        axios.get("http://0.0.0.0:8000/get_usecase_inst_lang").then(response => {
                             var arr = []
                             response.data['usecase'].map(use=>{
                                 if(use.toLowerCase() === 'colon' || use.toLowerCase() === 'lung' || use.toLowerCase().includes('uterine') || use.toLowerCase().includes('cervix')){
@@ -785,7 +785,7 @@ function Configure() {
 
     function onSaveExample(e,token){
         e.preventDefault()
-        axios.get('http://127.0.0.1:8000/download_examples', {params:{token:token}})
+        axios.get('http://0.0.0.0:8000/download_examples', {params:{token:token}})
                 .then(function (response) {
 
                     if(token === 'reports'){
@@ -939,7 +939,7 @@ function Configure() {
         }
         axios({
             method: "post",
-            url: "http://127.0.0.1:8000/get_keys_and_uses_from_csv",
+            url: "http://0.0.0.0:8000/get_keys_and_uses_from_csv",
             data: formData,
             headers: { "Content-Type": "multipart/form-data" },
         })
@@ -966,7 +966,7 @@ function Configure() {
     //     }
     //     axios({
     //         method: "post",
-    //         url: "http://127.0.0.1:8000/get_keys_and_uses_from_csv",
+    //         url: "http://0.0.0.0:8000/get_keys_and_uses_from_csv",
     //         data: formData,
     //         headers: { "Content-Type": "multipart/form-data" },
     //     })

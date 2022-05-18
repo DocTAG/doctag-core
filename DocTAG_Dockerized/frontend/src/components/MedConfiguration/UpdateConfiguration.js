@@ -102,27 +102,27 @@ function UpdateConfiguration() {
 
     useEffect(()=>{
         window.scrollTo(0, 0)
-        // axios.get('http://127.0.0.1:8000/get_uses_missing_exa').then(response=>{
+        // axios.get('http://0.0.0.0:8000/get_uses_missing_exa').then(response=>{
         //     SetUsesMissingExaConcepts(response.data['concepts_missing']);
         //     SetUsesPresentExaConcepts(response.data['concepts_present']);
         //     SetUsesMissingExaLabels(response.data['labels_missing'])
         //     SetUsesPresentExaLabels(response.data['labels_present'])
         // })
-        axios.get("http://127.0.0.1:8000/get_fields",{params:{all:'all'}}).then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
+        axios.get("http://0.0.0.0:8000/get_fields",{params:{all:'all'}}).then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
         SetMissing('')
         SetWarning('')
 
 
-        axios.get("http://127.0.0.1:8000/get_usecase_inst_lang").then(response => {
+        axios.get("http://0.0.0.0:8000/get_usecase_inst_lang").then(response => {
             SetUseCaseList(response.data['usecase']);
             SetLanguageList(response.data['language']);
             SetInstituteList(response.data['institute']);
 
         })
-        axios.get('http://127.0.0.1:8000/get_keys').then(response=>SetKeys(response.data['keys']))
+        axios.get('http://0.0.0.0:8000/get_keys').then(response=>SetKeys(response.data['keys']))
 
 
-        // axios.get("http://127.0.0.1:8000/pubmed_missing_auto").then(response => {
+        // axios.get("http://0.0.0.0:8000/pubmed_missing_auto").then(response => {
         //     SetPubMedMissingAuto(response.data);
         //
         //     SetPubMedUsesInserted(response.data['usecase'])
@@ -136,7 +136,7 @@ function UpdateConfiguration() {
     },[])
 
     useEffect(()=>{
-        // axios.get("http://127.0.0.1:8000/pubmed_missing_auto").then(response => {
+        // axios.get("http://0.0.0.0:8000/pubmed_missing_auto").then(response => {
         //     SetPubMedMissingAuto(response.data);
         //     SetPubMedUsesInserted(response.data['usecase'])
         //     var arr = {}
@@ -146,7 +146,7 @@ function UpdateConfiguration() {
         //     SetCommitPossible(true)
         // }).catch(function (error){console.log(error)})
 
-        // axios.get("http://127.0.0.1:8000/report_missing_auto").then(response => {
+        // axios.get("http://0.0.0.0:8000/report_missing_auto").then(response => {
         //     SetReportsMissingAuto(response.data);
         //     setOptionsUsecasesAuto(Object.keys(response.data))
         //     var arr = {}
@@ -157,7 +157,7 @@ function UpdateConfiguration() {
         //     SetSelectedFields(arr)
         // }).catch(function (error){console.log(error)})
         //
-        // axios.get("http://127.0.0.1:8000/pubmed_missing_auto").then(response => {
+        // axios.get("http://0.0.0.0:8000/pubmed_missing_auto").then(response => {
         //     SetPubMedMissingAuto(response.data);
         //     SetPubMedUsesInserted(response.data['usecase'])
         //     var arr = {}
@@ -172,7 +172,7 @@ function UpdateConfiguration() {
         // }).catch(function (error){console.log(error)})
 
 
-        // axios.get('http://127.0.0.1:8000/get_post_fields_for_auto').then(function(response){
+        // axios.get('http://0.0.0.0:8000/get_post_fields_for_auto').then(function(response){
         //     SetFieldsUseCasesToExtract(response.data['total_fields'])
         //     SetFieldsAlreadyExtracted(response.data['extract_fields'])
         //
@@ -343,7 +343,7 @@ function UpdateConfiguration() {
 
         axios({
             method: "post",
-            url: "http://127.0.0.1:8000/check_files_for_update",
+            url: "http://0.0.0.0:8000/check_files_for_update",
             data: formData,
             headers: { "Content-Type": "multipart/form-data" },
         })
@@ -578,7 +578,7 @@ function UpdateConfiguration() {
             }
             axios({
                 method: "post",
-                url: "http://127.0.0.1:8000/update_db",
+                url: "http://0.0.0.0:8000/update_db",
                 data: formData,
                 headers: { "Content-Type": "multipart/form-data" },
             })
@@ -646,7 +646,7 @@ function UpdateConfiguration() {
             }
             axios({
                 method: "post",
-                url: "http://127.0.0.1:8000/get_keys_from_csv_update",
+                url: "http://0.0.0.0:8000/get_keys_from_csv_update",
                 data: formData,
                 headers: { "Content-Type": "multipart/form-data" },
             })
@@ -673,7 +673,7 @@ function UpdateConfiguration() {
             }
             axios({
                 method: "post",
-                url: "http://127.0.0.1:8000/get_keys_from_csv_update",
+                url: "http://0.0.0.0:8000/get_keys_from_csv_update",
                 data: formData,
                 headers: { "Content-Type": "multipart/form-data" },
             })
@@ -718,7 +718,7 @@ function UpdateConfiguration() {
 
         axios({
             method: "post",
-            url: "http://127.0.0.1:8000/get_keys_and_uses_from_csv",
+            url: "http://0.0.0.0:8000/get_keys_and_uses_from_csv",
             data: formData,
             headers: { "Content-Type": "multipart/form-data" },
         })
@@ -738,7 +738,7 @@ function UpdateConfiguration() {
 
     function onSaveExample(e,token){
         e.preventDefault()
-        axios.get('http://127.0.0.1:8000/download_examples', {params:{token:token}})
+        axios.get('http://0.0.0.0:8000/download_examples', {params:{token:token}})
             .then(function (response) {
                 if(token === 'reports'){
                     FileDownload((response.data), 'reports_example.csv');
@@ -964,7 +964,7 @@ function UpdateConfiguration() {
         var opt = []
 
         if(PubMedAutoOpt !== ''){
-            axios.get('http://127.0.0.1:8000/get_auto_anno_PUBMED_batch_list',{params:{usecase:PubMedAutoOpt}}).then(response=>{
+            axios.get('http://0.0.0.0:8000/get_auto_anno_PUBMED_batch_list',{params:{usecase:PubMedAutoOpt}}).then(response=>{
                 // SetBa(response.data['batch_list'])
                 SetPubMedOptionsBatches(response.data['batch_list'])
                 response.data['batch_list'].map(el=>{
@@ -989,7 +989,7 @@ function UpdateConfiguration() {
         if(AutoOpt !== ''){
             var els = document.getElementsByName(AutoOpt)
 
-            axios.get('http://127.0.0.1:8000/get_auto_anno_batch_list',{params:{usecase:AutoOpt}}).then(response=>{
+            axios.get('http://0.0.0.0:8000/get_auto_anno_batch_list',{params:{usecase:AutoOpt}}).then(response=>{
                 // SetBa(response.data['batch_list'])
                 console.log('resp',response.data['batch_list'])
                 SetOptionsBatches(response.data['batch_list'])
@@ -1118,7 +1118,7 @@ function UpdateConfiguration() {
         })
         setShowModalAuto(false)
         SetShowPubMedModal(false)
-        axios.post('http://127.0.0.1:8000/create_auto_annotations',{usecase:[PubMedAutoOpt],batch:PubMedBatch,report_type:'pubmed',selected:selected_obj}).then(function(response){
+        axios.post('http://0.0.0.0:8000/create_auto_annotations',{usecase:[PubMedAutoOpt],batch:PubMedBatch,report_type:'pubmed',selected:selected_obj}).then(function(response){
             console.log(response.data)
             // setShowModalAuto(false)
             SetUpdateFields(true)
@@ -1161,7 +1161,7 @@ function UpdateConfiguration() {
 
         setShowModalAuto(false)
         SetShowPubMedModal(false)
-        axios.post('http://127.0.0.1:8000/create_auto_annotations',{usecase:[AutoOpt],batch:Batch,report_type:'reports',selected:selected_obj}).then(function(response){
+        axios.post('http://0.0.0.0:8000/create_auto_annotations',{usecase:[AutoOpt],batch:Batch,report_type:'reports',selected:selected_obj}).then(function(response){
             console.log(response.data)
             // setShowModalAuto(false)
             SetUpdateFields(true)
@@ -1194,7 +1194,7 @@ function UpdateConfiguration() {
         console.log('uses',UsesUpdate)
     },[UsesUpdate])
     function downloadAllAuto(){
-        axios.get('http://127.0.0.1:8000/download_all_ground_truths',{params:{gt_mode:'automatic'}})
+        axios.get('http://0.0.0.0:8000/download_all_ground_truths',{params:{gt_mode:'automatic'}})
             .then(function (response) {
                 FileDownload(JSON.stringify(response.data['ground_truth']), 'all_automatic_json_ground_truth.json');
 
@@ -1228,7 +1228,7 @@ function UpdateConfiguration() {
                 <Modal.Header closeButton>
                     <Modal.Title>Pay attention!</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>This action is <b>irreversible</b>, setting new fields to extract annotations from will remove all the reports already automatically annotated for {AutoOpt} use case together with the automatic annotations checked by your colleagues. If you want to save all the ground-truths created by the automatic user and those checked by the colleagues click on <i>Save</i>, otherwise click on <i>Yes</i>.</Modal.Body>
+                <Modal.Body>This action is <b>irreversible</b>, setting new fields to extract annotations from will remove all the documents already automatically annotated for {AutoOpt} use case together with the automatic annotations checked by your colleagues. If you want to save all the ground-truths created by the automatic user and those checked by the colleagues click on <i>Save</i>, otherwise click on <i>Yes</i>.</Modal.Body>
                 <Modal.Footer>
                     <Button style={{float:'left'}}  variant="info" onClick={()=>downloadAllAuto()}>
                         Download
@@ -1261,7 +1261,7 @@ function UpdateConfiguration() {
                 <Modal.Header closeButton>
                     <Modal.Title>Automatic annotation: ATTENTION</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>You selected: <b>{AutoOpt}</b> usecase to be automatically annotated. It might take a lot of time (especially if you have a lot of reports). Make sure your machine satisfies the following requirements:
+                <Modal.Body>You selected: <b>{AutoOpt}</b> usecase to be automatically annotated. It might take a lot of time (especially if you have a lot of documents). Make sure your machine satisfies the following requirements:
                     <ul>
                         <li>10GB RAM</li>
                     </ul>
@@ -1290,7 +1290,7 @@ function UpdateConfiguration() {
                 {ErrorAuto === true && <div>
                     <h3>ERROR</h3>
                     <div>
-                        Something went wrong with the automatic configuration. Try to do it again or drop us an email (section: <a href='http://127.0.0.1:8000/credits'>Credits</a>)
+                        Something went wrong with the automatic configuration. Try to do it again or drop us an email (section: <a href='http://0.0.0.0:8000/credits'>Credits</a>)
                     </div>
                     <hr/>
                     <div><Link to="/updateConfiguration"><Button onClick={()=>SetErrorAuto(0)} variant='success'>Back to Update</Button></Link></div>
@@ -1307,26 +1307,14 @@ function UpdateConfiguration() {
                                 <h2>Your new configuration is ready</h2>
                                 <div>{Message}</div>
                                 <hr/>
-                                {((Selected === 'reports' && ReportsMissingAuto !== {}) || (Selected === 'pubmed' && PubMedMissingAuto !== {})) && <div>
-                                    There are some reports that have not been automatically annotated yet.
-                                    {Object.keys(ReportsMissingAuto).length > 0 && <ul>
-                                        {Object.keys(ReportsMissingAuto).map(k=>
-                                            <li>the use case {k} has {ReportsMissingAuto[k]['all']['annotated']} automatically annotated reports over {ReportsMissingAuto[k]['all']['tot']}</li>
-                                        )}
-                                    </ul>}
-                                    {Object.keys(PubMedMissingAuto).length > 0 &&
-                                    <div>There are {PubMedMissingAuto['annotated']} PubMed articles that have been automatically annotated, while {PubMedMissingAuto['tot'] - PubMedMissingAuto['annotated']} have not</div>}
 
-                                    {/*clicking on <Button variant='warning'><FontAwesomeIcon icon={faRobot}/> Update now</Button><br/> You can also do it later*/}
-                                    <div>If you have not done the automatic annotation yet, We strongly suggest you to automatically annotate these reports going on <i>Configure -> Update Configuration -> Get the automatic annotations</i>.</div></div>}
-                                <hr/>
                                 <div>Log in with your credentials, or go back to the update page.</div>
 
                             </div>
 
                         </div>
                         <div style={{'text-align':'center'}}>
-                            <span><a href="http://127.0.0.1:8000/logout"><Button variant = 'primary'>Login</Button></a>&nbsp;&nbsp;<a href="http://127.0.0.1:8000/updateConfiguration"><Button variant = 'primary'>Update configuration</Button></a></span>
+                            <span><a href="http://0.0.0.0:8000/logout"><Button variant = 'primary'>Login</Button></a>&nbsp;&nbsp;<a href="http://0.0.0.0:8000/updateConfiguration"><Button variant = 'primary'>Update configuration</Button></a></span>
                         </div>
                     </Container>
                     }
@@ -1360,7 +1348,7 @@ function UpdateConfiguration() {
                     <div>
                         <h2 style={{'margin-top':'30px','margin-bottom':'30px','text-align':'center'}}>Update your DocTAG configuration</h2>
                         <div>
-                            Please, provide us with all the files and information required to customize the application. You can get the automatic annotations for your reports (available only for <i>colon, uterine cervix, lung</i> use cases), or add some data (report,s labels, concepts) to the current configuration.<br/>
+                            Please, provide us with all the files and information required to customize the application. You can add some data ( for example a new set of documents) to the current configuration.<br/>
                             <hr/>
 
 
@@ -1368,9 +1356,9 @@ function UpdateConfiguration() {
                             <div><h5 style={{display:'inline-block'}}>Add some data to the current configuration</h5><IconButton onClick={()=>SetShowAddSection(prev=>!prev)}><ExpandMoreIcon style={{marginLeft:'2px'}} /></IconButton></div>
                             <Collapse style={{marginTop:'0px'}} in={showAddSection}>
                                 {(!(Admin === '' && Username === 'Test')) ? <div>
-                                <div style={{'margin-bottom':'1%','margin-top':'0px'}}>Follow the instructions below to add some reports, labels and concepts:</div>
+                                <div style={{'margin-bottom':'1%','margin-top':'0px'}}>Follow the instructions below to add some documents, labels and concepts:</div>
                                 <ul>
-                                    <li><span>Select the type of file you want to add (the choices are: <i>labels, reports, concepts, fields to display and annotate).</i></span></li>
+                                    <li><span>Select the type of file you want to add (the choices are: <i>labels, documents, concepts, fields to display and annotate).</i></span></li>
                                     <li><span>Select the file(s).</span></li>
                                     <li>Click on <span><Button variant="primary" size='sm'>Check</Button></span> to control if the file (or information) you provided complies with the requirements.</li>
                                     <li>Click on <span><Button variant="success" size='sm'>Confirm</Button></span> to insert the data in the database. If some errors occurred you will be informed.</li>
@@ -1426,7 +1414,7 @@ function UpdateConfiguration() {
                                             </Form.Group>
                                             {ShowDeleteReports === true && <div><Button className='delete-button' onClick={(e)=>deleteInput(e,'reports')}><FontAwesomeIcon icon={faTimes} />Delete file</Button></div>}
                                             {UsesUpdate.length > 0 && <div>
-                                                You are uploading reports for {UsesUpdate.join(', ')}: you have already uploaded documents for these topics. You can upload these documents as a different <b>batch</b>, that means that you can upload the documents keeping track of the insertion date. This allows users to choose what batch to annotate and allows you to choose what batch to automatically annotate. If you do not want to keep reports in different batches, all the reports belonging to a specific use case will be loaded independetly of when they have been inserted.
+                                                You are uploading documents for {UsesUpdate.join(', ')}: you have already uploaded documents for these topics. You can upload these documents as a different <b>batch</b>, that means that you can upload the documents keeping track of the insertion date. This allows users to choose what batch to annotate and allows you to choose what batch to automatically annotate. If you do not want to keep reports in different batches, all the reports belonging to a specific use case will be loaded independetly of when they have been inserted.
                                                 Do you want to add documents for {UsesUpdate.join(', ')} in a new batch? If you do not want to and there is more than one batch in the database for that topic, then, the documents will be added to the last inserted batch.&nbsp;&nbsp;
                                                     <span>
                                                         <label>
@@ -1445,7 +1433,7 @@ function UpdateConfiguration() {
 
                                         {(Selected === 'reports' && KeysUpdate.length > 0) && <div>
                                             <div>In the documents file(s) you have just uploaded there are some fields that have never been seen before. Please notify us if you want to hide, display or annotate them.</div>
-                                            <div style = {{'font-weight':'bold'}}>Remember that if you have found some mentions in one or more reports, the fields that you annotated can not turned into Display or Hide, you can add fields to annotate but not remove them. </div>
+                                            <div style = {{'font-weight':'bold'}}>Remember that if you have found some mentions in one or more documents, the fields that you annotated can not turned into Display or Hide, you can add fields to annotate but not remove them. </div>
                                             {KeysUpdate.map((key,ind)=>
                                                 <Row><Col md = {4}>{key}</Col>
                                                     <Col md={8}>
@@ -1520,8 +1508,8 @@ function UpdateConfiguration() {
                                             <hr/>
                                         </div>}
                                         {((Selected === 'json_fields' && Keys.length > 1)) && <div>
-                                            <div style={{'margin-bottom':'20px'}}>Below you can find all the keys detected in your json reports. For each key you have to decide if you want to display, hide or both display and annotate the value corresponding to that key.</div>
-                                            <div style = {{'font-weight':'bold'}}>Remember that if you have found some mentions in one or more reports, the fields that you annotated can not turned into Display or Hide, you can add fields to annotate but not remove them.</div>
+                                            <div style={{'margin-bottom':'20px'}}>Below you can find all the keys detected in your json documents. For each key you have to decide if you want to display, hide or both display and annotate the value corresponding to that key.</div>
+                                            <div style = {{'font-weight':'bold'}}>Remember that if you have found some mentions in one or more documents, the fields that you annotated can not turned into Display or Hide, you can add fields to annotate but not remove them.</div>
                                             {Keys.map((key,ind)=>
                                                 <Row><Col md = {4}>
                                                     {key}</Col>

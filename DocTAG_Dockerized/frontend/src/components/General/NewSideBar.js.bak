@@ -25,7 +25,7 @@ function NewSideBar(props){
                     <div style={{'text-align':'center','font-size':'1rem','font-weight':'bold'}}>Tech</div>
                     <div style={{'text-align':'center','font-size':'1rem','font-weight':'bold'}}><button
                         style={{'border':'none','background-color':'#E25886'}}
-                        type='button' ><a style={{'font-size':'1rem','color':'black'}} href="http://0.0.0.0:8000/logout"> Logout <FontAwesomeIcon icon={faSignOutAlt}/></a></button></div>
+                        type='button' ><a style={{'font-size':'1rem','color':'black'}} href="http://127.0.0.1:8000/logout"> Logout <FontAwesomeIcon icon={faSignOutAlt}/></a></button></div>
                     <hr />
                 <Nav.Link href="#">Tutorial</Nav.Link>
                 <Nav.Link href="#">FAQ</Nav.Link>

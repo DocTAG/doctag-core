@@ -63,7 +63,7 @@ function ReportSelection(props){
         console.log('ACTION',Action)
         // console.log('Indice',Index)
         if(Reports.length > 0 && (Action === 'mentions' || Action === 'labels' || Action === 'concepts' || Action === 'concept-mention')){
-            axios.get("http://127.0.0.1:8000/get_reports_from_action", {params: {action:Action}}).then(response => {
+            axios.get("http://0.0.0.0:8000/get_reports_from_action", {params: {action:Action}}).then(response => {
                 var array_annotated = response.data['reports_presence']
                 // SetAutomaticAnnotatedChecked(response.data['auto_checked'])
                 // console.log('arrayanno',array_annotated)
@@ -223,7 +223,7 @@ function ReportSelection(props){
                 var data_to_ret = {'mentions': mentions_to_show.filter(x=>x.seq_number !== 0)}
                 // console.log('mentions: ' ,mentions_to_show)
 
-                axios.post('http://127.0.0.1:8000/mention_insertion/insert', {
+                axios.post('http://0.0.0.0:8000/mention_insertion/insert', {
                     mentions: data_to_ret['mentions'],language:Language,
                     report_id: Reports[Index].id_report
                 })
@@ -240,7 +240,7 @@ function ReportSelection(props){
             }else if (token.startsWith('annotation')) {
                 //const data = new FormData(document.getElementById("annotation-form"));
                 // console.log('labtoinsert',LabToInsert)
-                axios.post('http://127.0.0.1:8000/annotationlabel/insert', {
+                axios.post('http://0.0.0.0:8000/annotationlabel/insert', {
                     //labels: data.getAll('labels'),
                     labels: LabToInsert,language:Language,
                     report_id: Reports[Index].id_report,
@@ -268,7 +268,7 @@ function ReportSelection(props){
 
                 data_to_ret = {'linked': associations_to_show}
                 if (data_to_ret['linked'].length >= 0) {
-                    axios.post('http://127.0.0.1:8000/insert_link/insert', {
+                    axios.post('http://0.0.0.0:8000/insert_link/insert', {
                         linked: data_to_ret['linked'],language:Language,
                         report_id: Reports[Index].id_report
                     })
@@ -298,7 +298,7 @@ function ReportSelection(props){
 
                 // console.log(concepts_list);
 
-                axios.post('http://127.0.0.1:8000/contains/update', {
+                axios.post('http://0.0.0.0:8000/contains/update', {
                         concepts_list: concepts_list, language: Language,
                         report_id: Reports[Index].id_report,
                     },

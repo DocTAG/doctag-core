@@ -70,7 +70,7 @@ import Spinner from "react-bootstrap/Spinner";
 //     const [UsesExtraxcted,SetUsesExtracted] = useState([])
 //     useEffect(()=>{
 //         console.log('entro qua')
-//         axios.get("http://0.0.0.0:8000/get_usecase_inst_lang").then(response => {
+//         axios.get("http://127.0.0.1:8000/get_usecase_inst_lang").then(response => {
 //             SetUseCaseList(response.data['usecase']);
 //             SetUsesExtracted(response.data['usecase']);
 //             SetLanguageList(response.data['language']);
@@ -83,7 +83,7 @@ import Spinner from "react-bootstrap/Spinner";
 //
 //
 //
-//         // axios.get("http://0.0.0.0:8000/get_stats_array_per_usecase").then(response => {
+//         // axios.get("http://127.0.0.1:8000/get_stats_array_per_usecase").then(response => {
 //         //     // console.log('stats: ',response.data['array_stats'])
 //         //     SetStatsArray(response.data['array_stats'])
 //         //
@@ -95,7 +95,7 @@ import Spinner from "react-bootstrap/Spinner";
 //         var username = window.username
 //         // console.log('username', username)
 //         SetUsername(username)
-//         // axios.get('http://0.0.0.0:8000/get_presence_robot_user').then(function(response){
+//         // axios.get('http://127.0.0.1:8000/get_presence_robot_user').then(function(response){
 //         //     if(response.data['auto_annotation_count'] > 0){
 //         //         SetStatsAuto(true)
 //         //     }
@@ -117,7 +117,7 @@ import Spinner from "react-bootstrap/Spinner";
 //             SetStatsArrayPercent(false)
 //             // if (ChosenStats === 'Robot'){
 //             //     var uses = []
-//             //     axios.get('http://0.0.0.0:8000/get_post_fields_for_auto').then(function(response){
+//             //     axios.get('http://127.0.0.1:8000/get_post_fields_for_auto').then(function(response){
 //             //
 //             //         Object.keys(response.data['extract_fields']).map(elem=>{
 //             //             if(response.data['extract_fields'][elem].length > 0){
@@ -134,7 +134,7 @@ import Spinner from "react-bootstrap/Spinner";
 //             //         SetUsesExtracted(UseCaseList)
 //             //     }
 //
-//             axios.get("http://0.0.0.0:8000/get_stats_array_per_usecase",{params:{mode:ChosenStats}}).then(response => {
+//             axios.get("http://127.0.0.1:8000/get_stats_array_per_usecase",{params:{mode:ChosenStats}}).then(response => {
 //                 SetStatsArrayPercent(response.data['medtag']['percent'])
 //                 SetStatsArray(response.data['medtag']['original'])
 //                 SetStatsArrayPercentPubMed(response.data['pubmed']['percent'])
@@ -291,7 +291,7 @@ function MyStats() {
     const [ShowOptions,SetShowOptions] = useState(true)
 
     useEffect(()=>{
-        axios.get("http://0.0.0.0:8000/get_usecase_inst_lang").then(response => {
+        axios.get("http://127.0.0.1:8000/get_usecase_inst_lang").then(response => {
             SetUseCaseList(response.data['usecase']);
             SetUsesExtracted(response.data['usecase']);
             SetLanguageList(response.data['language']);
@@ -311,7 +311,7 @@ function MyStats() {
 
 
 
-        axios.get('http://0.0.0.0:8000/get_batch_list').then(response=>SetBatchList(response.data['batch_list']))
+        axios.get('http://127.0.0.1:8000/get_batch_list').then(response=>SetBatchList(response.data['batch_list']))
 
     },[])
 
@@ -341,7 +341,7 @@ function MyStats() {
             SetStatsArrayPercent(false)
 
 
-            axios.get("http://0.0.0.0:8000/get_stats_array_per_usecase",{params:{mode:ChosenStats,language:SelectedLang,institute:SelectedInstitute,batch:SelectedBatch}}).then(response => {
+            axios.get("http://127.0.0.1:8000/get_stats_array_per_usecase",{params:{mode:ChosenStats,language:SelectedLang,institute:SelectedInstitute,batch:SelectedBatch}}).then(response => {
                 SetStatsArrayPercent(response.data['medtag']['percent'])
                 SetStatsArray(response.data['medtag']['original'])
                 SetStatsArrayPercentPubMed(response.data['pubmed']['percent'])
@@ -428,7 +428,7 @@ function MyStats() {
                             <div>{UsesExtraxcted.map((usecase,ind)=>
                                 <div>
                                     {StatsArray && StatsArray[usecase]['all_reports'] > 0 && <div>
-                                        <div style={{'font-size':'1.5rem','margin':'5px'}}>USE CASE <span style={{'font-weight':'bold'}}>{usecase}</span>: {StatsArray[usecase]['all_reports']} reports</div>
+                                        <div style={{'font-size':'1.5rem','margin':'5px'}}>Topic: <span style={{'font-weight':'bold'}}>{usecase}</span>: {StatsArray[usecase]['all_reports']} reports</div>
                                         {<div><b>Language: <i style={{color: 'royalblue'}}>{SelectedLang}</i></b></div>}
                                         {/*{ChosenStats === 'Human' ? <div><b>Language: <i style={{color: 'royalblue'}}>{SelectedLang}</i></b></div> : <div><b>Language: <i style={{color: 'royalblue'}}>english</i></b></div>}*/}
                                         <div><b>Institute: <i style={{color: 'royalblue'}}> {SelectedInstitute}</i></b></div>
@@ -454,7 +454,7 @@ function MyStats() {
                                 {UsesExtraxcted.map((usecase,ind)=>
                                     <div>
                                         {StatsArrayPubMed && StatsArrayPubMed[usecase]['all_reports'] > 0 && <div>
-                                            <div style={{'font-size':'1.5rem','margin':'5px'}}><span style={{color:'royalblue'}}><b>PUBMED</b></span> - USE CASE <span style={{'font-weight':'bold'}}>{usecase}</span>: {StatsArrayPubMed[usecase]['all_reports']} reports</div>
+                                            <div style={{'font-size':'1.5rem','margin':'5px'}}><span style={{color:'royalblue'}}><b>PUBMED</b></span> - Topic <span style={{'font-weight':'bold'}}>{usecase}</span>: {StatsArrayPubMed[usecase]['all_reports']} reports</div>
                                             <div><b>Language: <i style={{color: 'royalblue'}}> english</i></b></div>
                                             <div><b>Institute: <i style={{color: 'royalblue'}}> PUBMED</i></b></div>
                                             <div style={{'text-align':'center'}}>

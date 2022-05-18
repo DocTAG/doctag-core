@@ -32,7 +32,7 @@ function Credits() {
     useEffect(()=>{
         // console.log('SHOWBAR',ShowBar)
 
-        axios.get("http://127.0.0.1:8000/get_usecase_inst_lang").then(response => {
+        axios.get("http://0.0.0.0:8000/get_usecase_inst_lang").then(response => {
             SetUseCaseList(response.data['usecase']);
             SetLanguageList(response.data['language']);
             SetInstituteList(response.data['institute']);

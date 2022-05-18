@@ -21,6 +21,7 @@ import cookie from "react-cookies";
 import LabelItem from "../Labels/LabelItem";
 import SnackBar from "../General/SnackBar";
 import Token_DocTag from "../Report/Token_DocTag";
+import Token_overlapping from "../Report/Token_overlapping";
 // import {Container,Row,Col} from "react-bootstrap";
 //
 // axios.defaults.xsrfCookieName = "csrftoken";
@@ -40,6 +41,7 @@ function Mention(props){
     const [ShowLabelsOpts,SetShowLabelsOpts] = showlabels
     const [ShowMemberGt,SetShowMemberGt] =showmember
     const [ShowMajorityModal,SetshowMajorityModal] = showmajoritymodal
+    const [Action, SetAction] = action
     const [labels, setLabels] = labelsList
 
     //const { mentionsList } = useContext(MentionContext);
@@ -101,54 +103,170 @@ function Mention(props){
     }
 
 
-
-
-
-
-    const handleHighlight = (e,WordsMention) =>{
+    const handleHighlight = () =>{
+        // console.log('highlight56')
         SetHighlightMention(false)
-        // SetColorWords(false)
-        // Children.map(child=>child.setAttribute('font-weight','normal'))
-
         var scroll = false
+        var starts = []
+
+        WordsMention.map(word=>{
+            starts.push(word.startToken.toString())
+        })
+        // var label = mentions_to_show[props.index].label
+        // var indice = labels.indexOf(label)
+        // var col = Color[indice]
+        var bottone_mention = Array.from(document.getElementsByClassName('butt_mention'))
+
+        bottone_mention.map(b=>{
+
+            if(Number(b.id) + b.textContent.trim().length-1 === props.start + props.text.trim().length -1 ) {
+
+                if (b.classList.contains('normal') || (!b.classList.contains('normal') && !b.classList.contains('blocked'))) {
+                    // console.log('somno qua')
+                    b.classList.add("blocked");
+                    b.classList.remove("normal");
+                }
+                else{
+                    b.classList.add("normal");
+                    b.classList.remove("blocked");
+                }
+            }
+        })
+        // if (bottone_mention[props.id].classList.contains('normal') || (!bottone_mention[props.id].classList.contains('normal') && !bottone_mention[props.id].classList.contains('blocked'))){
+        //     //     bottone_mention[props.id].style.fontWeight = 'bold'
+        //     // bottone_mention[props.id].className = 'normal'
+        //     bottone_mention[props.id].classList.add("blocked");
+        //     bottone_mention[props.id].classList.remove("normal");
+        //
+        // }
+        // else{
+        //
+        //     bottone_mention[props.id].classList.add("normal");
+        //     bottone_mention[props.id].classList.remove("blocked");
+        //
+        // }
+
+        var to_keep_bold = []
+        bottone_mention.map(s=>{
+            if(s.style.fontWeight === 'bold'){
+                var spans = s.getElementsByTagName('span')
+                for(const span of spans) {
+                    to_keep_bold.push(span.id)
+                }
+
+            }
+
+        })
         Children.map(child=>{
+
+            if(starts.indexOf(child.id.toString()) !== -1){
+                // console.log('counts',counts.hasOwnProperty(child.id))
+                // console.log('counts',counts[child.id])
+                if(scroll === false && (child.style.fontWeight === 'normal' || child.style.fontWeight === '')){
+
+                    child.scrollIntoView({ behavior: 'smooth',block: "nearest"})
+                    scroll = true
+                }
+                bottone_mention.map(b=> {
+                    if(Number(b.id) + b.textContent.trim().length-1 === props.start + props.text.trim().length -1 ) {
+                        // console.log('color',b.style.color)
+                        child.style.color = b.style.color
+                        // console.log('color',child.style.color)
+
+                        if (b.classList.contains('blocked')) {
+
+                            child.classList.add("blocked");
+                            child.classList.remove("normal");
+
+                        } else {
+
+                            child.classList.add("normal");
+                            child.classList.remove("blocked");
+
+                        }
+                    }
+                })
+
+            }
+
+        })
+
+    }
+
+
+    const handleHighlight_Over = (e,type) =>{
+        var target = e.target
+        if (! target.classList.contains('blocked')){
+            SetHighlightMention(false)
+            var scroll = false
+            var starts = []
             WordsMention.map(word=>{
-                if(child.id.toString() === word.startToken.toString()){
+                starts.push(word.startToken.toString())
+            })
+            if(Action === 'mentions'){
+
+                var bottone_mention = Array.from(document.getElementsByClassName('butt_mention'))
+
+            }else{
+                var bottone_mention = Array.from(document.getElementsByClassName('butt_linked'))
+
+            }
+            type === 'over' ? target.style.fontWeight = 'bold' : target.style.fontWeight = ''
+            // bottone_mention.map(b=> {
+            //     if(Number(b.id) + b.textContent.trim().length-1 >= target.id && target.id >= Number(b.id)) {
+            //         // console.log('color',b.style.color)
+            //         // target.style.color = b.style.color
+            //         // console.log('color',target.style.color)
+            //         // console.log('color',b.textContent)
+            //         // console.log('color',target.textContent)
+            //         type === 'over' ? b.style.fontWeight = 'bold' : b.style.fontWeight = ''
+            //     }
+            // })
+
+            Children.map(child=>{
+                // console.log('st',starts.indexOf(child.id.toString()))
+                // console.log('st',(child.id))
+                // console.log('st',(starts))
+                if(starts.indexOf(child.id.toString()) !== -1){
                     if(scroll === false && (child.style.fontWeight === 'normal' || child.style.fontWeight === '')){
 
                         child.scrollIntoView({ behavior: 'smooth',block: "nearest"})
                         scroll = true
                     }
-
-                    child.style.fontWeight === 'bold' ? child.style.fontWeight = '' : child.style.fontWeight = 'bold'
-
+                    // child.style.fontWeight = 'bold'
+                    bottone_mention.map(b=> {
+                        if(Number(b.id) + b.textContent.trim().length-1 === props.start + props.text.trim().length -1 ) {
+                            // console.log('color',b.style.color)
+                            child.style.color = b.style.color
+                            // console.log('color',child.style.color)
+                            type === 'over' ? child.style.fontWeight = 'bold' : child.style.fontWeight = ''
+                        }
+                    })
+                    // type === 'over' ? child.style.fontWeight = 'bold' : child.style.fontWeight = ''
+                    // child.style.color = target.style.color
+                    // ClickedMention === false ? child.style.fontWeight = 'bold' : child.style.fontWeight = ''
 
                 }
+                else{
+                    child.style.fontWeight = ''
+                }
+
+
             })
-        })
-        // e.target.style.fontWeight === 'bold' ? e.target.style.fontWeight = 'normal' : e.target.style.fontWeight = 'bold'
-        var bottone_mention = Array.from(document.getElementsByClassName('butt_mention'))
-        // var str = '#'+ WordsMention[0].start + '.butt_mention'
-        // var bottone_mention =document.getElementById(WordsMention[0].startToken.toString()).getElementsByClassName("butt_mention")[0];
-        bottone_mention.map(bottone=>{
 
-            if(bottone.id.toString() === WordsMention[0].startToken.toString()){
-                // console.log('1',bottone.id.toString())
-                // console.log('2',WordsMention[0].startToken.toString())
-                bottone.style.fontWeight === 'bold' ? bottone.style.fontWeight = '' : bottone.style.fontWeight = 'bold'
-
-            }
-        })
-        // bottone_mention[props.id].style.fontWeight === 'bold' ? bottone_mention[props.id].style.fontWeight = '' : bottone_mention[props.id].style.fontWeight = 'bold'
+        }
 
     }
+    // if (!ClickedMention){
+
+
+
+
 
 
     function fromMentionToArray(text,start1){
         var array = []
         var words = []
-        // console.log('mention',text)
-
         var stringa = text.toString() //The age is considered an integer!!
         if(stringa.indexOf(' ')){
             words = stringa.split(' ')
@@ -196,7 +314,6 @@ function Mention(props){
             doc.scrollIntoView()
             // var tokens_butt = Array.from(document.getElementById(mention.start))
             token_list.map((ment,ind)=>{
-
                 var token_sel = document.getElementById(ment.startToken)
                 token_sel.style.color = 'royalblue'
                 token_sel.style.fontWeight = 'bold'
@@ -204,8 +321,6 @@ function Mention(props){
         }
         else{
             console.log('out')
-
-            // token_list[0].scrollIntoView({ behavior: 'smooth',block: "nearest"})
             // var tokens_butt = Array.from(document.getElementById(mention.start))
             token_list.map((ment,ind)=>{
                 var token_sel = document.getElementById(ment.startToken)
@@ -215,6 +330,120 @@ function Mention(props){
         }
 
     }
+
+
+
+
+    // const handleHighlight = (e,WordsMention) =>{
+    //     SetHighlightMention(false)
+    //     // SetColorWords(false)
+    //     // Children.map(child=>child.setAttribute('font-weight','normal'))
+    //
+    //     var scroll = false
+    //     Children.map(child=>{
+    //         WordsMention.map(word=>{
+    //             if(child.id.toString() === word.startToken.toString()){
+    //                 if(scroll === false && (child.style.fontWeight === 'normal' || child.style.fontWeight === '')){
+    //
+    //                     child.scrollIntoView({ behavior: 'smooth',block: "nearest"})
+    //                     scroll = true
+    //                 }
+    //
+    //                 child.style.fontWeight === 'bold' ? child.style.fontWeight = '' : child.style.fontWeight = 'bold'
+    //
+    //
+    //             }
+    //         })
+    //     })
+    //     // e.target.style.fontWeight === 'bold' ? e.target.style.fontWeight = 'normal' : e.target.style.fontWeight = 'bold'
+    //     var bottone_mention = Array.from(document.getElementsByClassName('butt_mention'))
+    //     // var str = '#'+ WordsMention[0].start + '.butt_mention'
+    //     // var bottone_mention =document.getElementById(WordsMention[0].startToken.toString()).getElementsByClassName("butt_mention")[0];
+    //     bottone_mention.map(bottone=>{
+    //
+    //         if(bottone.id.toString() === WordsMention[0].startToken.toString()){
+    //             // console.log('1',bottone.id.toString())
+    //             // console.log('2',WordsMention[0].startToken.toString())
+    //             bottone.style.fontWeight === 'bold' ? bottone.style.fontWeight = '' : bottone.style.fontWeight = 'bold'
+    //
+    //         }
+    //     })
+    //     // bottone_mention[props.id].style.fontWeight === 'bold' ? bottone_mention[props.id].style.fontWeight = '' : bottone_mention[props.id].style.fontWeight = 'bold'
+    //
+    // }
+    //
+    //
+    // function fromMentionToArray(text,start1){
+    //     var array = []
+    //     var words = []
+    //     // console.log('mention',text)
+    //
+    //     var stringa = text.toString() //The age is considered an integer!!
+    //     if(stringa.indexOf(' ')){
+    //         words = stringa.split(' ')
+    //
+    //     }
+    //     else{
+    //         words.push(stringa)
+    //     }
+    //     // console.log('startpassato',props.startSectionChar)
+    //     var start = start1
+    //     var last = words.slice(-1)[0]
+    //     var chars = [',','.',':',';']
+    //     words.map((word,index) =>{
+    //         var apostrofo = false
+    //         var end = start + word.length - 1
+    //         word = word.replace(/[.,#!$%\^&\*;:{}=`~()]/g,"");
+    //         if(word.includes("'") && Language === 'Italian'){
+    //             apostrofo = true
+    //             //word = word.split("'")[1]
+    //         }
+    //
+    //         var obj = {'word':word,'startToken':start,'stopToken':end}
+    //
+    //         array.push(obj)
+    //         start = end + 2 //tengo conto dello spazio
+    //         // console.log('obj',obj)
+    //
+    //     })
+    //
+    //     return array
+    // }
+    //
+    // useEffect(()=>{
+    //     var array = fromMentionToArray(props.text,props.start)
+    //     SetWordsMention(array)
+    //
+    // },[props.text,props.start,props.stop])
+    //
+    // function mouseHover(e,mention,action){
+    //     // GESTIONE HOVER NEL REPORTLISTUPDATED DELLE MODALI
+    //     var token_list = fromMentionToArray(mention.mention,mention.start)
+    //     var doc = document.getElementById(token_list[0].startToken)
+    //     console.log('hover')
+    //     if(action === 'hover'){
+    //         doc.scrollIntoView()
+    //         // var tokens_butt = Array.from(document.getElementById(mention.start))
+    //         token_list.map((ment,ind)=>{
+    //
+    //             var token_sel = document.getElementById(ment.startToken)
+    //             token_sel.style.color = 'royalblue'
+    //             token_sel.style.fontWeight = 'bold'
+    //         })
+    //     }
+    //     else{
+    //         console.log('out')
+    //
+    //         // token_list[0].scrollIntoView({ behavior: 'smooth',block: "nearest"})
+    //         // var tokens_butt = Array.from(document.getElementById(mention.start))
+    //         token_list.map((ment,ind)=>{
+    //             var token_sel = document.getElementById(ment.startToken)
+    //             token_sel.style.color = 'black'
+    //             token_sel.style.fontWeight = 'normal'
+    //         })
+    //     }
+    //
+    // }
 
     function show_lab(option){
         if(ShowLabelsOpts.length > 0){
@@ -244,10 +473,10 @@ function Mention(props){
             <Row>
                 <Col md={9} className='left_list'>
 
-                    <button style={{'text-align':'left'}} className="butt_mention" id={props.start} name={props.index} type="button" onClick={(e)=>handleHighlight(e,WordsMention)} >
+                    <button style={{'text-align':'left'}} className="butt_mention" id={props.start} name={props.index} type="button" onClick={()=>handleHighlight()}  onMouseOver={(e)=>handleHighlight_Over(e,'over')} onMouseOut={(e)=>handleHighlight_Over(e,'out')} >
                         {Color !== '' && WordsMention.map((word,index)=>
 
-                            <div style={{'float':'left'}}><Token_DocTag index_mention={props.id} action='mentionsList' words={WordsMention} start_token={word.startToken}
+                            <div style={{'float':'left'}}><Token_overlapping index_mention={props.id} action='mentionsList' words={WordsMention} start_token={word.startToken}
                                          stop_token={word.stopToken} word={word.word} index={index}/>&nbsp;</div>
                         )}
 

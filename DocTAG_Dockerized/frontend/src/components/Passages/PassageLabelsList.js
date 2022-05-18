@@ -40,7 +40,7 @@ import Collapse from "@material-ui/core/Collapse";
 // export const PassageContext = createContext('')
 
 function PassageLabelsList(props){
-    const { language,labelsList,colorword,showlabels,report,mentionToAdd,disButton, mentionsList,color,showmember,selectedLang,showautoannotation,showmajority,loadingColors,finalcount, highlightMention, action,reports, index, mentionSingleWord, allMentions, tokens } = useContext(AppContext);
+    const { language,labelsList,colorword,showlabels,report,reload,mentionToAdd,disButton, mentionsList,color,showmember,selectedLang,showautoannotation,showmajority,loadingColors,finalcount, highlightMention, action,reports, index, mentionSingleWord, allMentions, tokens } = useContext(AppContext);
     // const { mentionsList } = useContext(PassageContext);
     const [Children,SetChildren] = tokens;
     const [FinalCount, SetFinalCount] = finalcount;
@@ -70,6 +70,8 @@ function PassageLabelsList(props){
     const [MentionToAdd,SetMentionToAdd] = mentionToAdd
     const [Filtered_mention,SetFiltered_mention] = useState([])
     const [HighlightMention, SetHighlightMention] = highlightMention;
+    const [ReloadMentions,SetReloadMentions] = reload;
+
     //const [Highlight, SetHighlight] = useState('Highlight all');
 
     // useEffect(()=>{
@@ -115,6 +117,132 @@ function PassageLabelsList(props){
     },[WordMention])
 
 
+    // useEffect(()=>{
+    //     // console.log('MENTISHOW',ShowInfoMentions)
+    //     SetReloadMentions(false)
+    //     if(SelectedLang === Language && WordMention.length === 0) {
+    //         // console.log('entro')
+    //         // console.log('count1', FinalCount)
+    //         // console.log('count1', Children.length)
+    //         // console.log('count1',mentions_to_show)
+    //         if (ShowInfoMentions === false) {
+    //             if (Children.length === FinalCount) {
+    //                 if (mentions_to_show.length === 0) {
+    //                     console.log('EMPTY MENTIONS')
+    //                     Children.map(child => {
+    //                         console.log('TOKEN empty')
+    //                         child.setAttribute('class', 'token') //Added!!
+    //                         child.style.color = 'black'                        //Added!!
+    //                     })
+    //                 }
+    //
+    //                 var bottone_mention = (document.getElementsByClassName('butt_mention'))
+    //                 if (mentions_to_show.length > 0) {
+    //                     Children.map(child => {
+    //                         console.log('TOKEN')
+    //                         child.setAttribute('class', 'token') //Added!!
+    //                         child.style.color = 'black'
+    //                         //Added!!
+    //                     })
+    //                     console.log('PASSO DI QUA, MENTIONS',mentions_to_show)
+    //                     // console.log('PASSO COLORO')
+    //                     var range_overlapping = []
+    //                     mentions_to_show.map((m,i)=>{
+    //                         console.log('m1',m)
+    //                         console.log('m1',range_overlapping)
+    //
+    //                         var start = m.start
+    //                         var stop = m.stop
+    //                         var found = false
+    //                         range_overlapping.map((o,i)=>{
+    //                             // console.log('m1 found',o[0],o[1],start,stop)
+    //                             // console.log('m1 found',start<=o[1])
+    //                             // console.log('m1 found',o[0]<= stop)
+    //                             // console.log('m1 found',(stop<= o[1]))
+    //                             // console.log('m1 found',(o[0]<=start && start<=o[1]))
+    //                             // console.log('m1 found',(o[0]<= stop && stop<= o[1]))
+    //                             if (((o[0]<=start && start<=o[1]) || (o[0]<= stop && stop<= o[1]))){
+    //                                 o[0] = Math.min(o[0],start)
+    //                                 o[1] = Math.max(o[1],stop)
+    //                                 found = true
+    //                             }
+    //                         })
+    //                         if (found === false){
+    //
+    //                             range_overlapping.push([start,stop])
+    //                             // console.log('m1',start,stop)
+    //                             // console.log('m1',range_overlapping)
+    //
+    //                         }
+    //
+    //                     })
+    //                     console.log('rangeover',range_overlapping)
+    //
+    //
+    //                     mentions_to_show.map((mention, index) => {
+    //                         var array = fromMentionToArray(mention.mention_text, mention.start)
+    //                         //console.log(array)
+    //                         var words_array = []
+    //                         // var index_color = index
+    //                         var index_color = index
+    //
+    //                         range_overlapping.map((o,i)=>{
+    //                             if (((o[0]<=mention.start && mention.start<=o[1]) || (o[0]<= mention.stop && mention.stop<= o[1]))){
+    //                                 index_color = i
+    //                             }
+    //                         })
+    //                         console.log('m1',mention.text,index)
+    //
+    //                         if (Color[index_color] === undefined) {
+    //                             index_color = index_color - Color.length
+    //                         }
+    //
+    //                         // if (Color[index] === undefined) {
+    //                         //     index_color = index - Color.length
+    //                         // }
+    //                         bottone_mention[index].style.color = Color[index_color]
+    //
+    //                         Children.map(child => {
+    //
+    //                             array.map((word, ind) => {
+    //                                 if (child.id.toString() === word.startToken.toString()) {
+    //
+    //                                     words_array.push(child)
+    //
+    //                                     // supporto overlapping
+    //                                     child.setAttribute('class', 'notSelectedMention')
+    //                                     console.log('PASSO COLORO qua',child)
+    //
+    //                                     child.style.color = Color[index_color]
+    //
+    //                                     if (child.style.fontWeight === 'bold') {
+    //                                         bottone_mention[index].style.fontWeight = 'bold'
+    //                                     }
+    //
+    //                                 }
+    //                             })
+    //                         })
+    //
+    //                     })
+    //                 }
+    //
+    //             }
+    //         }//Added
+    //         else {
+    //             Children.map(child => {
+    //                 child.setAttribute('class', 'notSelected')
+    //             })
+    //             SetWordMention([])
+    //         }
+    //         if (ShowAutoAnn === true || ShowMemberGt === true) {
+    //             Children.map(child => {
+    //                 child.setAttribute('class', 'notSelected')
+    //             })
+    //         }
+    //
+    //         SetLoadingMentionsColor(false)
+    //     }
+    // },[Action,mentions_to_show,Color,ShowInfoMentions,SelectedLang,FinalCount,Children,ReloadMentions]) //COLOR AGGIUNTO,children
     useEffect(()=>{
         if(SelectedLang === Language && WordMention.length === 0) {
 
@@ -245,8 +373,8 @@ function PassageLabelsList(props){
         e.preventDefault()
         SetWordMention([])
         SetMentionToAdd('')
-        console.log('mention_pa',mention)
-        console.log('mention_pa',label)
+        // console.log('mention_pa',mention)
+        // console.log('mention_pa',label)
         if (Action === 'mentions') {
             SetDisable_Buttons(false)
             var bool = false // controllo se nelle mention to show c'è già ciò che voglio inserire
@@ -261,35 +389,50 @@ function PassageLabelsList(props){
             //     alert('this mention has been already inserted in the list!')
             // } else {
             var mentions = mentions_to_show
-            // console.log('mentions_current',mentions)
+            var found = false
+            mentions.map(m=>{
+                // console.log(m.start,mention.start)
+                // console.log(m.stop,mention.stop)
+                // console.log(m.label,label)
+                if(m.start === mention.start && m.stop === mention.stop && m.label === label.label){
+                    alert('This assignment already exist')
+                    SetReloadMentions(true)
+                    found = true
 
-            // var eq = false
-            // mentions.map(m =>{
-            //     if(m.start.toString() === mention.start.toString()){
-            //         eq = true
-            //     }
-            // })
-            // if(eq === true){
-            //     mentions = mentions.filter(x => x.start.toString() === mention.start.toString())
-            // }
-            // mentions = mentions.filter(x => x.start.toString() === mention.start.toString())
-            mention['seq_number'] = label.seq_number
-            mention['label'] = label.label
-
-            mentions.push(mention)
-            // console.log('mentions_current',mentions)
-
-            var ordered = order_array(mentions)
-            console.log('mentions_current',ordered)
-            SetMentions_to_show(ordered)
-
-            mentions_to_show.map(ment => {
-                // console.log('mentions_current',ment.start)
-                // console.log('mentions_current',mention.start)
-                if ((ment.start === mention.start) && (ment.stop === mention.stop)) {
-                    SetChangeLabel(prev => !prev)
                 }
             })
+            if (!found){
+                // console.log('mentions_current',mentions)
+
+                // var eq = false
+                // mentions.map(m =>{
+                //     if(m.start.toString() === mention.start.toString()){
+                //         eq = true
+                //     }
+                // })
+                // if(eq === true){
+                //     mentions = mentions.filter(x => x.start.toString() === mention.start.toString())
+                // }
+                // mentions = mentions.filter(x => x.start.toString() === mention.start.toString())
+                mention['seq_number'] = label.seq_number
+                mention['label'] = label.label
+
+                mentions.push(mention)
+                // console.log('mentions_current',mentions)
+
+                var ordered = order_array(mentions)
+                console.log('mentions_current',ordered)
+                SetMentions_to_show(ordered)
+
+                mentions_to_show.map(ment => {
+                    // console.log('mentions_current',ment.start)
+                    // console.log('mentions_current',mention.start)
+                    if ((ment.start === mention.start) && (ment.stop === mention.stop)) {
+                        SetChangeLabel(prev => !prev)
+                    }
+                })
+            }
+
 
         }
         Children.forEach(function (child) {
@@ -348,11 +491,16 @@ function PassageLabelsList(props){
     }
 
     function handleSelectAll(){
+        Children.map(c=>{
+            c.classList.remove('normal')
+            c.classList.remove('blocked')
+        })
         var count_bold = 0
         var count_normal = 0
-
         var mentions = Array.from(document.getElementsByClassName('butt_mention'))
         mentions.map(but=>{
+            but.classList.remove('normal')
+            but.classList.remove('blocked')
             but.style.fontWeight === 'bold' ? count_bold = count_bold +1 : count_normal = count_normal +1
 
         })
@@ -362,6 +510,7 @@ function PassageLabelsList(props){
             Children.map(child=>{
                 words.map(word=>{
                     if(child.id.toString() === word.startToken.toString()){
+
                         {(HighlightMention === true ) ? child.style.fontWeight = '' : child.style.fontWeight = 'bold'}
 
 
@@ -434,7 +583,7 @@ function PassageLabelsList(props){
             }
             {!ShowInfoMentions && WordMention.length >0 && <div className="mentions_list" id='mentions_list'>
                 {<div >
-                    <div><b>Current Mention:</b></div>
+                    <div><b>Current Passage:</b></div>
                 <AddPassage mention_to_add ={WordMention}/>
                     <hr/>
                 </div>}
@@ -592,6 +741,7 @@ function PassageLabelsList(props){
 
 
 }
+
 
 
 export default PassageLabelsList

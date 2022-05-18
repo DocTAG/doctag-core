@@ -53,7 +53,13 @@ div{
     font-weight: bold;
     text-decoration: underline;
 }
+.blocked{
+    font-weight: bold;
 
+}
+.normal{
+    font-weight: normal;
+}
 
 .token{
     background-color: white;
@@ -102,7 +108,7 @@ div{
     text-decoration: underline;
 
 }
-.notSelected,.notSelectedMention,.tokenOtherField{
+.notSelected,.tokenOtherField{
     text-decoration: none;
     background-color: white;
     color: black;
@@ -112,7 +118,26 @@ div{
     cursor: default !important;
 
 }
+.notSelectedMention{
+    text-decoration: none;
+    background-color: white;
+    color: black;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    cursor: pointer !important;
 
+}
+.notSelectedMention:hover{
+    text-decoration: underline;
+    background-color: white;
+    color: black;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    cursor: pointer !important;
+
+}
 
 .token-selected{
     font-weight: bold !important;

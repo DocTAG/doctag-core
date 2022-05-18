@@ -37,7 +37,7 @@ import {Language} from "@material-ui/icons";
 // axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 
 function LinkedList(props){
-    const { language, showmember,selectedLang,action,highlightMention,showautoannotation,loadingColors,finalcount, color, allMentions,tokens, reports, index, mentionSingleWord, associations } = useContext(AppContext);
+    const { language, showmember,selectedLang,action,highlightMention,showautoannotation,loadingColors,finalcount, color, allMentions,tokens, reload, index, mentionSingleWord, associations } = useContext(AppContext);
     const [AllMentions, SetAllMentions] = allMentions;
     const [WordMention, SetWordMention] = mentionSingleWord;
     const [LoadingMentionsColor, SetLoadingMentionsColor] = loadingColors;
@@ -51,6 +51,7 @@ function LinkedList(props){
     const [ShowAutoAnn,SetShowAutoAnn] = showautoannotation
     const [SelectedLang,SetSelectedLang] = selectedLang
     const [Language,SetLanguage] = language;
+    const [ReloadMentions,SetReloadMentions] = reload;
 
 
 
@@ -269,6 +270,130 @@ function LinkedList(props){
         }
 
     },[Action,AllMentions,Color,ShowInfoLinking,SelectedLang,Children]) //COLOR AGGIUNTO,children
+    // useEffect(()=>{
+    //     // console.log('MENTISHOW',ShowInfoMentions)
+    //     SetReloadMentions(false)
+    //     if(SelectedLang === Language && WordMention.length === 0) {
+    //         // console.log('entro')
+    //         // console.log('count1', FinalCount)
+    //         // console.log('count1', Children.length)
+    //         // console.log('count1',mentions_to_show)
+    //         if (ShowInfoLinking === false) {
+    //             if (Children.length === FinalCount) {
+    //                 if (AllMentions.length === 0) {
+    //                     console.log('EMPTY MENTIONS')
+    //                     Children.map(child => {
+    //                         console.log('TOKEN empty')
+    //                         child.setAttribute('class', 'token') //Added!!
+    //                         child.style.color = 'black'                        //Added!!
+    //                     })
+    //                 }
+    //
+    //                 var bottone_mention = (document.getElementsByClassName('butt_linked'))
+    //                 if (AllMentions.length > 0) {
+    //                     Children.map(child => {
+    //                         console.log('TOKEN')
+    //                         child.setAttribute('class', 'token') //Added!!
+    //                         child.style.color = 'black'
+    //                         //Added!!
+    //                     })
+    //                     console.log('PASSO DI QUA, MENTIONS',AllMentions)
+    //                     // console.log('PASSO COLORO')
+    //                     var range_overlapping = []
+    //                     AllMentions.map((m,i)=>{
+    //                         var start = m.start
+    //                         var stop = m.stop
+    //                         var found = false
+    //                         range_overlapping.map((o,i)=>{
+    //                             // console.log('m1 found',o[0],o[1],start,stop)
+    //                             // console.log('m1 found',start<=o[1])
+    //                             // console.log('m1 found',o[0]<= stop)
+    //                             // console.log('m1 found',(stop<= o[1]))
+    //                             // console.log('m1 found',(o[0]<=start && start<=o[1]))
+    //                             // console.log('m1 found',(o[0]<= stop && stop<= o[1]))
+    //                             if (((o[0]<=start && start<=o[1]) || (o[0]<= stop && stop<= o[1]))){
+    //                                 o[0] = Math.min(o[0],start)
+    //                                 o[1] = Math.max(o[1],stop)
+    //                                 found = true
+    //                             }
+    //                         })
+    //                         if (found === false){
+    //
+    //                             range_overlapping.push([start,stop])
+    //                             // console.log('m1',start,stop)
+    //                             // console.log('m1',range_overlapping)
+    //
+    //                         }
+    //
+    //                     })
+    //                     console.log('rangeover',range_overlapping)
+    //
+    //
+    //                     AllMentions.map((mention, index) => {
+    //                         console.log('mm',mention)
+    //                         var array = fromMentionToArray(mention.mention_text, mention.start)
+    //                         //console.log(array)
+    //                         var words_array = []
+    //                         // var index_color = index
+    //                         var index_color = index
+    //
+    //                         range_overlapping.map((o,i)=>{
+    //                             if (((o[0]<=mention.start && mention.start<=o[1]) || (o[0]<= mention.stop && mention.stop<= o[1]))){
+    //                                 index_color = i
+    //                             }
+    //                         })
+    //                         console.log('m1',mention.mention_text,index)
+    //
+    //                         if (Color[index_color] === undefined) {
+    //                             index_color = index_color - Color.length
+    //                         }
+    //
+    //                         // if (Color[index] === undefined) {
+    //                         //     index_color = index - Color.length
+    //                         // }
+    //                         bottone_mention[index].style.color = Color[index_color]
+    //
+    //                         Children.map(child => {
+    //
+    //                             array.map((word, ind) => {
+    //                                 if (child.id.toString() === word.startToken.toString()) {
+    //
+    //                                     words_array.push(child)
+    //
+    //                                     // supporto overlapping
+    //                                     child.setAttribute('class', 'notSelectedMention')
+    //                                     // console.log('PASSO COLORO qua',child)
+    //
+    //                                     child.style.color = Color[index_color]
+    //
+    //                                     if (child.style.fontWeight === 'bold') {
+    //                                         bottone_mention[index].style.fontWeight = 'bold'
+    //                                     }
+    //
+    //                                 }
+    //                             })
+    //                         })
+    //
+    //                     })
+    //                 }
+    //
+    //             }
+    //         }//Added
+    //         else {
+    //             Children.map(child => {
+    //                 child.setAttribute('class', 'notSelected')
+    //             })
+    //             SetWordMention([])
+    //         }
+    //         if (ShowAutoAnn === true || ShowMemberGt === true) {
+    //             Children.map(child => {
+    //                 child.setAttribute('class', 'notSelected')
+    //             })
+    //         }
+    //
+    //         SetLoadingMentionsColor(false)
+    //     }
+    // },[Action,AllMentions,Color,ShowInfoLinking,SelectedLang,FinalCount,Children,ReloadMentions]) //COLOR AGGIUNTO,children
 
 
     useEffect(()=>{
@@ -317,10 +442,16 @@ function LinkedList(props){
     }
 
     function handleSelectAll(){
+        Children.map(c=>{
+            c.classList.remove('normal')
+            c.classList.remove('blocked')
+        })
         var count_bold = 0
         var count_normal = 0
         var mentions = Array.from(document.getElementsByClassName('butt_linked'))
         mentions.map(but=>{
+            but.classList.remove('normal')
+            but.classList.remove('blocked')
             but.style.fontWeight === 'bold' ? count_bold = count_bold +1 : count_normal = count_normal +1
 
         })
@@ -339,16 +470,18 @@ function LinkedList(props){
             })
         })
 
-        var bottone_linked = Array.from(document.getElementsByClassName('butt_linked'))
-        bottone_linked.map(but=>{
+        var bottone_mention = Array.from(document.getElementsByClassName('butt_linked'))
+        bottone_mention.map(but=>{
             (HighlightMention === true ) ? but.style.fontWeight = '' : but.style.fontWeight = 'bold'
 
         })
 
         if(HighlightMention === true){
+            // console.log('setto1')
             SetHighlightMention(false)
         }
         else{
+            // console.log('setto2')
 
             SetHighlightMention(true)
 
@@ -380,7 +513,7 @@ function LinkedList(props){
                     <div>
                         Info about linking: &nbsp;&nbsp;<button className='butt_info' onClick={(e)=>changeInfoLinking(e)}><FontAwesomeIcon  color='blue' icon={faInfoCircle} /></button>
                     </div>
-                    {WordMention.length >0 && !ShowInfoLinking && <div><AddMention mention_to_add ={WordMention}/>
+                    {WordMention.length >0 && !ShowInfoLinking && <div ><AddMention mention_to_add ={WordMention}/>
                         <hr/>
 
                     </div>}
