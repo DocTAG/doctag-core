@@ -15,6 +15,7 @@ DocTAG provides four annotation types:
 
 DocTAG provides the following functionalities:
 
+- :bangbang: **NEW** We introduced the support for **overlapping mentions** :bangbang:
 - a web-based collaborative annotation platform, enabling users to consult the annotations made by other team users and to transfer the annotations between annotators. Moreover, users can edit the annotations transfered from other annotators in their own profiles.
 - Long passage annotation facilities (i.e. users can click on the first and the last passage word to get all the words in-between selected)
 - support for passage highlighting in different colors
