@@ -1,4 +1,4 @@
-# DocTAG: A Customizable Annotation Tool for Ground Truth Creation
+# DocTAG: A Customizable Annotation Tool for Ground Truth Creation [![DOI](https://zenodo.org/badge/419801253.svg)](https://zenodo.org/badge/latestdoi/419801253)
 
 ![docTAG_logo](./images/logo/doctag_logo_bg_white_450x146.png)
 
