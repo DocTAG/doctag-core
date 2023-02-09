@@ -51,7 +51,7 @@ function SideBar(props){
                     <div style={{'text-align':'center','font-size':'1rem','font-weight':'bold','color':'white'}}>{ Profile }</div>
                     <div style={{'text-align':'center','font-size':'1rem','font-weight':'bold','color':'white'}}><button
                         style={{'border':'none','background-color':'#0093c4'}}
-                     type='button' ><a className='logout_a' style={{'font-size':'1rem'}} href="http://0.0.0.0:8000/logout"> <Badge pill variant="dark">
+                     type='button' ><a className='logout_a' style={{'font-size':'1rem'}} href="logout"> <Badge pill variant="dark">
                                             Logout <FontAwesomeIcon icon={faSignOutAlt}/></Badge></a></button></div>
                 <hr />
                     {/*<Link onClick={()=>SetShowBar(false)} to="/exatag/index">Home</Link>*/}

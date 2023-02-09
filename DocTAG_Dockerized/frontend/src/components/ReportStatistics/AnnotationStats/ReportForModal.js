@@ -63,10 +63,10 @@ function ReportForModal(props) {
     useEffect(()=>{
         setReportsString('')
         SetMentions_to_show([])
-        axios.get("http://0.0.0.0:8000/get_reports", {params: {all: 'all'}}).then(response => {
+        axios.get("get_reports", {params: {all: 'all'}}).then(response => {
             SetReports(response.data['report']);})
 
-        // axios.get("http://0.0.0.0:8000/check_presence_exa_conc_lab", {params: {id_report:props.id_report,language:props.language}})
+        // axios.get("check_presence_exa_conc_lab", {params: {id_report:props.id_report,language:props.language}})
         //     .then(response => {
         //     if(response.data['labels'] === true){
         //         SetEXAPresenceLabels(true)
@@ -97,10 +97,10 @@ function ReportForModal(props) {
             console.log(Reports[newInd].id_report)
             console.log(newInd)
             if(newInd >= 0){
-                axios.get("http://0.0.0.0:8000/report_start_end", {params: {report_id: Reports[newInd].id_report.toString()}}).then(response => {SetFinalCount(response.data['final_count']);
+                axios.get("report_start_end", {params: {report_id: Reports[newInd].id_report.toString()}}).then(response => {SetFinalCount(response.data['final_count']);
                     setReportsString(response.data['rep_string']); SetFinalCountReached(false);
                 })
-                axios.get("http://0.0.0.0:8000/get_fields",{params:{report:props.id_report}}).then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
+                axios.get("get_fields",{params:{report:props.id_report}}).then(response => {SetFields(response.data['fields']);SetFieldsToAnn(response.data['fields_to_ann']);})
 
             }
         }

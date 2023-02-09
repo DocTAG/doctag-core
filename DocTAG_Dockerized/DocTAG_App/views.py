@@ -27,10 +27,28 @@ def index(request):
 
     """Home page for app (and project)"""
 
+    # username = request.session.get('username', False)
+    # profile = request.session.get('profile', False)
+    # if(username):
+    #     context = {'username': username,'profile':profile}
+    #     return render(request, 'DocTAG_App/index.html', context)
+    # else:
+    #     return redirect('DocTAG_App:login')
+
     username = request.session.get('username', False)
     profile = request.session.get('profile', False)
-    if(username):
-        context = {'username': username,'profile':profile}
+    baseurl = ''
+    workpath = os.path.dirname(os.path.abspath(__file__))  # Returns the Path your .py file is in
+    with open((os.path.join(workpath, '../baseurl.txt')), 'r', encoding='utf-8') as f:
+        baseurl = f.readline()
+        baseurl = baseurl.replace('\n', '').strip()
+        print(baseurl)
+        if not baseurl.endswith('/'):
+            baseurl = baseurl + '/'
+    if (username and baseurl != ''):
+        context = {'username': username, 'profile': profile, 'baseurl': baseurl}
+        # if(username):
+        #     context = {'username': username,'profile':profile}
         return render(request, 'DocTAG_App/index.html', context)
     else:
         return redirect('DocTAG_App:login')
@@ -190,12 +208,21 @@ def credits(request):
 
     username = request.session.get('username', False)
     profile = request.session.get('profile', False)
-    if(username):
-        context = {'username': username,'profile':profile}
+    baseurl = ''
+    workpath = os.path.dirname(os.path.abspath(__file__))  # Returns the Path your .py file is in
+    with open((os.path.join(workpath, '../baseurl.txt')), 'r', encoding='utf-8') as f:
+        baseurl = f.readline()
+        baseurl = baseurl.replace('\n', '').strip()
+        print(baseurl)
+        if not baseurl.endswith('/'):
+            baseurl = baseurl + '/'
+    if (username and baseurl != ''):
+        context = {'username': username, 'profile': profile, 'baseurl': baseurl}
+        # if(username):
+        #     context = {'username': username,'profile':profile}
         return render(request, 'DocTAG_App/index.html', context)
     else:
         return redirect('DocTAG_App:login')
-
 
 def uploadFile(request):
 
@@ -203,8 +230,18 @@ def uploadFile(request):
 
     username = request.session.get('username', False)
     profile = request.session.get('profile', False)
-    if(username):
-        context = {'username': username,'profile':profile}
+    baseurl = ''
+    workpath = os.path.dirname(os.path.abspath(__file__))  # Returns the Path your .py file is in
+    with open((os.path.join(workpath, '../baseurl.txt')), 'r', encoding='utf-8') as f:
+        baseurl = f.readline()
+        baseurl = baseurl.replace('\n', '').strip()
+        print(baseurl)
+        if not baseurl.endswith('/'):
+            baseurl = baseurl + '/'
+    if (username and baseurl != ''):
+        context = {'username': username, 'profile': profile, 'baseurl': baseurl}
+        # if(username):
+        #     context = {'username': username,'profile':profile}
         return render(request, 'DocTAG_App/index.html', context)
     else:
         return redirect('DocTAG_App:login')
@@ -216,8 +253,18 @@ def configure(request):
 
     username = request.session.get('username', False)
     profile = request.session.get('profile', False)
-    if(username):
-        context = {'username': username,'profile':profile}
+    baseurl = ''
+    workpath = os.path.dirname(os.path.abspath(__file__))  # Returns the Path your .py file is in
+    with open((os.path.join(workpath, '../baseurl.txt')), 'r', encoding='utf-8') as f:
+        baseurl = f.readline()
+        baseurl = baseurl.replace('\n', '').strip()
+        print(baseurl)
+        if not baseurl.endswith('/'):
+            baseurl = baseurl + '/'
+    if (username and baseurl != ''):
+        context = {'username': username, 'profile': profile, 'baseurl': baseurl}
+        # if(username):
+        #     context = {'username': username,'profile':profile}
         return render(request, 'DocTAG_App/index.html', context)
     else:
         return redirect('DocTAG_App:login')
@@ -228,8 +275,18 @@ def team_members_stats(request):
 
     username = request.session.get('username', False)
     profile = request.session.get('profile', False)
-    if (username):
-        context = {'username': username, 'profile': profile}
+    baseurl = ''
+    workpath = os.path.dirname(os.path.abspath(__file__))  # Returns the Path your .py file is in
+    with open((os.path.join(workpath, '../baseurl.txt')), 'r', encoding='utf-8') as f:
+        baseurl = f.readline()
+        baseurl = baseurl.replace('\n', '').strip()
+        print(baseurl)
+        if not baseurl.endswith('/'):
+            baseurl = baseurl + '/'
+    if (username and baseurl != ''):
+        context = {'username': username, 'profile': profile, 'baseurl': baseurl}
+        # if(username):
+        #     context = {'username': username,'profile':profile}
         return render(request, 'DocTAG_App/index.html', context)
     else:
         return redirect('DocTAG_App:login')
@@ -241,8 +298,18 @@ def updateConfiguration(request):
 
     username = request.session.get('username', False)
     profile = request.session.get('profile', False)
-    if(username):
-        context = {'username': username,'profile':profile}
+    baseurl = ''
+    workpath = os.path.dirname(os.path.abspath(__file__))  # Returns the Path your .py file is in
+    with open((os.path.join(workpath, '../baseurl.txt')), 'r', encoding='utf-8') as f:
+        baseurl = f.readline()
+        baseurl = baseurl.replace('\n', '').strip()
+        print(baseurl)
+        if not baseurl.endswith('/'):
+            baseurl = baseurl + '/'
+    if (username and baseurl != ''):
+        context = {'username': username, 'profile': profile, 'baseurl': baseurl}
+        # if(username):
+        #     context = {'username': username,'profile':profile}
         return render(request, 'DocTAG_App/index.html', context)
     else:
         return redirect('DocTAG_App:login')
@@ -254,12 +321,21 @@ def infoAboutConfiguration(request):
 
     username = request.session.get('username', False)
     profile = request.session.get('profile', False)
-    if(username):
-        context = {'username': username,'profile':profile}
+    baseurl = ''
+    workpath = os.path.dirname(os.path.abspath(__file__))  # Returns the Path your .py file is in
+    with open((os.path.join(workpath, '../baseurl.txt')), 'r', encoding='utf-8') as f:
+        baseurl = f.readline()
+        baseurl = baseurl.replace('\n', '').strip()
+        print(baseurl)
+        if not baseurl.endswith('/'):
+            baseurl = baseurl + '/'
+    if (username and baseurl != ''):
+        context = {'username': username, 'profile': profile, 'baseurl': baseurl}
+        # if(username):
+        #     context = {'username': username,'profile':profile}
         return render(request, 'DocTAG_App/index.html', context)
     else:
         return redirect('DocTAG_App:login')
-
 
 def tutorial(request):
 
@@ -267,8 +343,18 @@ def tutorial(request):
 
     username = request.session.get('username', False)
     profile = request.session.get('profile', False)
-    if(username):
-        context = {'username': username,'profile':profile}
+    baseurl = ''
+    workpath = os.path.dirname(os.path.abspath(__file__))  # Returns the Path your .py file is in
+    with open((os.path.join(workpath, '../baseurl.txt')), 'r', encoding='utf-8') as f:
+        baseurl = f.readline()
+        baseurl = baseurl.replace('\n', '').strip()
+        print(baseurl)
+        if not baseurl.endswith('/'):
+            baseurl = baseurl + '/'
+    if (username and baseurl != ''):
+        context = {'username': username, 'profile': profile, 'baseurl': baseurl}
+        # if(username):
+        #     context = {'username': username,'profile':profile}
         return render(request, 'DocTAG_App/index.html', context)
     else:
         return redirect('DocTAG_App:login')
@@ -280,8 +366,18 @@ def my_stats(request):
 
     username = request.session.get('username', False)
     profile = request.session.get('profile', False)
-    if(username):
-        context = {'username': username,'profile':profile}
+    baseurl = ''
+    workpath = os.path.dirname(os.path.abspath(__file__))  # Returns the Path your .py file is in
+    with open((os.path.join(workpath, '../baseurl.txt')), 'r', encoding='utf-8') as f:
+        baseurl = f.readline()
+        baseurl = baseurl.replace('\n', '').strip()
+        print(baseurl)
+        if not baseurl.endswith('/'):
+            baseurl = baseurl + '/'
+    if (username and baseurl != ''):
+        context = {'username': username, 'profile': profile, 'baseurl': baseurl}
+        # if(username):
+        #     context = {'username': username,'profile':profile}
         return render(request, 'DocTAG_App/index.html', context)
     else:
         return redirect('DocTAG_App:login')
@@ -292,12 +388,21 @@ def reports_stats(request):
 
     username = request.session.get('username', False)
     profile = request.session.get('profile', False)
-    if(username):
-        context = {'username': username,'profile':profile}
+    baseurl = ''
+    workpath = os.path.dirname(os.path.abspath(__file__))  # Returns the Path your .py file is in
+    with open((os.path.join(workpath, '../baseurl.txt')), 'r', encoding='utf-8') as f:
+        baseurl = f.readline()
+        baseurl = baseurl.replace('\n', '').strip()
+        print(baseurl)
+        if not baseurl.endswith('/'):
+            baseurl = baseurl + '/'
+    if (username and baseurl != ''):
+        context = {'username': username, 'profile': profile, 'baseurl': baseurl}
+        # if(username):
+        #     context = {'username': username,'profile':profile}
         return render(request, 'DocTAG_App/index.html', context)
     else:
         return redirect('DocTAG_App:login')
-
 
 def get_session_params(request):
 

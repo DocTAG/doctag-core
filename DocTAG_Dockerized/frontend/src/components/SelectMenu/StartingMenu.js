@@ -94,7 +94,7 @@ function StartingMenu(props){
             Setoptions_language(options_language)
         }
 
-        axios.get('http://0.0.0.0:8000/check_PUBMED_reports').then(function(response){
+        axios.get('check_PUBMED_reports').then(function(response){
             if(response.data['count'] > 0){
                 SetPubMedPresence(true)
             }
@@ -106,7 +106,7 @@ function StartingMenu(props){
         }).catch(function(error){
             console.log('error: ',error)
         })
-        axios.get('http://0.0.0.0:8000/check_doctag_reports').then(function(response){
+        axios.get('check_doctag_reports').then(function(response){
             if(response.data['count'] > 0){
                 SetDocTAGPresence(true)
             }
@@ -127,7 +127,7 @@ function StartingMenu(props){
             SetIns('PUBMED')
             SetLang('english')
 
-            axios.get("http://0.0.0.0:8000/pubmed_reports").then(response => {
+            axios.get("pubmed_reports").then(response => {
                 (response.data['usecase'].map(uc=>{
                     options_usecases.push({value: uc, label: uc})
 
@@ -140,7 +140,7 @@ function StartingMenu(props){
                 SetLang(LanguageList[0])
             }
             SetIns('default')
-            axios.get("http://0.0.0.0:8000/doctag_reports").then(response => {
+            axios.get("doctag_reports").then(response => {
                 (response.data['usecase'].map(uc=>{
                     options_usecases.push({value: uc, label: uc})
 
@@ -170,7 +170,7 @@ function StartingMenu(props){
             }
             else { //Salvo solo se tutti e tre i campi sono stati riempiti
                 var count = 0
-                axios.get('http://0.0.0.0:8000/get_reports', {
+                axios.get('get_reports', {
                     params: {
                         institute: Ins,
                         usec: Use,
@@ -190,7 +190,7 @@ function StartingMenu(props){
                         SetShowErrorReports(false)
 
 
-                        axios.post("http://0.0.0.0:8000/new_credentials", {
+                        axios.post("new_credentials", {
                             usecase: Use, language: Lang, institute: Ins, report_type: Rep,batch:Batch
                         })
                             .then(function (response) {
@@ -277,7 +277,7 @@ function StartingMenu(props){
     // useEffect(()=>{
     //
     //     if(Use !== '' && Ins !== '' && Lang !== '' && Batch !== ''){
-    //         axios.get('http://0.0.0.0:8000/check_auto_presence_for_configuration',{params:{batch:Batch,report_type:Rep,usecase:Use,institute:Ins,language:Lang}})
+    //         axios.get('check_auto_presence_for_configuration',{params:{batch:Batch,report_type:Rep,usecase:Use,institute:Ins,language:Lang}})
     //             .then(response=>{
     //                 if(response.data['count']>0){
     //                     var arr = []
@@ -302,7 +302,7 @@ function StartingMenu(props){
             var opt = []
             if(Rep === 'reports') {
 
-                axios.get('http://0.0.0.0:8000/get_batch_list', {params: {usecase: Use}}).then(response => {
+                axios.get('get_batch_list', {params: {usecase: Use}}).then(response => {
                     SetBatchList(response.data['batch_list'])
                     if (response.data['batch_list'].length === 1) {
                         SetBatch(1)
@@ -315,7 +315,7 @@ function StartingMenu(props){
                 })
             }
             if(Rep === 'pubmed'){
-                axios.get('http://0.0.0.0:8000/get_PUBMED_batch_list',{params:{usecase:Use}}).then(response=>{
+                axios.get('get_PUBMED_batch_list',{params:{usecase:Use}}).then(response=>{
 
                     SetBatchList(response.data['batch_list'])
                     if(response.data['batch_list'].length === 1){
@@ -341,7 +341,7 @@ function StartingMenu(props){
         <Row>
             <Col md={8}></Col>
             <Col md={4} style={{'text-align':'right'}}>
-                <span className='userInfo'><span > {Username} </span><FontAwesomeIcon icon={faUser} size='2x'/> <a href="http://0.0.0.0:8000/logout" className="badge badge-secondary" >Logout <FontAwesomeIcon icon={faSignOutAlt}/></a></span>
+                <span className='userInfo'><span > {Username} </span><FontAwesomeIcon icon={faUser} size='2x'/> <a href="logout" className="badge badge-secondary" >Logout <FontAwesomeIcon icon={faSignOutAlt}/></a></span>
 
             </Col>
         </Row>

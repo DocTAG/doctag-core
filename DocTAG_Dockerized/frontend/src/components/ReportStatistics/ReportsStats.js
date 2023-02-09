@@ -51,7 +51,7 @@ function ReportsStats() {
 
     useEffect(()=>{
         var opt = []
-        axios.get("http://0.0.0.0:8000/get_usecase_inst_lang").then(response => {
+        axios.get("get_usecase_inst_lang").then(response => {
             SetUseCaseList(response.data['usecase']);
             SetLanguageList(response.data['language']);
             SetInstituteList(response.data['institute']);
@@ -114,7 +114,7 @@ function ReportsStats() {
         // hid_cols.push('linking')
 
 
-        axios.get('http://0.0.0.0:8000/get_fields',{params:{all:'all'}}).then(function (response){
+        axios.get('get_fields',{params:{all:'all'}}).then(function (response){
             response.data['all_fields'].map((elem,ind)=>{
                 var nome = elem + '_0'
                 col.push({name:nome,title:elem})
@@ -132,7 +132,7 @@ function ReportsStats() {
             SetHiddenCols(hid_cols)
         })
 
-        axios.get('http://0.0.0.0:8000/get_data',).then(function (response){
+        axios.get('get_data',).then(function (response){
             response.data['reports'].map((elem,ind)=>{
                 arr_data.push(
                     {
@@ -148,7 +148,7 @@ function ReportsStats() {
 
 
         // MODIFIED BY ORNELLA 04082021
-        // axios.get("http://0.0.0.0:8000/get_reports", {params: {configure: 'configure'}}).then(response => {
+        // axios.get("get_reports", {params: {configure: 'configure'}}).then(response => {
         //     SetReports(response.data['report']);
         //
         // })

@@ -78,7 +78,7 @@ function SelectMenu(props){
     useEffect(()=>{
 
 
-            axios.get('http://0.0.0.0:8000/get_number_of_annotations',{params:{action:Action}}).then(response=>{
+            axios.get('get_number_of_annotations',{params:{action:Action}}).then(response=>{
                 SetTotal(response.data['tot'])
                 SetAnnotated(response.data['annotations'])
             })
@@ -100,12 +100,12 @@ function SelectMenu(props){
 
         if(Use !== '' ) {
             if(ReportType === 'reports'){
-                axios.get('http://0.0.0.0:8000/get_batch_list', {params: {usecase: Use}}).then(response => {
+                axios.get('get_batch_list', {params: {usecase: Use}}).then(response => {
                     SetBatchList(response.data['batch_list']);
                 })
             }
             else if(ReportType === 'pubmed'){
-                axios.get('http://0.0.0.0:8000/get_PUBMED_batch_list', {params: {usecase: Use}}).then(response => {
+                axios.get('get_PUBMED_batch_list', {params: {usecase: Use}}).then(response => {
                     SetBatchList(response.data['batch_list']);
                 })
             }
@@ -125,7 +125,7 @@ function SelectMenu(props){
     }
     function handleChangeLanguage(e){
         SetLanguage(e.target.value)
-        axios.post("http://0.0.0.0:8000/new_credentials", {
+        axios.post("new_credentials", {
             usecase: UseCase, language: e.target.value, institute: Institute, annotation: Annotation,report_type: ReportType,batch:1
         })
             .then(function (response) {
@@ -154,7 +154,7 @@ function SelectMenu(props){
             var r = ('reports')
 
         }
-        axios.post("http://0.0.0.0:8000/new_credentials", {
+        axios.post("new_credentials", {
             usecase: '', language: Language, institute: e.target.value, annotation: Annotation,report_type: r,batch:1
         })
             .then(function (response) {
@@ -176,7 +176,7 @@ function SelectMenu(props){
 
     function handleChangeBatch(e){
         SetBatch(e.target.value)
-        axios.post("http://0.0.0.0:8000/new_credentials", {
+        axios.post("new_credentials", {
             usecase: UseCase, language: Language, institute: Institute, annotation: Annotation,report_type: ReportType,batch:e.target.value
         })
             .then(function (response) {
@@ -192,7 +192,7 @@ function SelectMenu(props){
     }
     useEffect(()=>{
         // console.log('prima entrata in parametri')
-        axios.get("http://0.0.0.0:8000/get_session_params").then(response => {
+        axios.get("get_session_params").then(response => {
             SetInstitute(response.data['institute']);
             SetLanguage(response.data['language']);
             SetUseCase(response.data['usecase']);
@@ -323,7 +323,7 @@ function SelectMenu(props){
 
                 </Col>
                 <Col md={3} style={{'text-align':'right'}}>
-                    <span className='userInfo'><span > {Username} &nbsp;&nbsp;</span><FontAwesomeIcon icon={faUser} size='2x'/> <a  href="http://0.0.0.0:8000/logout" className="badge badge-secondary" >Logout <FontAwesomeIcon icon={faSignOutAlt}/></a></span>
+                    <span className='userInfo'><span > {Username} &nbsp;&nbsp;</span><FontAwesomeIcon icon={faUser} size='2x'/> <a  href="logout" className="badge badge-secondary" >Logout <FontAwesomeIcon icon={faSignOutAlt}/></a></span>
 
                 </Col>
 

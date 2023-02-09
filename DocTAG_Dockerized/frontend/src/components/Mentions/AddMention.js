@@ -24,7 +24,7 @@ import Mention from "./Mention";
 function AddMention(props){
     const [Text, SetText] = useState('')
 
-    const { tokens,disButton, language,mentionsList, reports, index,  mentionSingleWord,highlightMention, action, mentionToAdd, allMentions } = useContext(AppContext);
+    const { tokens,disButton, language,mentionsList,reload, reports, index,  mentionSingleWord,highlightMention, action, mentionToAdd, allMentions } = useContext(AppContext);
     const [mentions_to_show, SetMentions_to_show] = mentionsList;
     const [AllMentions, SetAllMentions] = allMentions
     const [Action, SetAction] = action;
@@ -37,7 +37,7 @@ function AddMention(props){
     const [HighlightMention, SetHighlightMention] = highlightMention;
     // const [mentions_to_show,SetMentions_to_show] = useContext(AppContext)
     const [Disable_Buttons, SetDisable_Buttons] = disButton;
-
+    const [ReloadMentions,SetReloadMentions] = reload
 
 
     function order_array(mentions){
@@ -93,44 +93,73 @@ function AddMention(props){
                 SetMentions_to_show(ordered)
             }
         } else if (Action === 'concept-mention') {
+            var bottone_mention = Array.from(document.getElementsByClassName('butt_linked'))
             SetDisable_Buttons(false)
-            // var mentions = AllMentions
-            // mentions.push(mention)
-            // var ordered = order_array(mentions)
-            // SetAllMentions(ordered)
-            //SetAllMentions([...AllMentions, mention])
-
-            // console.log(JSON.stringify(mention))
-            var ment = JSON.stringify(mention)
-            var ment_to_add = document.getElementsByName('mention_to_add')
-            var array_to_ret = []
-            array_to_ret.push(MentionToAdd)
-            //array_to_ret.push(JSON.stringify(mention))
-            //SetAllMentions([...AllMentions, mention])
-            axios.post("http://0.0.0.0:8000/insert_link/insert_mention", {
-
-                mentions: array_to_ret,language:Language,
-                report_id: Reports[Index].id_report.toString()
-
+            var bool = false
+            AllMentions.map(ment => {
+                // console.log('mentions_current',ment.start)
+                // console.log('mentions_current',mention.start)
+                if ((ment.start === mention.start) && (ment.stop === mention.stop)) {
+                    bool = true
+                }
             })
-                .then(function (response) {
-                    var mentions = AllMentions
-                    mention['label'] = ''
-                    mention['seq_number'] = 0
-                    mentions.push(mention)
-                    var ordered = order_array(mentions)
-                    SetAllMentions(ordered)
-                    // SetAllMentions([...AllMentions, mention])
-                    //alert('OK')
-                    // console.log(response);
+            if (bool === true) {
+                alert('this mention has been already inserted in the list!')
+                SetReloadMentions(true)
+            } else {
+                var mentions = AllMentions
+                // console.log('mentions_current',mentions)
+                mentions.push(mention)
+                // console.log('mentions_current',mentions)
+                bottone_mention.map((b, i) => {
+                    b.classList.remove('blocked')
+                    b.classList.remove('normal')
                 })
-                .catch(function (error) {
-                    //alert('ATTENTION')
-                    console.log(error);
-                });
+                Children.map(c => {
+                    c.classList.remove('blocked')
+                    c.classList.remove('normal')
+                    // c.className = 'token'
+                })
+
+                // var mentions = AllMentions
+                // mentions.push(mention)
+                // var ordered = order_array(mentions)
+                // SetAllMentions(ordered)
+                //SetAllMentions([...AllMentions, mention])
+
+                // console.log(JSON.stringify(mention))
+                // var ment = JSON.stringify(mention)
+                // var ment_to_add = document.getElementsByName('mention_to_add')
+                SetDisable_Buttons(false)
+
+                var array_to_ret = []
+                array_to_ret.push(MentionToAdd)
+                //array_to_ret.push(JSON.stringify(mention))
+                //SetAllMentions([...AllMentions, mention])
+                axios.post("insert_link/insert_mention", {
+
+                    mentions: array_to_ret, language: Language,
+                    report_id: Reports[Index].id_report.toString()
+
+                })
+                    .then(function (response) {
+                        var mentions = AllMentions
+                        mention['label'] = ''
+                        mention['seq_number'] = 0
+                        mentions.push(mention)
+                        var ordered = order_array(mentions)
+                        SetAllMentions(ordered)
+                        // SetAllMentions([...AllMentions, mention])
+                        //alert('OK')
+                        // console.log(response);
+                    })
+                    .catch(function (error) {
+                        //alert('ATTENTION')
+                        console.log(error);
+                    });
 
 
-
+            }
 
         }
         Children.forEach(function (child) {

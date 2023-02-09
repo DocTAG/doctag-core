@@ -79,7 +79,7 @@ function TokenList(props){
             {Words.map((word,index)=>
                     // <span className="tokenList">{word.word} </span>
 
-                <span className="tokenList"><Token_overlapping key = {word.startToken} action = {props.action} words = {Words} start_token={word.startToken} stop_token={word.stopToken} word={word.word} index={index} activate = {ActiveWords}/> </span>
+                <span className="tokenList"><Token_overlapping token_scores = {TokenScores} token_text = {TokenWords} key = {word.startToken} action = {props.action} words = {Words} start_token={word.startToken} stop_token={word.stopToken} word={word.word} index={index} activate = {ActiveWords}/> </span>
             )}
         </div>
     );

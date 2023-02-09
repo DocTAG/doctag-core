@@ -5,16 +5,20 @@ import {Container,Row,Col} from "react-bootstrap";
 import './report.css';
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
-import Tooltip from "react-bootstrap/Tooltip";
+// import Tooltip from "react-bootstrap/Tooltip";
 import Overlay from 'react-bootstrap/Overlay';
 import {AppContext} from "../../App";
 
+import Tooltip from '@mui/material/Tooltip';
 
 
 
 function TokenOverlapping(props){
-    const { tokens,mentionSingleWord,index,language,selectedLang,fields,fieldsToAnn,reportString,mentionToAdd,allMentions,action,mentionsList,color,report,finalcount,reached } = useContext(AppContext);
+    const { tokens,mentionSingleWord,index,tokentocolor,language,selectedLang,fields,fieldsToAnn,reportString,mentionToAdd,allMentions,action,mentionsList,color,report,finalcount,reached } = useContext(AppContext);
     const [Color,SetColor] = color
+    const [TokenToColor, SetTokenToColor] = tokentocolor
+    const [TokenWords, SetTokenWords] = useState([]);
+    const [TokenScores, SetTokenScores] = useState([]);
     const [PartOfMention,SetPartOfMention] = useState(false)
     const [ReportString, SetReportString] = reportString;
     const [Action,SetAction] = action
@@ -99,6 +103,28 @@ function TokenOverlapping(props){
     // }, [Action, Index, SelectedLang, FinalCount, Fields, FieldsToAnn])
 
 
+    // useEffect(() => {
+    //     console.log('tokenc', TokenToColor)
+    //     if (TokenToColor === false) {
+    //         SetTokenScores(false)
+    //         SetTokenWords(false)
+    //     } else {
+    //         var words = []
+    //         var scores = []
+    //         TokenToColor.map(t => {
+    //             words.push(t[0])
+    //             scores.push(t[1])
+    //         })
+    //         console.log('words', words)
+    //         console.log('words', scores)
+    //         SetTokenWords(words)
+    //         SetTokenScores(scores)
+    //     }
+    // }, [TokenToColor])
+
+
+
+
     const handleVisible1 = () => {
         SetShowAlert1(true)
         setTimeout(() => {
@@ -170,10 +196,10 @@ function TokenOverlapping(props){
             }
             ReportWords.map(child=>{
                 if(Number(child.id)< Number(props.words[0].startToken) || Number(child.id) > Number(props.words[props.words.length -1 ].startToken)){
-                    if(child.getAttribute('class') === 'token'){
+                    // if(child.getAttribute('class') === 'token'){
                         child.setAttribute('class','tokenOtherField')
 
-                    }
+                    // }
                 }
 
 
@@ -513,57 +539,90 @@ function TokenOverlapping(props){
     }
 
 
-    {if(props.action === 'mentions' || props.action === 'concept-mention'){
-        return (
-            <>
-                {/*<button ref={target} name = "butt" id={props.start_token} className="token" onClick={handleClick} value={props.word}><span>{props.word.slice(0,-1)}</span><span id={props.stop_token}>{props.word.slice(-1)}</span></button>*/}
-                <button ref={target} name = "butt" id={props.start_token} className="token" onMouseOut={(e)=>TokenOut(e)} onClick={(e)=>handleClick(e,props.start_token)}  onMouseOver={(e)=>TokenOver(e)} value={props.word}>{props.word}</button>
+    {
+        if (props.action === 'mentions' || props.action === 'concept-mention') {
+            return (
+                <>
+
+
+            <span>
+                <Tooltip
+                    // PopperProps={{
+                    //     disablePortal: true,
+                    // }}
+                    arrow
+                    leaveDelay='100'
+                    open={ShowAlert1 || ShowAlert2 || ShowAlert3}
+                    disableFocusListener
+                    disableHoverListener
+                    disableTouchListener
+                    title={(ShowAlert2 && "Already selected*")}
+                >
+            {(props.token_scores && props.token_text.indexOf(props.word.toLowerCase()) !== -1) ?
+                <button ref={target} name="butt" id={props.start_token} className="token"
+                        onMouseOut={(e) => TokenOut(e)} onClick={(e) => handleClick(e, props.start_token)}
+                        onMouseOver={(e) => TokenOver(e)} value={props.word}>
+
+
+                    <Tooltip arrow disableFocusListener disableTouchListener placement="top"
+                             title={'TF-IDF: ' + props.token_scores[Number(props.token_text.indexOf(props.word.toLowerCase()))].toString()}>
+                        <span><b>{props.word}</b></span></Tooltip>
+                </button>
+                :
+
+                <button ref={target} name="butt" id={props.start_token} className="token"
+                        onMouseOut={(e) => TokenOut(e)} onClick={(e) => handleClick(e, props.start_token)}
+                        onMouseOver={(e) => TokenOver(e)} value={props.word}>{props.word}</button>
+
+
+            }
+
+                </Tooltip>
 
 
 
-                <Overlay target={target.current} show={ShowAlert1} placement="top">
-                    {(props) => (
-                        <Tooltip  {...props}>
-                            Not allowed
-                        </Tooltip>
-                    )}
-                </Overlay>
-                <Overlay target={target.current} show={ShowAlert2} placement="top">
-                    {(props) => (
-                        <Tooltip {...props}>
-                            Already selected
-                        </Tooltip>
-                    )}
-                </Overlay>
-                <Overlay target={target.current} show={ShowAlert3} placement="top">
-                    {(props) => (
-                        <Tooltip {...props}>
-                            It is a mention
-                        </Tooltip>
-                    )}
-                </Overlay>
 
-            </>
 
-        );
+            </span>
 
+
+                </>
+
+
+            );
+
+        } else if (props.action === 'mentionsList' && Color !== '') { //Colora nella lista a destra
+            return (
+                <>
+                    {(props.token_scores && props.token_text.indexOf(props.word.toLowerCase()) !== -1) ?
+
+                        <Tooltip disableFocusListener disableTouchListener
+                                 title={'TF-IDF: ' + props.token_scores[Number(props.token_text.indexOf(props.word.toLowerCase()))].toString()}>
+                            <span className='span_to_highlight'
+                                  id={props.start_token}><b>{props.word}</b></span></Tooltip> :
+                        <span className='span_to_highlight' id={props.start_token}>{props.word}</span>
+                    }</>
+
+            );
+
+        }
     }
 
-    else if(props.action === 'mentionsList' && Color !== ''){ //Colora nella lista a destra
-        return (
-            <span id={props.start_token}>{props.word}</span>
+    return (
 
-        );
+        <>
+            {(props.token_scores && props.token_text.indexOf(props.word.toLowerCase()) !== -1) ?
 
-    }
 
-        return (
-            <span id={props.start_token}>{props.word}</span>
-        );
-    }
+                <Tooltip disableFocusListener disableTouchListener
+                         title={'TF-IDF: ' + props.token_scores[Number(props.token_text.indexOf(props.word.toLowerCase()))].toString()}>
+                    <span className='span_to_highlight'
+                          id={props.start_token}><b>{props.word}</b></span></Tooltip> :
+                <span className='span_to_highlight' id={props.start_token}>{props.word}</span>}</>
+
+    );
 
 }
-
 
 
 export default TokenOverlapping;

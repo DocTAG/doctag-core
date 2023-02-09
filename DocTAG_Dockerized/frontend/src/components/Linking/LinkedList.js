@@ -267,9 +267,10 @@ function LinkedList(props){
             }
 
             SetLoadingMentionsColor(false)
-        }
 
-    },[Action,AllMentions,Color,ShowInfoLinking,SelectedLang,Children]) //COLOR AGGIUNTO,children
+        }
+        SetReloadMentions(false)
+    },[Action,AllMentions,Color,ShowInfoLinking,SelectedLang,Children,ReloadMentions]) //COLOR AGGIUNTO,children
     // useEffect(()=>{
     //     // console.log('MENTISHOW',ShowInfoMentions)
     //     SetReloadMentions(false)

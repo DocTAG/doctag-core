@@ -101,14 +101,14 @@ function DownloadGTUser(props){
             Setoptions_format(options_form)
             Setoptions_format_red(options_form_red)
         }
-        // axios.get('http://127.0.0.1:8000/get_post_fields_for_auto').then(function(response){
+        // axios.get('http://0.0.0.0:8000/get_post_fields_for_auto').then(function(response){
         //     SetFieldsUseCasesToExtract(response.data['total_fields'])
         //     SetFieldsAlreadyExtracted(response.data['extract_fields'])
         //
         // }).catch(function(error){
         //     console.log('error: ',error)
         // })
-        axios.get('http://127.0.0.1:8000/check_PUBMED_reports').then(function(response){
+        axios.get('http://0.0.0.0:8000/check_PUBMED_reports').then(function(response){
             if(response.data['count'] > 0){
                 SetPubMedPresence(true)
             }
@@ -120,7 +120,7 @@ function DownloadGTUser(props){
         }).catch(function(error){
             console.log('error: ',error)
         })
-        axios.get('http://127.0.0.1:8000/check_doctag_reports').then(function(response){
+        axios.get('http://0.0.0.0:8000/check_doctag_reports').then(function(response){
             if(response.data['count'] > 0){
                 SetDocTAGPresence(true)
             }
@@ -142,7 +142,7 @@ function DownloadGTUser(props){
         if(Rep==='pubmed'){
             SetIns('PUBMED')
             SetLang('english')
-            axios.get("http://127.0.0.1:8000/pubmed_missing_auto").then(response => {
+            axios.get("http://0.0.0.0:8000/pubmed_missing_auto").then(response => {
                 (response.data['usecase'].map(el=>{
                     options_usecases.push({value:el,label:el})
 
@@ -176,7 +176,7 @@ function DownloadGTUser(props){
             SetBiocError(true)
         }
         else if(Format !== '' || token === 'all') {
-            axios.get('http://127.0.0.1:8000/get_gt_list',{params:{reptype:Rep,token:token,action:Act,inst:Ins,lang:Lang,use:Use,annotation_mode:Anno}})
+            axios.get('http://0.0.0.0:8000/get_gt_list',{params:{reptype:Rep,token:token,action:Act,inst:Ins,lang:Lang,use:Use,annotation_mode:Anno}})
                 .then(response => {
                     if (response.data['ground_truths'] === 0) {
                         SetShowNotDownload(true)
@@ -185,7 +185,7 @@ function DownloadGTUser(props){
                         if (token === 'conf') {
 
 
-                            axios.get('http://127.0.0.1:8000/download_ground_truths', {
+                            axios.get('http://0.0.0.0:8000/download_ground_truths', {
                                 params: {
                                     institute: Ins,
                                     usec: Use,
@@ -288,7 +288,7 @@ function DownloadGTUser(props){
                         else if (token === 'all') {
                             SetShowError(false)
 
-                            axios.get('http://127.0.0.1:8000/download_ground_truths', {params: {all_gt: 'all'}})
+                            axios.get('http://0.0.0.0:8000/download_ground_truths', {params: {all_gt: 'all'}})
                                 .then(function (response) {
                                     console.log('message', response.data);
                                     FileDownload(JSON.stringify(response.data), 'all_json_ground_truth.json');
@@ -381,7 +381,7 @@ function DownloadGTUser(props){
     function onSaveKeyFiles(e,type_key){
         e.preventDefault()
         if(type_key === 'mentions'){
-            axios.get('http://127.0.0.1:8000/download_key_files', {params:{type_key:'mentions'}})
+            axios.get('http://0.0.0.0:8000/download_key_files', {params:{type_key:'mentions'}})
                 .then(function (response) {
                     console.log('message', response.data);
                     FileDownload((response.data), 'mentions.key');
@@ -393,7 +393,7 @@ function DownloadGTUser(props){
         }
         else if(type_key === 'concept-mention') {
 
-            axios.get('http://127.0.0.1:8000/download_key_files', {params: {type_key: 'linking'}})
+            axios.get('http://0.0.0.0:8000/download_key_files', {params: {type_key: 'linking'}})
                 .then(function (response) {
                     console.log('message', response.data);
                     FileDownload((response.data), 'linking.key');
@@ -406,7 +406,7 @@ function DownloadGTUser(props){
     }
     // useEffect(()=>{
     //     if(Use !== '' && Rep !== ''){
-    //         axios.get("http://127.0.0.1:8000/get_presence_robot_user", {params: {usecase:Use,report_type:Rep}})
+    //         axios.get("http://0.0.0.0:8000/get_presence_robot_user", {params: {usecase:Use,report_type:Rep}})
     //             .then(response => {
     //                 if(response.data['auto_annotation_count'] > 0){
     //                     SetAutoPresence(true)
@@ -425,7 +425,7 @@ function DownloadGTUser(props){
         if(Use !== ''){
             var opt = []
             var batch = []
-            axios.get('http://127.0.0.1:8000/get_batch_list',{params:{usecase:Use}}).then(response=>{
+            axios.get('http://0.0.0.0:8000/get_batch_list',{params:{usecase:Use}}).then(response=>{
 
                 response.data['batch_list'].map(el=>{
                     console.log('value',el)
@@ -440,7 +440,7 @@ function DownloadGTUser(props){
             }
             var opt = []
             if(Rep === 'pubmed'){
-                axios.get('http://127.0.0.1:8000/get_PUBMED_batch_list',{params:{usecase:Use}}).then(response=>{
+                axios.get('http://0.0.0.0:8000/get_PUBMED_batch_list',{params:{usecase:Use}}).then(response=>{
 
                     response.data['batch_list'].map(el=>{
                         console.log('value',el)

@@ -51,10 +51,10 @@ function DownloadModalRep(props) {
     useEffect(()=>{
         setReportsString('')
         SetMentions_to_show([])
-        axios.get("http://0.0.0.0:8000/get_reports", {params: {all: 'all'}}).then(response => {
+        axios.get("get_reports", {params: {all: 'all'}}).then(response => {
             SetReports(response.data['report']);})
 
-        axios.get("http://0.0.0.0:8000/get_users_list")
+        axios.get("get_users_list")
             .then(response => {
                 if(response.data.length>0){
                     SetUsersList(response.data)
@@ -68,7 +68,7 @@ function DownloadModalRep(props) {
 
     // useEffect(()=>{
     //     if(RowsToDownload.length > 0){
-    //         axios.post("http://0.0.0.0:8000/get_presence_robot_user", {reports:JSON.stringify(RowsToDownload)})
+    //         axios.post("get_presence_robot_user", {reports:JSON.stringify(RowsToDownload)})
     //             .then(response => {
     //                 if(response.data['auto_annotation_count'] > 0){
     //                     SetAutoPresence(true)
@@ -76,7 +76,7 @@ function DownloadModalRep(props) {
     //             .catch(error=>{
     //                 console.log(error)
     //             })
-    //         axios.post("http://0.0.0.0:8000/check_presence_exa_conc_lab", {reports:JSON.stringify(RowsToDownload)})
+    //         axios.post("check_presence_exa_conc_lab", {reports:JSON.stringify(RowsToDownload)})
     //             .then(response => {
     //                 if(response.data['labels'] === true){
     //                     SetEXAPresenceLabels(true)
@@ -128,7 +128,7 @@ function DownloadModalRep(props) {
     }
     function downloadAllReports(){
         if(selectedActAll !== 'none'  && selectedFormatAll !== '') {
-            axios.post('http://0.0.0.0:8000/download_all_reports',
+            axios.post('download_all_reports',
                 {
                     report_list:RowsToDownload,
                     action: selectedActAll,
@@ -190,7 +190,7 @@ function DownloadModalRep(props) {
     }
     function downloadMajorityReports(){
         if(selectedActMajor !== 'none' && ChosenUsers.length > 1 && selectedFormatMajor !== '') {
-            axios.post('http://0.0.0.0:8000/download_majority_reports',
+            axios.post('download_majority_reports',
                 {
                     reports:RowsToDownload,
                     action: selectedActMajor,

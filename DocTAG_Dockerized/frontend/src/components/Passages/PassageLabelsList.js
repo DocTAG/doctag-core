@@ -343,7 +343,8 @@ function PassageLabelsList(props){
 
             SetLoadingMentionsColor(false)
         }
-    },[Action,mentions_to_show,Color,ShowInfoMentions,SelectedLang,ChangeLabel,WordMention]) //COLOR AGGIUNTO,children
+        SetReloadMentions(false)
+    },[Action,mentions_to_show,Color,ShowInfoMentions,SelectedLang,ChangeLabel,WordMention,ReloadMentions]) //COLOR AGGIUNTO,children
 
 
     function order_array(mentions){
@@ -394,7 +395,7 @@ function PassageLabelsList(props){
                 // console.log(m.start,mention.start)
                 // console.log(m.stop,mention.stop)
                 // console.log(m.label,label)
-                if(m.start === mention.start && m.stop === mention.stop && m.label === label.label){
+                if(m.start === mention.start && m.stop === mention.stop){
                     alert('This assignment already exist')
                     SetReloadMentions(true)
                     found = true

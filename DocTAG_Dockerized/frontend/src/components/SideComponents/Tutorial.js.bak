@@ -51,7 +51,7 @@ function Tutorial() {
     useEffect(()=>{
         // console.log('SHOWBAR',ShowBar)
 
-        axios.get("http:/127.0.0.1:8000/get_usecase_inst_lang").then(response => {
+        axios.get("http:/0.0.0.0:8000/get_usecase_inst_lang").then(response => {
             SetUseCaseList(response.data['usecase']);
             SetLanguageList(response.data['language']);
             SetInstituteList(response.data['institute']);
@@ -91,7 +91,7 @@ function Tutorial() {
                         <hr/>
                             <div>The first time you try DocTAG, you run in TEST mode. The database is populated with a sample of data which allow you to try the application and to understand how the annotations work. In order to change the configuration, and populate the database with your data, you can open the side menu clicking on <FontAwesomeIcon icon={faBars}/> and select <i>Configuration</i>. Then, a list of instructions is displayed: follow them and at the end you can start annotating your own documents.
                                 <div><span style = {{'font-weight':'bold'}}>NOTE: </span><span>You can change configuration only if you are the admin of DocTAG. If you are not, the <i>Configure</i> option will not be present in the side menu.</span></div>
-                                <div>If you are interested in how to configure DocTAG, please, <a href='http://127.0.0.1:8000/infoAboutConfiguration'>click here</a>.</div>
+                                <div>If you are interested in how to configure DocTAG, please, <a href='http://0.0.0.0:8000/infoAboutConfiguration'>click here</a>.</div>
                             </div>
 
                         <hr/>
@@ -261,7 +261,7 @@ function Tutorial() {
                             {/*   <ul>*/}
                             {/*       <li><b>MANUAL ANNOTATION</b>: You can annotate the reports the administrator uploaded and find the labels, concepts, mentions and concept-mention associations (linking) creating your own ground-truths. </li>*/}
                             {/*       <li><b>AUTOMATIC ANNOTATION</b>: Automatic annotation is based on an algorithm which automatically annotate the reports. The algorithm assigns a set of labels, mentions, concept-mention associations and concepts to the reports your administrator uploaded (or to PubMed reports). you can check the algorithm's ground-truth of a report in every moment.*/}
-                            {/*           <div>If you are the administrator bare in mind that Automatic annotation is available for: <b>colon, uterine cervix, lung</b> use cases and for <b>english</b> reports (and PubMed articles). Automatic annotation works with labels and concepts belonging to <a href='https://www.examode.eu/'>EXAMODE</a> we provide; this process can take a lot of time depending on how many reports you want to annotate and how powerful your machine is. If you want to automatically annotate your reports or get some more information click <a href='http://127.0.0.1:8000/infoAboutConfiguration'>here</a></div>*/}
+                            {/*           <div>If you are the administrator bare in mind that Automatic annotation is available for: <b>colon, uterine cervix, lung</b> use cases and for <b>english</b> reports (and PubMed articles). Automatic annotation works with labels and concepts belonging to <a href='https://www.examode.eu/'>EXAMODE</a> we provide; this process can take a lot of time depending on how many reports you want to annotate and how powerful your machine is. If you want to automatically annotate your reports or get some more information click <a href='http://0.0.0.0:8000/infoAboutConfiguration'>here</a></div>*/}
                             {/*       </li>*/}
                             {/*   </ul> </div>*/}
                             </div><hr/>

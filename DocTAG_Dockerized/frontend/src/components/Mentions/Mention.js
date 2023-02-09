@@ -168,7 +168,16 @@ function Mention(props){
                     scroll = true
                 }
                 bottone_mention.map(b=> {
-                    if(Number(b.id) + b.textContent.trim().length-1 === props.start + props.text.trim().length -1 ) {
+                    // console.log('mention',b)
+                    // console.log('mention',props.text.trim())
+                    // console.log('mention',b.textContent.trim())
+                    // console.log('mention',Number(b.id) + b.textContent.trim().length-1)
+                    // console.log('mention',props.start + props.text.trim().length -1)
+                    // console.log('mention',props.text.split(' ').length)
+                    // console.log('mention',b.innerText.toString().split(' ').length)
+                    // console.log('mention',Number(b.id))
+                    // console.log('mention',props.start)
+                    if(Number(b.id) === props.start && props.text.split(' ').length === b.textContent.toString().split(' ').length) {
                         // console.log('color',b.style.color)
                         child.style.color = b.style.color
                         // console.log('color',child.style.color)
@@ -282,7 +291,7 @@ function Mention(props){
         words.map((word,index) =>{
             var apostrofo = false
             var end = start + word.length - 1
-            word = word.replace(/[.,#!$%\^&\*;:{}=`~()]/g,"");
+            // word = word.replace(/[.,#!$%\^&\*;:{}=`~()]/g,"");
             if(word.includes("'") && Language === 'Italian'){
                 apostrofo = true
                 //word = word.split("'")[1]

@@ -160,8 +160,7 @@ function ReportListUpdated(props) {
         if(ColorWords === true){
 
             var t = []
-            axios.get('http://0.0.0.0:8000/get_query_doc_words',{params:{id_report:Reports[Index].id_report}}).then(response=>{
-                var words_to_highlight = response.data['top_k']
+            axios.get('get_query_doc_words',{params:{id_report:Reports[Index].id_report}}).then(response=>{
                 console.log('words',response.data['top_k'])
                 response.data['top_k'].map(k=>{
                     topic_spans.map(token=>{
@@ -183,14 +182,9 @@ function ReportListUpdated(props) {
 
 
                     tokens.map(token=>{
-
-
-
                         if((token.innerText.toString().toLowerCase()).includes(k[0].toString().toLowerCase())){
                             // t.push([token,k[1]])
                             t.push([token.innerText.toString().toLowerCase().replace(' ',''),k[1]])
-
-
                         }
                     })
                     tokens_1.map(token=>{
@@ -307,7 +301,7 @@ function ReportListUpdated(props) {
 
             if((ShowAutoAnn || ShowMemberGt)){
                 // console.log('AXIOS')
-                axios.get('http://0.0.0.0:8000/get_insertion_time_record',
+                axios.get('get_insertion_time_record',
                     {params:{ns_id:ns_id,username:username_to_call,rep:Reports[Index]['id_report'],language:SelectedLang,action:Action}})
                     .then(response=>{
                         if(response.data['date'] !== ''){
@@ -359,7 +353,7 @@ function ReportListUpdated(props) {
     useEffect(()=>{
         // console.log('trans')
         if(ReportString !== undefined && LanguageList.length > 1){
-            axios.get('http://0.0.0.0:8000/get_report_translations',{params:{id_report:Report.id_report}}).then(response=>{
+            axios.get('get_report_translations',{params:{id_report:Report.id_report}}).then(response=>{
                 SetReportTranslation(response.data['languages'])
                 // console.log('respp',response.data['languages'])
             })
@@ -371,7 +365,7 @@ function ReportListUpdated(props) {
         SetSelectedLang(rep)
         if(rep !== Language){
             // SetLoadingReport(true)
-            axios.get("http://0.0.0.0:8000/report_start_end", {params: {language:rep,report_id: Reports[Index].id_report.toString()}}).then(response => {
+            axios.get("report_start_end", {params: {language:rep,report_id: Reports[Index].id_report.toString()}}).then(response => {
                 SetTranslation(response.data['rep_string']); SetFinalCount(response.data['final_count']);SetFinalCountReached(false);
                 // SetLoadingReport(false)
             })

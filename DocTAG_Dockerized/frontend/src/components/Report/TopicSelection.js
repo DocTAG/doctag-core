@@ -78,7 +78,7 @@ function TopicSelection(props){
             // if(ReportType==='pubmed'){
             //
             //
-            //     axios.get("http://0.0.0.0:8000/pubmed_reports").then(response => {
+            //     axios.get("pubmed_reports").then(response => {
             //         (response.data['usecase'].map((uc,ind)=>{
             //             var str = (ind+1).toString() +' - '+ uc.toString()
             //             arr_to_opt.push({id:ind, label: str})
@@ -89,7 +89,7 @@ function TopicSelection(props){
             // }
             // else if(ReportType==='reports'){
             //
-            //     axios.get("http://0.0.0.0:8000/doctag_reports").then(response => {
+            //     axios.get("doctag_reports").then(response => {
             //         (response.data['usecase'].map((uc,ind)=>{
             //             var str = (ind+1).toString() +' - '+ uc.toString()
             //             arr_to_opt.push({id:ind, label: str})
@@ -133,7 +133,7 @@ function TopicSelection(props){
             var data_to_ret = {'mentions': mentions_to_show.filter(x=>x.seq_number !== 0)}
             // console.log('mentions: ' ,mentions_to_show)
 
-            axios.post('http://0.0.0.0:8000/mention_insertion/insert', {
+            axios.post('mention_insertion/insert', {
                 mentions: data_to_ret['mentions'],language:Language,
                 report_id: Reports[Index].id_report
             })
@@ -150,7 +150,7 @@ function TopicSelection(props){
         }else if (token.startsWith('annotation')) {
             //const data = new FormData(document.getElementById("annotation-form"));
             // console.log('labtoinsert',LabToInsert)
-            axios.post('http://0.0.0.0:8000/annotationlabel/insert', {
+            axios.post('annotationlabel/insert', {
                 //labels: data.getAll('labels'),
                 labels: LabToInsert,language:Language,
                 report_id: Reports[Index].id_report,
@@ -178,7 +178,7 @@ function TopicSelection(props){
 
             data_to_ret = {'linked': associations_to_show}
             if (data_to_ret['linked'].length >= 0) {
-                axios.post('http://0.0.0.0:8000/insert_link/insert', {
+                axios.post('insert_link/insert', {
                     linked: data_to_ret['linked'],language:Language,
                     report_id: Reports[Index].id_report
                 })
@@ -208,7 +208,7 @@ function TopicSelection(props){
 
             // console.log(concepts_list);
 
-            axios.post('http://0.0.0.0:8000/contains/update', {
+            axios.post('contains/update', {
                     concepts_list: concepts_list,language:Language,
                     report_id: Reports[Index].id_report,
                 },
@@ -249,7 +249,7 @@ function TopicSelection(props){
                     submit(event,Action);
                     SetTopicIndex(Number(newValue['id']))
                     SetUseCase(UseCaseList[Number(newValue['id'])])
-                    axios.post("http://0.0.0.0:8000/new_credentials", {
+                    axios.post("new_credentials", {
                         usecase: UseCaseList[Number(newValue['id'])], language: Language, institute: Institute, annotation: Annotation,report_type: ReportType,batch:1
                     })
                         .then(function (response) {
