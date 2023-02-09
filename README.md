@@ -61,13 +61,15 @@ If you already have both [docker](https://docs.docker.com/engine/reference/comma
 
 4. Download or clone the [doctag-core](https://github.com/DocTAG/doctag-core) repository.
 
-5. Open the [DocTAG_Dockerized](https://github.com/DocTAG/doctag-core/tree/main/DocTAG_Dockerized) project folder and, on a new terminal session, type ```docker-compose up```. After running the latter command the installation of DocTAG dependencies is performed and the following output will be generated:
+5. Open DocTAG_Dockerized/baseurl.txt file and put the baseURL of the server where DocTAG is deployed. If the server hosting MedTAG has the baseURL http://example.com/server/example/, specify this URL in place of the http://0.0.0.0:8000/ provided by default.
+
+6. Open the [DocTAG_Dockerized](https://github.com/DocTAG/doctag-core/tree/main/DocTAG_Dockerized) project folder and, on a new terminal session, type ```docker-compose up```. After running the latter command the installation of DocTAG dependencies is performed and the following output will be generated:
 
    ![installation_process_output](./images/screen/process_output.png)
 
    **NOTE**: In Unix-like systems `docker-compose` should be run  without using `sudo` in a directory owned by the user.
 
-6. DocTAG installation has completed and you can access it on your browser at http://0.0.0.0:8000/.
+7. DocTAG installation has completed and you can access it on your browser at http://0.0.0.0:8000/.
 
 **NOTE**: If you want to shut down DocTAG, open a new terminal window and navigate to the project folder. Finally type `docker-compose down`
 
@@ -90,7 +92,9 @@ Once log in with the credentials above, you are asked to choose a *topic*: in th
 In the *Test mode* all the DocTAG functionalities are available to be tested even if an administrator (*Admin*) has not been defined yet.
 **NOTE** The data provided in the *Test mode* are provided in the *first_configuration_data-test_mode_data* folder of the project.
 ## Customize DocTAG
-Once you tested DocTAG you can create a new configuration so to start annotating the documents you upload. Open the sidebar and click on *Configure*. You are provided with a guide that shows how to format your files. In the folder *Examples files*  of the project you can find some examples of how to format each required file.
+Once you tested DocTAG you can create a new configuration so to start annotating the documents you upload. Open the sidebar and click on *Configure*. You are provided with a guide that shows how to format your files. In the folder *Examples files*  of the project you can find some examples of how to format each required file. 
+
+*Providing a new configuration will delete the already existing one, hence, your first configuration will overwrite the one provided to test DocTAG as well as the Test user*.
 ![config](./images/screen/config.png)
 
 Once you have uploaded all the required files, click on *Check* to check that the files are well formed. Under each file a message will appear:
