@@ -61,7 +61,7 @@ If you already have both [docker](https://docs.docker.com/engine/reference/comma
 
 4. Download or clone the [doctag-core](https://github.com/DocTAG/doctag-core) repository.
 
-5. Open DocTAG_Dockerized/baseurl.txt file and put the baseURL of the server where DocTAG is deployed. If the server hosting MedTAG has the baseURL http://example.com/server/example/, specify this URL in place of the http://0.0.0.0:8000/ provided by default.
+5. Open DocTAG_Dockerized/baseurl.txt file and put the baseURL of the server where DocTAG is deployed. If the server hosting DocTAG has the baseURL http://example.com/server/example/, specify this URL in place of the http://0.0.0.0:8000/ provided by default.
 
 6. Open the [DocTAG_Dockerized](https://github.com/DocTAG/doctag-core/tree/main/DocTAG_Dockerized) project folder and, on a new terminal session, type ```docker-compose up```. After running the latter command the installation of DocTAG dependencies is performed and the following output will be generated:
 
