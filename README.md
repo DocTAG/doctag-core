@@ -201,6 +201,24 @@ For each document the *admin* can check the ground-truth created basing on **maj
 ## Support for multilingual documents
 Even if the default language is *english*, DocTAG allows the upload of the same document translated in different languages or, more in general, for each topic it is possible to upload documents written in different languages. The information about the language is given with the collection file and it is useful to filter the documents of a topic basing on the language your interested in.
 
+# Citation
+If you use DocTAG for your research work, please consider citing our paper:
+
+  ```bibtex
+@inproceedings{GiachelleIS22,
+  author    = {Fabio Giachelle and
+               Ornella Irrera and
+               Gianmaria Silvello},
+  title     = {DocTAG: {A} Customizable Annotation Tool for Ground Truth Creation},
+  booktitle = {{ECIR} {(2)}},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {13186},
+  pages     = {288--293},
+  publisher = {Springer},
+  year      = {2022}
+}
+```
+
 # Credits
 
 DocTAG has been developed by the [Intelligent Interactive Information Access Hub (IIIA)](http://iiia.dei.unipd.it/) of the  [Department of Information Engineering](https://www.dei.unipd.it/en/), [University of Padua](https://www.unipd.it/en/), Italy.
