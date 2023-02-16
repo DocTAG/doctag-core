@@ -210,7 +210,7 @@ If you use DocTAG for your research work, please consider citing our paper:
                Ornella Irrera and
                Gianmaria Silvello},
   title     = {DocTAG: {A} Customizable Annotation Tool for Ground Truth Creation},
-  booktitle = {{ECIR} {(2)}},
+  booktitle={Advances in Information Retrieval: 44th European Conference on IR Research, ECIR 2022, Stavanger, Norway, April 10--14, 2022, Proceedings, Part II},
   series    = {Lecture Notes in Computer Science},
   volume    = {13186},
   pages     = {288--293},
