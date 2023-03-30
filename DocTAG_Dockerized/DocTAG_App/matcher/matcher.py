@@ -270,10 +270,13 @@ class QueryDocMatcher:
 
         # list of the top-k matching words
         top_k_matching_words = []
-
+        title = ''
+        desc = ''
         # topic data
-        title = self.topic["title"]
-        desc = self.topic["description"]
+        if 'title' in self.topic.keys():
+            title = self.topic["title"]
+        elif 'description' in self.topic.keys():
+            desc = self.topic["description"]
         topic_joint_text = ' '.join([title, desc])
 
         # document data
