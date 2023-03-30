@@ -242,8 +242,12 @@ def elaborate_runs_json_files(run):
             if isinstance(d,dict):
                 if 'language' in d.keys() and 'document_id' in d.keys():
                     arr_to_ret.append((topic_id,d['document_id'],d['language']))
+                elif 'document_id' in d.keys():
+                    arr_to_ret.append((topic_id, d['document_id'], 'english'))
+                else:
+                    arr_to_ret.append((topic_id,d,'english'))
             else:
-                arr_to_ret.append((topic_id,d,'english'))
+                arr_to_ret.append((topic_id, d, 'english'))
 
     return arr_to_ret
 

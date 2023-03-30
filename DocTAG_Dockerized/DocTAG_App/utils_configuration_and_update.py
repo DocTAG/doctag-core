@@ -1144,7 +1144,6 @@ def configure_data(pubmedfiles,reports, labels, concepts, jsondisp, jsonann, jso
 
                 json_to_write = {}
                 for top in t:
-                    print('topic:'+str(top))
                     json_to_write[top.name] = {}
                     topic = {}
                     corpus = []
@@ -1163,40 +1162,41 @@ def configure_data(pubmedfiles,reports, labels, concepts, jsondisp, jsonann, jso
                                 r_j1['text'] = r_j1['text'] + ' ' + str(e[k])
                         if el[1].lower() in LANGUAGES_NLTK:
                             corpus.append(r_j1)
-                    topic['title'] = top.title
-                    topic['description'] = top.description
-
+                    if top.title is not None:
+                        topic['title'] = top.title
+                    if top.description is not None:
+                        topic['description'] = top.description
                     # df_tfidf = gen_tfidf_map(corpus,language)
+                    if topic != {}:
+                        for el in ans:
+                            if el[1].lower() in LANGUAGES_NLTK:
+                                language = el[1].lower()
+                                start = time.time()
+                                print('working on ', str(el[0]))
+                                e = json.loads(el[2])
+                                r_j1 = {}
+                                r_j1['document_id'] = str(el[0])
+                                r_j1['text'] = ''
+                                for k in e.keys():
+                                    # print(k)
+                                    # print(e[k])
+                                    if isinstance(e[k],list):
+                                        e[k] = ', '.join(e[k])
+                                    if k != 'document_id' and k != 'language' and e[k] is not None:
+                                        r_j1['text'] = r_j1['text'] + ' ' + e[k]
 
-                    for el in ans:
-                        if el[1].lower() in LANGUAGES_NLTK:
-                            language = el[1].lower()
-                            start = time.time()
-                            print('working on ', str(el[0]))
-                            e = json.loads(el[2])
-                            r_j1 = {}
-                            r_j1['document_id'] = str(el[0])
-                            r_j1['text'] = ''
-                            for k in e.keys():
-                                # print(k)
-                                # print(e[k])
-                                if isinstance(e[k],list):
-                                    e[k] = ', '.join(e[k])
-                                if k != 'document_id' and k != 'language' and e[k] is not None:
-                                    r_j1['text'] = r_j1['text'] + ' ' + e[k]
+                                tfidf_matcher = QueryDocMatcher(topic=topic,doc= r_j1, corpus=corpus,language=language)
+                                top_k_matching_words = tfidf_matcher.get_words_to_highlight()
 
-                            tfidf_matcher = QueryDocMatcher(topic=topic,doc= r_j1, corpus=corpus,language=language)
-                            top_k_matching_words = tfidf_matcher.get_words_to_highlight()
+                                # print(top_k_matching_words)
 
-                            # print(top_k_matching_words)
-
-                            # json_val = {}
-                            # json_val[str(el[0])] = top_k_matching_words
-                            # json_val['words'] = top_k_matching_words
-                            json_to_write[top.name][str(el[0])] = top_k_matching_words
-                            # print(json_to_write)
-                            end = time.time()
-                            print('elaborated in '+str(end-start)+' seconds')
+                                # json_val = {}
+                                # json_val[str(el[0])] = top_k_matching_words
+                                # json_val['words'] = top_k_matching_words
+                                json_to_write[top.name][str(el[0])] = top_k_matching_words
+                                # print(json_to_write)
+                                end = time.time()
+                                print('elaborated in '+str(end-start)+' seconds')
             else:
                 json_to_write = {}
             end = time.time()
@@ -2422,92 +2422,94 @@ def update_db_util(reports,pubmedfiles,labels,concepts,jsondisp,jsonann,jsondisp
                         os.remove(path)
         if ((jsonann is not None) and (jsonann != '')) or ((jsondisp is not None) and jsondisp != ''):
             outfile.close()
-        if tf_idf is not None :
-                print(str(tf_idf))
-                data = {}
-                cursor = connection.cursor()
-                cursor.execute('SELECT DISTINCT language FROM report')
-                ans = cursor.fetchall()
-                languages = []
-                for el in ans:
-                    languages.append(el[0])
-                st = time.time()
-                if int(tf_idf) > 0:
-                    workpath = os.path.dirname(os.path.abspath(__file__))  # Returns the Path your .py file is in
-                    path1 = os.path.join(workpath, './config_files/config.json')
-                    g = open(path1, 'r')
-                    data = json.load(g)
-                    data['TF-IDF_k'] = tf_idf
-                    with open(path1, 'w') as f:
-                        json.dump(data, f)
-
-                    t = UseCase.objects.all()
+        try:
+            if tf_idf is not None :
+                    print(str(tf_idf))
+                    data = {}
                     cursor = connection.cursor()
+                    cursor.execute('SELECT DISTINCT language FROM report')
+                    ans = cursor.fetchall()
+                    languages = []
+                    for el in ans:
+                        languages.append(el[0])
+                    st = time.time()
+                    if int(tf_idf) > 0:
+                        workpath = os.path.dirname(os.path.abspath(__file__))  # Returns the Path your .py file is in
+                        path1 = os.path.join(workpath, './config_files/config.json')
+                        g = open(path1, 'r')
+                        data = json.load(g)
+                        data['TF-IDF_k'] = tf_idf
+                        with open(path1, 'w') as f:
+                            json.dump(data, f)
 
-                    json_to_write = {}
-                    for top in t:
-                        print('topic:' + str(top))
-                        json_to_write[top.name] = {}
-                        topic = {}
-                        corpus = []
-                        cursor.execute(
-                            "SELECT r.id_report,r.language,r.report_json FROM report as r inner join topic_has_document as t on t.id_report = r.id_report and r.language = t.language where t.name = %s",
-                            [str(top.name)])
-                        ans = cursor.fetchall()
-                        for el in ans:
-                            e = json.loads(el[2])
-                            r_j1 = {}
+                        t = UseCase.objects.all()
+                        cursor = connection.cursor()
 
-                            r_j1['document_id'] = str(el[0])
-                            r_j1['text'] = ''
-                            for k in e.keys():
-                                if k != 'document_id' or (
-                                        str(el[0]).startswith('PUBMED_') and (k == 'abstract' or k == 'title')):
-                                    r_j1['text'] = r_j1['text'] + ' ' + str(e[k])
-                            if el[1].lower() in LANGUAGES_NLTK:
-                                corpus.append(r_j1)
-                        topic['title'] = top.title
-                        topic['description'] = top.description
-
-                        # df_tfidf = gen_tfidf_map(corpus,language)
-
-                        for el in ans:
-                            if el[1].lower() in LANGUAGES_NLTK:
-                                language = el[1].lower()
-                                start = time.time()
-                                print('working on ', str(el[0]))
+                        json_to_write = {}
+                        for top in t:
+                            print('topic:' + str(top))
+                            json_to_write[top.name] = {}
+                            topic = {}
+                            corpus = []
+                            cursor.execute(
+                                "SELECT r.id_report,r.language,r.report_json FROM report as r inner join topic_has_document as t on t.id_report = r.id_report and r.language = t.language where t.name = %s",
+                                [str(top.name)])
+                            ans = cursor.fetchall()
+                            for el in ans:
                                 e = json.loads(el[2])
                                 r_j1 = {}
+
                                 r_j1['document_id'] = str(el[0])
                                 r_j1['text'] = ''
                                 for k in e.keys():
-                                    # print(k)
-                                    # print(e[k])
-                                    if isinstance(e[k], list):
-                                        e[k] = ', '.join(e[k])
-                                    if k != 'document_id' and k != 'language' and e[k] is not None:
-                                        r_j1['text'] = r_j1['text'] + ' ' + e[k]
+                                    if k != 'document_id' or (
+                                            str(el[0]).startswith('PUBMED_') and (k == 'abstract' or k == 'title')):
+                                        r_j1['text'] = r_j1['text'] + ' ' + str(e[k])
+                                if el[1].lower() in LANGUAGES_NLTK:
+                                    corpus.append(r_j1)
+                            topic['title'] = top.title
+                            topic['description'] = top.description
 
-                                tfidf_matcher = QueryDocMatcher(topic=topic, doc=r_j1, corpus=corpus, language=language)
-                                top_k_matching_words = tfidf_matcher.get_words_to_highlight()
+                            # df_tfidf = gen_tfidf_map(corpus,language)
 
-                                # print(top_k_matching_words)
+                            for el in ans:
+                                if el[1].lower() in LANGUAGES_NLTK:
+                                    language = el[1].lower()
+                                    start = time.time()
+                                    print('working on ', str(el[0]))
+                                    e = json.loads(el[2])
+                                    r_j1 = {}
+                                    r_j1['document_id'] = str(el[0])
+                                    r_j1['text'] = ''
+                                    for k in e.keys():
+                                        # print(k)
+                                        # print(e[k])
+                                        if isinstance(e[k], list):
+                                            e[k] = ', '.join(e[k])
+                                        if k != 'document_id' and k != 'language' and e[k] is not None:
+                                            r_j1['text'] = r_j1['text'] + ' ' + e[k]
 
-                                # json_val = {}
-                                # json_val[str(el[0])] = top_k_matching_words
-                                # json_val['words'] = top_k_matching_words
-                                json_to_write[top.name][str(el[0])] = top_k_matching_words
-                                # print(json_to_write)
-                                end = time.time()
-                                print('elaborated in ' + str(end - start) + ' seconds')
-                else:
-                    json_to_write = {}
-                end = time.time()
-                print('time', end - st)
-                path2 = os.path.join(workpath, './config_files/tf_idf_map.json')
-                with open(path2, 'w') as f:
-                    json.dump(json_to_write, f)
+                                    tfidf_matcher = QueryDocMatcher(topic=topic, doc=r_j1, corpus=corpus, language=language)
+                                    top_k_matching_words = tfidf_matcher.get_words_to_highlight()
 
+                                    # print(top_k_matching_words)
+
+                                    # json_val = {}
+                                    # json_val[str(el[0])] = top_k_matching_words
+                                    # json_val['words'] = top_k_matching_words
+                                    json_to_write[top.name][str(el[0])] = top_k_matching_words
+                                    # print(json_to_write)
+                                    end = time.time()
+                                    print('elaborated in ' + str(end - start) + ' seconds')
+                    else:
+                        json_to_write = {}
+                    end = time.time()
+                    print('time', end - st)
+                    path2 = os.path.join(workpath, './config_files/tf_idf_map.json')
+                    with open(path2, 'w') as f:
+                        json.dump(json_to_write, f)
+        except Exception as e:
+            pass
 
         json_resp = {'message': 'Ok'}
 
